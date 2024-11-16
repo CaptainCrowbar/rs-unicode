@@ -22,24 +22,24 @@ is a bit simplified; not all PCRE features are currently exported.
 enum class RegexFlags: std::uint16_t;
 ```
 
-| Flag             | Description                                           | Phases              | Prefix               |
-| ----             | -----------                                           | ------              | ------               |
-| `none`           | No flags                                              |                     |                      |
-| `anchor`         | The match must start at the beginning of the string   | All                 |                      |
-| `byte`           | Byte mode matching (default is UTF-8 mode)            | Compile&nbsp;only   | <nobr>`(?b)`</nobr>  |
-| `dotall`         | Dot matches any character including LF                | Compile&nbsp;only   | <nobr>`(?s)`</nobr>  |
-| `extended`       | Free form pattern layout                              | Compile&nbsp;only   | <nobr>`(?x)`</nobr>  |
-| `firstline`      | The match must start in the first line                | Compile&nbsp;only   |                      |
-| `full`           | The pattern must match the complete string            | All                 |                      |
-| `global`         | Replace all matches                                   | Format&nbsp;only    |                      |
-| `icase`          | Case insensitive                                      | Compile&nbsp;only   | <nobr>`(?i)`</nobr>  |
-| `multiline`      | `^` and `$` match the beginning and end of each line  | Compile&nbsp;only   | <nobr>`(?m)`</nobr>  |
-| `nocapture`      | Groups are not captured unless they are named         | Compile&nbsp;only   |                      |
-| `notbol`         | `^` does not match the beginning of the string        | Match,&nbsp;format  |                      |
-| `notempty`       | Do not match an empty string                          | Match,&nbsp;format  |                      |
-| `notemptystart`  | Do not match an empty string at the start             | Match,&nbsp;format  |                      |
-| `noteol`         | `$` does not match the end of the string              | Match,&nbsp;format  |                      |
-| `partial`        | Enable partial matching                               | Match&nbsp;only     |                      |
+| Flag             | Description                                           | Phases              | Prefix             |
+| ----             | -----------                                           | ------              | ------             |
+| `none`           | No flags                                              |                     |                    |
+| `anchor`         | The match must start at the beginning of the string   | All                 |                    |
+| `byte`           | Byte mode matching (default is UTF-8 mode)            | Compile&nbsp;only   | <nobr>(?b)</nobr>  |
+| `dotall`         | Dot matches any character including LF                | Compile&nbsp;only   | <nobr>(?s)</nobr>  |
+| `extended`       | Free form pattern layout                              | Compile&nbsp;only   | <nobr>(?x)</nobr>  |
+| `firstline`      | The match must start in the first line                | Compile&nbsp;only   |                    |
+| `full`           | The pattern must match the complete string            | All                 |                    |
+| `global`         | Replace all matches                                   | Format&nbsp;only    |                    |
+| `icase`          | Case insensitive                                      | Compile&nbsp;only   | <nobr>(?i)</nobr>  |
+| `multiline`      | `^` and `$` match the beginning and end of each line  | Compile&nbsp;only   | <nobr>(?m)</nobr>  |
+| `nocapture`      | Groups are not captured unless they are named         | Compile&nbsp;only   |                    |
+| `notbol`         | `^` does not match the beginning of the string        | Match,&nbsp;format  |                    |
+| `notempty`       | Do not match an empty string                          | Match,&nbsp;format  |                    |
+| `notemptystart`  | Do not match an empty string at the start             | Match,&nbsp;format  |                    |
+| `noteol`         | `$` does not match the end of the string              | Match,&nbsp;format  |                    |
+| `partial`        | Enable partial matching                               | Match&nbsp;only     |                    |
 
 These are bitmasks defined originally in the `RegexFlags` enumeration, but
 they are imported into the `Regex` class via `using enum RegexFlags` and
