@@ -27,11 +27,35 @@ no longer consider worthwhile), and some other design decisions I wanted to
 revisit, I decided that writing a new library (with some code imported form
 the old one) was the best approach at this point.
 
-## Index
+## Index of headers
 
-* `[rs-unicode/character](character.html)` -- Character properties
-* `[rs-unicode/encoding](encoding.html)` -- Character encodings
-* `[rs-unicode/legacy](legacy.html)` -- Legacy encodings
-* `[rs-unicode/regex](regex.html)` -- Regular expressions
-* `[rs-unicode/string](string.html)` -- String manipulation
-* `[rs-unicode/version](version.html)` -- Version information
+* [`rs-unicode/character`](character.html) -- Character properties
+* [`rs-unicode/encoding`](encoding.html) -- Character encodings
+* [`rs-unicode/legacy`](legacy.html) -- Legacy encodings
+* [`rs-unicode/regex`](regex.html) -- Regular expressions
+* [`rs-unicode/string`](string.html) -- String manipulation
+* [`rs-unicode/version`](version.html) -- Version information
+
+## Using the library
+
+There is a `CMakeLists.txt` file that can build and install the library using
+the usual [CMake](https://cmake.org) conventions. Command line usage will
+typically look like this:
+
+```bash
+cd wherever/you/installed/rs-unicode
+mkdir build
+cd build
+cmake -G "Unix Makefiles" ../src
+    # or cmake -G "Visual Studio 17 2022" ../src on Windows
+cmake --build . --config Release -- -j<N>
+    # where <N> is your CPU core count
+cmake --build . --config Release --target install'
+```
+
+The library's public headers are listed above (other headers are for internal
+use only and should not be included by your code). To use the library,
+`#incldue` either the individual headers you want, or `rs-unicode.hpp` to
+include all of them.
+
+Link your build with `-lrs-unicode.`

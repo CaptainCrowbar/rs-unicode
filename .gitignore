@@ -1,5 +1,5 @@
 .DS_Store
 _*
-build*
 *.log
-/UCD
+/build*
+/ucd
