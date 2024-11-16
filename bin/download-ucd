@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+# Download the UCD reference data from the Unicode website
+
+# The Unicode version is hardcoded here and should not be updated until
+# compatibility with the table extraction code has been checked and any
+# necessary changes have been made.
+
+ucd_version=15.1.0
+ucd_url="https://www.unicode.org/Public/zipped/$ucd_version/UCD.zip"
+
+set -o errexit
+set -o nounset
+set -o pipefail
+shopt -s globasciiranges globstar nullglob
+
+if [[ "${TRACE-}" ]]; then
+    set -o xtrace
+fi
+
+bin="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+root="$(readlink -f "$bin/..")"
+
+if [ "${root##*/}" != "rs-unicode" ]; then
+    echo "*** Project root not found"
+    exit 1
+fi
+
+cd "$root"
+rm -f UCD.zip
+if [ -d ucd ]; then rm -r ucd; fi
+curl "$ucd_url" -o UCD.zip
+mkdir ucd
+cd ucd
+unzip ../UCD.zip
+cd ..
+rm UCD.zip
