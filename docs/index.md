@@ -13,11 +13,19 @@ namespace RS::Unicode;
 
 ## Introduction
 
-TODO
+This is my new C++ Unicode library.
 
 The library is designed on the assumption that text processing will normally
-be done entirely with known-valid Unicode text, with unvalidated text only
+be done entirely with known-valid UTF-8 text, with unvalidated text only
 being encountered during input sanitization.
+
+My original library (Unicorn) hasn't been updated for many years; there have
+been enough changes to the Unicode standard since then that it will not work
+with a significant fraction of existing Unicode text (in particular, anything
+that uses emoji). Along with the library's size (containing many features I
+no longer consider worthwhile), and some other design decisions I wanted to
+revisit, I decided that writing a new library (with some code imported form
+the old one) was the best approach at this point.
 
 ## Index
 
