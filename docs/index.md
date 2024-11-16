@@ -58,4 +58,5 @@ use only and should not be included by your code). To use the library,
 `#incldue` either the individual headers you want, or `rs-unicode.hpp` to
 include all of them.
 
-Link your build with `-lrs-unicode.`
+Link your build with `-lrs-unicode.` You will also need `-lpcre2-8.` On some
+systems, you may also need `-liconv.`
