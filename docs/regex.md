@@ -22,24 +22,24 @@ is a bit simplified; not all PCRE features are currently exported.
 enum class RegexFlags: std::uint16_t;
 ```
 
-| Flag             | Description                                          | Phases              | Prefix             |
-| ----             | -----------                                          | ------              | ------             |
-| `none`           | No flags                                             |                     |                    |
-| `anchor`         | The match must start at the beginning of the string  | All                 |                    |
-| `byte`           | Byte mode matching (default is UTF-8 mode)           | Compile&nbsp;only   | <nobr>(?b)</nobr>  |
-| `dotall`         | Dot matches any character including LF               | Compile&nbsp;only   | <nobr>(?s)</nobr>  |
-| `extended`       | Free form pattern layout                             | Compile&nbsp;only   | <nobr>(?x)</nobr>  |
-| `firstline`      | The match must start in the first line               | Compile&nbsp;only   |                    |
-| `full`           | The pattern must match the complete string           | All                 |                    |
-| `global`         | Replace all matches                                  | Format&nbsp;only    |                    |
-| `icase`          | Case insensitive                                     | Compile&nbsp;only   | <nobr>(?i)</nobr>  |
-| `multiline`      | ^ and $ match the beginning and end of each line     | Compile&nbsp;only   | <nobr>(?m)</nobr>  |
-| `nocapture`      | Groups are not captured unless they are named        | Compile&nbsp;only   |                    |
-| `notbol`         | ^ does not match the beginning of the string         | Match,&nbsp;format  |                    |
-| `notempty`       | Do not match an empty string                         | Match,&nbsp;format  |                    |
-| `notemptystart`  | Do not match an empty string at the start            | Match,&nbsp;format  |                    |
-| `noteol`         | $ does not match the end of the string               | Match,&nbsp;format  |                    |
-| `partial`        | Enable partial matching                              | Match&nbsp;only     |                    |
+| Flag             | Description                                          | Phase    | Prefix             |
+| ----             | -----------                                          | -----    | ------             |
+| `none`           | No flags                                             | Any      |                    |
+| `anchor`         | The match must start at the beginning of the string  | Any      |                    |
+| `byte`           | Byte mode matching (default is UTF-8 mode)           | Compile  | <nobr>(?b)</nobr>  |
+| `dotall`         | Dot matches any character including LF               | Compile  | <nobr>(?s)</nobr>  |
+| `extended`       | Free form pattern layout                             | Compile  | <nobr>(?x)</nobr>  |
+| `firstline`      | The match must start in the first line               | Compile  |                    |
+| `full`           | The pattern must match the complete string           | Any      |                    |
+| `global`         | Replace all matches                                  | Format   |                    |
+| `icase`          | Case insensitive                                     | Compile  | <nobr>(?i)</nobr>  |
+| `multiline`      | ^ and $ match the beginning and end of each line     | Compile  | <nobr>(?m)</nobr>  |
+| `nocapture`      | Groups are not captured unless they are named        | Compile  |                    |
+| `notbol`         | ^ does not match the beginning of the string         | Any      |                    |
+| `notempty`       | Do not match an empty string                         | Any      |                    |
+| `notemptystart`  | Do not match an empty string at the start            | Any      |                    |
+| `noteol`         | $ does not match the end of the string               | Any      |                    |
+| `partial`        | Enable partial matching                              | Search   |                    |
 
 These are bitmasks defined originally in the `RegexFlags` enumeration, but
 they are imported into the `Regex` class via `using enum RegexFlags` and
@@ -47,21 +47,15 @@ should normally be used as member constants of the class, e.g.
 `Regex::anchor.` A full set of bitwise operators are defined to allow these
 to be combined.
 
-The _Phases_ column lists which phases of regex processing the flag is
-relevant to: compiling (constructing the `Regex` object), searching, or
-formatting.
+Flags marked as compile phase must be supplied to the `Regex` constructor; the
+others can be supplied either to the constructor or to the matching or
+formatting functions. Flags supplied at compile time cannot be overridden at
+match time. The matching and formatting functions will throw `Regex::error`
+if they are passed a flag that is only valid at compile time.
 
 The effects of some of the compile time flags can be replicated by attaching a
 prefix to the pattern. This can be useful in conjunction with the custom
 literal operator (see below).
-
-All flags can be supplied at compile time even if they are listed here as
-applying only to match or format time. Any flags that cannot be used at
-compile time will be saved and applied at match or format time.
-
-All of the matching functions -- `search(), operator(), grep(), split(),` and
-`format()` -- will throw `Regex::error` if they are passed a flag that is
-only valid at compile time.
 
 ## Regex class
 
