@@ -22,24 +22,24 @@ is a bit simplified; not all PCRE features are currently exported.
 enum class RegexFlags: std::uint16_t;
 ```
 
-| Flag             | Description                                           | Compile  | Match  | Format  | Prefix  |
-| ----             | -----------                                           | -------  | -----  | ------  | ------  |
-| `none`           | No flags                                              |          |        |         |         |
-| `anchor`         | The match must start at the beginning of the string   | Compile  | Match  | Format  |         |
-| `byte`           | Byte mode matching (default is UTF-8 mode)            | Compile  | X      | X       | `(?b)`  |
-| `dotall`         | Dot matches any character including LF                | Compile  | X      | X       | `(?s)`  |
-| `extended`       | Free form pattern layout                              | Compile  | X      | X       | `(?x)`  |
-| `firstline`      | The match must start in the first line                | Compile  | X      | X       |         |
-| `full`           | The pattern must match the complete string            | Compile  | Match  | Format  |         |
-| `global`         | Replace all matches                                   | X        | X      | Format  |         |
-| `icase`          | Case insensitive                                      | Compile  | X      | X       | `(?i)`  |
-| `multiline`      | `^` and `$` match the beginning and end of each line  | Compile  | X      | X       | `(?m)`  |
-| `nocapture`      | Groups are not captured unless they are named         | Compile  | X      | X       |         |
-| `notbol`         | `^` does not match the beginning of the string        | X        | Match  | Format  |         |
-| `notempty`       | Do not match an empty string                          | X        | Match  | Format  |         |
-| `notemptystart`  | Do not match an empty string at the start             | X        | Match  | Format  |         |
-| `noteol`         | `$` does not match the end of the string              | X        | Match  | Format  |         |
-| `partial`        | Enable partial matching                               | X        | Match  | X       |         |
+| Flag             | Description                                           | Phases           | Prefix                    |
+| ----             | -----------                                           | ------           | ------                    |
+| `none`           | No flags                                              |                  |                           |
+| `anchor`         | The match must start at the beginning of the string   | All              |                           |
+| `byte`           | Byte mode matching (default is UTF-8 mode)            | Compile only     | <nobr>`(?b)`</nobr>nobr>  |
+| `dotall`         | Dot matches any character including LF                | Compile only     | <nobr>`(?s)`</nobr>nobr>  |
+| `extended`       | Free form pattern layout                              | Compile only     | <nobr>`(?x)`</nobr>nobr>  |
+| `firstline`      | The match must start in the first line                | Compile only     |                           |
+| `full`           | The pattern must match the complete string            | All              |                           |
+| `global`         | Replace all matches                                   | Format only      |                           |
+| `icase`          | Case insensitive                                      | Compile only     | <nobr>`(?i)`</nobr>nobr>  |
+| `multiline`      | `^` and `$` match the beginning and end of each line  | Compile only     | <nobr>`(?m)`</nobr>nobr>  |
+| `nocapture`      | Groups are not captured unless they are named         | Compile only     |                           |
+| `notbol`         | `^` does not match the beginning of the string        | Match or format  |                           |
+| `notempty`       | Do not match an empty string                          | Match or format  |                           |
+| `notemptystart`  | Do not match an empty string at the start             | Match or format  |                           |
+| `noteol`         | `$` does not match the end of the string              | Match or format  |                           |
+| `partial`        | Enable partial matching                               | Match only       |                           |
 
 These are bitmasks defined originally in the `RegexFlags` enumeration, but
 they are imported into the `Regex` class via `using enum RegexFlags` and
@@ -47,8 +47,9 @@ should normally be used as member constants of the class, e.g.
 `Regex::anchor.` A full set of bitwise operators are defined to allow these
 to be combined.
 
-The _Compile, Match,_ and _Format_ columns list which phases of regex
-processing the flag is relevant to.
+The _Phases_ column lists which phases of regex processing the flag is
+relevant to: compiling (constructing the `Regex` object), searching, or
+formatting.
 
 The effects of some of the compile time flags can be replicated by attaching a
 prefix to the pattern. This can be useful in conjunction with the custom
@@ -120,8 +121,10 @@ match (`$0`). The only time this will return zero is if it is called on a
 default constructed or moved-from object.
 
 ```c++
-Regex::match Regex::search(std::string_view subject, RegexFlags flags = {}, std::size_t offset = 0) const;
-Regex::match Regex::operator()(std::string_view subject, RegexFlags flags = {}, std::size_t offset = 0) const;
+Regex::match Regex::search(std::string_view subject,
+    RegexFlags flags = {}, std::size_t offset = 0) const;
+Regex::match Regex::operator()(std::string_view subject,
+    RegexFlags flags = {}, std::size_t offset = 0) const;
 ```
 
 Search for a pattern within a string. Optionally a starting offset can be
@@ -130,21 +133,24 @@ this point, but look-behind assertions can still see the earlier part of the
 subject string.
 
 ```c++
-[match_iterator range] Regex::grep(std::string_view subject, RegexFlags flags = {}, std::size_t offset = 0) const;
+[match_iterator range] Regex::grep(std::string_view subject,
+    RegexFlags flags = {}, std::size_t offset = 0) const;
 ```
 
 Find all non-overlapping matches in the subject string. The returned iterators
 dereference to a `Regex::match.`
 
 ```c++
-[split_iterator range] Regex::split(std::string_view subject, RegexFlags flags = {}, std::size_t offset = 0) const;
+[split_iterator range] Regex::split(std::string_view subject,
+    RegexFlags flags = {}, std::size_t offset = 0) const;
 ```
 
 Split the subject string on every non-overlapping match. The returned
 iterators dereference to a `std::string_view.`
 
 ```c++
-std::string Regex::format(std::string_view subject, std::string_view replace, RegexFlags flags = {}) const;
+std::string Regex::format(std::string_view subject, std::string_view replace,
+    RegexFlags flags = {}) const;
 ```
 
 Transform the subject string, replacing the first matching substring with the

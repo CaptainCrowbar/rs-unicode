@@ -12,7 +12,7 @@ namespace RS::Unicode;
 * TOC
 {:toc}
 
-# Important
+## Important
 
 **All functions in this header assume that their input is valid UTF-8 (or
 other UTF). Behaviour is undefined if they are passed invalid encoding.**
@@ -183,14 +183,11 @@ character has zero or variable width.
 std::pair<std::string_view, std::string_view>
     partition(std::string_view str) noexcept;
 std::pair<std::string_view, std::string_view>
-    partition(std::string_view str,
-        std::string_view delimiter) noexcept;
+    partition(std::string_view str, std::string_view delimiter) noexcept;
 std::pair<std::string_view, std::string_view>
-    partition(std::string_view str,
-        std::u32string_view delimiter) noexcept;
+    partition(std::string_view str, std::u32string_view delimiter) noexcept;
 std::pair<std::string_view, std::string_view>
-    partition(std::string_view str,
-        CharacterPredicate delimiter) noexcept;
+    partition(std::string_view str, CharacterPredicate delimiter) noexcept;
 ```
 
 Split a string at the first occurrence of one or more delimiter characters.
@@ -220,19 +217,13 @@ std::string_view trim(std::string_view str, std::string_view substr);
 std::string_view trim(std::string_view str, std::u32string_view chars);
 std::string_view trim(std::string_view str, CharacterPredicate pred);
 std::string_view trim_left(std::string_view str);
-std::string_view trim_left(std::string_view str,
-    std::string_view substr);
-std::string_view trim_left(std::string_view str,
-    std::u32string_view chars);
-std::string_view trim_left(std::string_view str,
-    CharacterPredicate pred);
+std::string_view trim_left(std::string_view str, std::string_view substr);
+std::string_view trim_left(std::string_view str, std::u32string_view chars);
+std::string_view trim_left(std::string_view str, CharacterPredicate pred);
 std::string_view trim_right(std::string_view str);
-std::string_view trim_right(std::string_view str,
-    std::string_view substr);
-std::string_view trim_right(std::string_view str,
-    std::u32string_view chars);
-std::string_view trim_right(std::string_view str,
-    CharacterPredicate pred);
+std::string_view trim_right(std::string_view str, std::string_view substr);
+std::string_view trim_right(std::string_view str, std::u32string_view chars);
+std::string_view trim_right(std::string_view str, CharacterPredicate pred);
 ```
 
 Trim leading or trailing characters from a string.

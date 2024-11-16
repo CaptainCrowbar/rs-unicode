@@ -70,9 +70,11 @@ not a legal leading code unit.
 ## Character encoding and decoding functions
 
 ```c++
-std::size_t decode_utf8_char(const char* in, std::size_t max_units, char32_t& out) noexcept;
+std::size_t decode_utf8_char(const char* in, std::size_t max_units,
+    char32_t& out) noexcept;
 std::size_t decode_utf8_char(const char* in, char32_t& out) noexcept;
-std::size_t decode_utf16_char(const char16_t* in, std::size_t max_units, char32_t& out) noexcept;
+std::size_t decode_utf16_char(const char16_t* in, std::size_t max_units,
+    char32_t& out) noexcept;
 std::size_t decode_utf16_char(const char16_t* in, char32_t& out) noexcept;
 ```
 
@@ -105,9 +107,12 @@ Append a character to a string. Behaviour is undefined if the character is not
 a valid USV.
 
 ```c++
-std::optional<std::size_t> utf8_error_check(std::string_view text) noexcept;
-std::optional<std::size_t> utf16_error_check(std::u16string_view text) noexcept;
-std::optional<std::size_t> utf32_error_check(std::u32string_view text) noexcept;
+std::optional<std::size_t>
+    utf8_error_check(std::string_view text) noexcept;
+std::optional<std::size_t>
+    utf16_error_check(std::u16string_view text) noexcept;
+std::optional<std::size_t>
+    utf32_error_check(std::u32string_view text) noexcept;
 ```
 
 Check for valid UTF encoding. These return the position (offset in code units)
