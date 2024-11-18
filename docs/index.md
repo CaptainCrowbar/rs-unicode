@@ -55,8 +55,17 @@ cmake --build . --config Release --target install'
 
 The library's public headers are listed above (other headers are for internal
 use only and should not be included by your code). To use the library,
-`#incldue` either the individual headers you want, or `rs-unicode.hpp` to
+`#include` either the individual headers you want, or `rs-unicode.hpp` to
 include all of them.
 
 Link your build with `-lrs-unicode.` You will also need `-lpcre2-8.` On some
 systems, you may also need `-liconv.`
+
+## General implementation notes
+
+In a library that does string manipulation, any function that constructs or
+modifies a string runs the risk of a memory allocation error. This possibility
+is not usually explicitly documented because it is so ubiquitous. Unless the
+documentation explicitly says otherwise, any function that is not marked
+`noexcept` may throw `std::bad_alloc,` in addition to any other exceptions
+documented for it.
