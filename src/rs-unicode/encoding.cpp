@@ -249,6 +249,27 @@ namespace RS::Unicode {
         }
     }
 
+    void valid_utf8(std::string_view text) {
+        auto pos = utf8_error_check(text);
+        if (pos) {
+            throw EncodingError(text, *pos);
+        }
+    }
+
+    void valid_utf16(std::u16string_view text) {
+        auto pos = utf16_error_check(text);
+        if (pos) {
+            throw EncodingError(text, *pos);
+        }
+    }
+
+    void valid_utf32(std::u32string_view text) {
+        auto pos = utf32_error_check(text);
+        if (pos) {
+            throw EncodingError(text, *pos);
+        }
+    }
+
     std::u32string utf8_to_utf32(std::string_view utf8, Convert mode, char32_t replace) {
 
         std::u32string out;

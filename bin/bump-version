@@ -39,6 +39,7 @@ v2=${version#*.}
 v2=${v2%.*}
 v3=${version##*.}
 (( ++v3 ))
+echo "Version $v1.$v2.$v3"
 
 sed -E "s/(VERSION) [0-9]+\.[0-9]+\.[0-9]+/\1 $v1.$v2.$v3/" "$cmakefile" > "$temp"
 mv "$temp" "$cmakefile"

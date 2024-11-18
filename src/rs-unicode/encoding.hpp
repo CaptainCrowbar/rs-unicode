@@ -150,6 +150,9 @@ namespace RS::Unicode {
     std::optional<std::size_t> utf8_error_check(std::string_view text) noexcept;
     std::optional<std::size_t> utf16_error_check(std::u16string_view text) noexcept;
     std::optional<std::size_t> utf32_error_check(std::u32string_view text) noexcept;
+    void valid_utf8(std::string_view text);
+    void valid_utf16(std::u16string_view text);
+    void valid_utf32(std::u32string_view text);
     std::u32string utf8_to_utf32(std::string_view utf8, Convert mode = Convert::unchecked, char32_t replace = replacement_char);
     std::u32string utf16_to_utf32(std::u16string_view utf16, Convert mode = Convert::unchecked, char32_t replace = replacement_char);
     std::string utf32_to_utf8(std::u32string_view utf32, Convert mode = Convert::unchecked, char32_t replace = replacement_char);

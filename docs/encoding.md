@@ -119,6 +119,15 @@ Check for valid UTF encoding. These return the position (offset in code units)
 of the first invalid encoding if any is found, otherwise null.
 
 ```c++
+void valid_utf8(std::string_view text);
+void valid_utf16(std::u16string_view text);
+void valid_utf32(std::u32string_view text);
+```
+
+Check for valid UTF encoding. These throw `EncodingError` if invalid encoding
+is found.
+
+```c++
 enum class Convert {
     unchecked,
     checked,

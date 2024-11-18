@@ -184,6 +184,21 @@ void test_rs_unicode_encoding_utf8_error_check() {
     s = "αβγδε\xed\xbf\xbfαβγδε";      TRY(pos = utf8_error_check(s)); TEST(pos); TEST_EQUAL(pos.value(), 10u);
     s = "αβγδε\xf4\x90\x80\x80αβγδε";  TRY(pos = utf8_error_check(s)); TEST(pos); TEST_EQUAL(pos.value(), 10u);
 
+    s = "";                            TRY(valid_utf8(s));
+    s = "hello world";                 TRY(valid_utf8(s));
+    s = "αβγδε";                       TRY(valid_utf8(s));
+    s = "∀∃√∫";                        TRY(valid_utf8(s));
+    s = "\U00010000\U0010ffff";        TRY(valid_utf8(s));
+    s = "αβγδε\x80αβγδε";              TEST_THROW(valid_utf8(s), EncodingError, "UTF-8 encoding error at offset 10: 80 ce b1 ce");
+    s = "αβγδε\xbfαβγδε";              TEST_THROW(valid_utf8(s), EncodingError, "UTF-8 encoding error at offset 10: bf ce b1 ce");
+    s = "αβγδε\xc0αβγδε";              TEST_THROW(valid_utf8(s), EncodingError, "UTF-8 encoding error at offset 10: c0 ce b1 ce");
+    s = "αβγδε\xc1αβγδε";              TEST_THROW(valid_utf8(s), EncodingError, "UTF-8 encoding error at offset 10: c1 ce b1 ce");
+    s = "αβγδε\xf5αβγδε";              TEST_THROW(valid_utf8(s), EncodingError, "UTF-8 encoding error at offset 10: f5 ce b1 ce");
+    s = "αβγδε\xffαβγδε";              TEST_THROW(valid_utf8(s), EncodingError, "UTF-8 encoding error at offset 10: ff ce b1 ce");
+    s = "αβγδε\xed\xa0\x80αβγδε";      TEST_THROW(valid_utf8(s), EncodingError, "UTF-8 encoding error at offset 10: ed a0 80 ce");
+    s = "αβγδε\xed\xbf\xbfαβγδε";      TEST_THROW(valid_utf8(s), EncodingError, "UTF-8 encoding error at offset 10: ed bf bf ce");
+    s = "αβγδε\xf4\x90\x80\x80αβγδε";  TEST_THROW(valid_utf8(s), EncodingError, "UTF-8 encoding error at offset 10: f4 90 80 80");
+
 }
 
 void test_rs_unicode_encoding_utf16_error_check() {
@@ -199,6 +214,15 @@ void test_rs_unicode_encoding_utf16_error_check() {
     t = {u'α',u'β',0xd800,u'γ',u'δ',};         TRY(pos = utf16_error_check(t)); TEST(pos); TEST_EQUAL(pos.value(), 2u);
     t = {u'α',u'β',0xdfff,u'γ',u'δ',};         TRY(pos = utf16_error_check(t)); TEST(pos); TEST_EQUAL(pos.value(), 2u);
     t = {u'α',u'β',0xdfff,0xd800,u'γ',u'δ',};  TRY(pos = utf16_error_check(t)); TEST(pos); TEST_EQUAL(pos.value(), 2u);
+
+    t = u"";                                   TRY(valid_utf16(t));
+    t = u"hello world";                        TRY(valid_utf16(t));
+    t = u"αβγδε";                              TRY(valid_utf16(t));
+    t = u"∀∃√∫";                               TRY(valid_utf16(t));
+    t = u"\U00010000\U0010ffff";               TRY(valid_utf16(t));
+    t = {u'α',u'β',0xd800,u'γ',u'δ',};         TEST_THROW(valid_utf16(t), EncodingError, "UTF-16 encoding error at offset 2: d800 03b3");
+    t = {u'α',u'β',0xdfff,u'γ',u'δ',};         TEST_THROW(valid_utf16(t), EncodingError, "UTF-16 encoding error at offset 2: dfff 03b3");
+    t = {u'α',u'β',0xdfff,0xd800,u'γ',u'δ',};  TEST_THROW(valid_utf16(t), EncodingError, "UTF-16 encoding error at offset 2: dfff d800");
 
 }
 
@@ -216,6 +240,16 @@ void test_rs_unicode_encoding_utf32_error_check() {
     u = {U'α',U'β',0xdfff,U'γ',U'δ',};         TRY(pos = utf32_error_check(u)); TEST(pos); TEST_EQUAL(pos.value(), 2u);
     u = {U'α',U'β',0xdfff,0xd800,U'γ',U'δ',};  TRY(pos = utf32_error_check(u)); TEST(pos); TEST_EQUAL(pos.value(), 2u);
     u = {U'α',U'β',0x110000,U'γ',U'δ',};       TRY(pos = utf32_error_check(u)); TEST(pos); TEST_EQUAL(pos.value(), 2u);
+
+    u = U"";                                   TRY(valid_utf32(u));
+    u = U"hello world";                        TRY(valid_utf32(u));
+    u = U"αβγδε";                              TRY(valid_utf32(u));
+    u = U"∀∃√∫";                               TRY(valid_utf32(u));
+    u = U"\U00010000\U0010ffff";               TRY(valid_utf32(u));
+    u = {U'α',U'β',0xd800,U'γ',U'δ',};         TEST_THROW(valid_utf32(u), EncodingError, "UTF-32 encoding error at offset 2: 0000d800");
+    u = {U'α',U'β',0xdfff,U'γ',U'δ',};         TEST_THROW(valid_utf32(u), EncodingError, "UTF-32 encoding error at offset 2: 0000dfff");
+    u = {U'α',U'β',0xdfff,0xd800,U'γ',U'δ',};  TEST_THROW(valid_utf32(u), EncodingError, "UTF-32 encoding error at offset 2: 0000dfff");
+    u = {U'α',U'β',0x110000,U'γ',U'δ',};       TEST_THROW(valid_utf32(u), EncodingError, "UTF-32 encoding error at offset 2: 00110000");
 
 }
 
