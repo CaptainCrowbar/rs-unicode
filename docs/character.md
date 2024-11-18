@@ -55,7 +55,6 @@ enum class General_Category: unsigned char {
     Co,  // Private Use
     Cs,  // Surrogate
     // Letter (L*)
-    LC,  // Cased Letter
     Ll,  // Lowercase letter
     Lm,  // Modifier letter
     Lo,  // Other letter
