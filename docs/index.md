@@ -29,12 +29,12 @@ the old one) was the best approach at this point.
 
 ## Index of headers
 
-* [`rs-unicode/character` -- Character properties](character.html)
-* [`rs-unicode/encoding` -- Character encodings](encoding.html)
-* [`rs-unicode/legacy` -- Legacy encodings](legacy.html)
-* [`rs-unicode/regex` -- Regular expressions](regex.html)
-* [`rs-unicode/string` -- String manipulation](string.html)
-* [`rs-unicode/version` -- Version information](version.html)
+* [`rs-unicode/character.hpp` -- Character properties](character.html)
+* [`rs-unicode/encoding.hpp` -- Character encodings](encoding.html)
+* [`rs-unicode/legacy.hpp` -- Legacy encodings](legacy.html)
+* [`rs-unicode/regex.hpp` -- Regular expressions](regex.html)
+* [`rs-unicode/string.hpp` -- String manipulation](string.html)
+* [`rs-unicode/version.hpp` -- Version information](version.html)
 
 ## Using the library
 
