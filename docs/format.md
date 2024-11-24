@@ -45,7 +45,8 @@ by the formatter:
 * `std::string T::str(std::string_view flags) const;`
 * `std::string T::str(std::size_t prec) const;`
 * `std::string T::str() const;`
-* `std::string to_string(const T& t, std::string_view flags, std::size_t prec) const;`
+* `std::string to_string(const T& t, std::string_view flags,
+    std::size_t prec) const;`
 * `std::string to_string(const T& t, std::string_view flags) const;`
 * `std::string to_string(const T& t, std::size_t prec) const;`
 * `std::string to_string(const T& t) const;`
@@ -73,5 +74,5 @@ class MyClass {
 MyClass x;
 std::println("{}", x);      // OK, generates default format
 std::println("{:abc}", x);  // OK, calls x.str("abc")
-std::println("{:42}", x);   // Compile error, str() has no integer argument
+std::println("{:42}", x);   // Compile error, str() has no int argument
 ```
