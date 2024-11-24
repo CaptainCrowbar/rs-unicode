@@ -29,12 +29,19 @@ the old one) was the best approach at this point.
 
 ## Index of headers
 
-* [`rs-unicode/character.hpp` -- Character properties](character.html)
-* [`rs-unicode/encoding.hpp` -- Character encodings](encoding.html)
-* [`rs-unicode/legacy.hpp` -- Legacy encodings](legacy.html)
-* [`rs-unicode/regex.hpp` -- Regular expressions](regex.html)
-* [`rs-unicode/string.hpp` -- String manipulation](string.html)
-* [`rs-unicode/version.hpp` -- Version information](version.html)
+* Unicode librray
+    * [`rs-unicode/character.hpp` -- Character properties](character.html)
+    * [`rs-unicode/encoding.hpp` -- Character encodings](encoding.html)
+    * [`rs-unicode/legacy.hpp` -- Legacy encodings](legacy.html)
+    * [`rs-unicode/regex.hpp` -- Regular expressions](regex.html)
+    * [`rs-unicode/string.hpp` -- String manipulation](string.html)
+    * [`rs-unicode/version.hpp` -- Version information](version.html)
+* Infrastructure
+    * _(These are not directly related to Unicode, but are used throughout the
+       main library and are exported because they are likely to be generally
+       useful.)_
+    * [`rs-unicode/enum.hpp` -- Enumeration helpers](enum.html)
+    * [`rs-unicode/format.hpp` -- Formatting helpers](format.html)
 
 ## Using the library
 

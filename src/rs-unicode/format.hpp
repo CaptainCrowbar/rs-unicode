@@ -123,11 +123,10 @@ private:
     }
 
     static constexpr bool legit_flag(char c) noexcept {
-        return c >= ' ' && c <= '~'
-            && ! (c >= '0' && c <= '9')
-            && c != '(' && c != ')'
-            && c != '[' && c != ']'
-            && c != '{' && c != '}';
+        return (c >= ' ' && c <= '~'
+                && ! (c >= '0' && c <= '9')
+                && c != '{' && c != '}')
+            || static_cast<unsigned char>(c) >= 0x80;
     }
 
 public:
