@@ -1,13 +1,13 @@
 #include "rs-unicode/regex.hpp"
 #include "test/unit-test.hpp"
 #include <algorithm>
+#include <format>
 #include <iterator>
 #include <ranges>
 #include <string>
 
 using namespace RS::Unicode;
 using namespace RS::Unicode::Literals;
-using RS::UnitTest::format_range;
 namespace rs = std::ranges;
 
 void test_rs_unicode_regex_pcre_version() {
@@ -187,7 +187,7 @@ void test_rs_unicode_regex_grep() {
     TRY(re = "[a-z]+"_re);
     TRY(matches = re.grep("Hello world"));
     TEST_EQUAL(rs::distance(matches), 2);
-    TEST_EQUAL(format_range(matches), "ello,world");
+    TEST_EQUAL(std::format("{}", matches), "[ello, world]");
 
 }
 
@@ -197,15 +197,15 @@ void test_rs_unicode_regex_split() {
 
     auto words = re.split("Hello world\r\nGoodbye");
     TEST_EQUAL(rs::distance(words), 1);
-    TEST_EQUAL(format_range(words), "Hello world\r\nGoodbye");
+    TEST_EQUAL(std::format("{}", words), R"(["Hello world\r\nGoodbye"])");
 
     TRY(re = "\\s+"_re);
     TRY(words = re.split("Hello world\r\nGoodbye"));
     TEST_EQUAL(rs::distance(words), 3);
-    TEST_EQUAL(format_range(words), "Hello,world,Goodbye");
+    TEST_EQUAL(std::format("{}", words), R"(["Hello", "world", "Goodbye"])");
     TRY(words = re.split("Hello world\r\nGoodbye\r\n"));
     TEST_EQUAL(rs::distance(words), 4);
-    TEST_EQUAL(format_range(words), "Hello,world,Goodbye,");
+    TEST_EQUAL(std::format("{}", words), R"(["Hello", "world", "Goodbye", ""])");
 
 }
 

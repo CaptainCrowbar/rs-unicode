@@ -2,6 +2,7 @@
 
 #include "rs-unicode/character.hpp"
 #include "rs-unicode/enum.hpp"
+#include "rs-unicode/format.hpp"
 #include <compare>
 #include <cstddef>
 #include <cstdint>
@@ -115,6 +116,8 @@ namespace RS::Unicode {
         bool partial_ = false;
 
     };
+
+    [[maybe_unused]] void rs_unicode_format(Regex::match);
 
     class Regex::match_iterator {
 

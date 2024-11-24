@@ -83,14 +83,6 @@ void test_rs_unicode_format_concepts() {
 
     using namespace Detail;
 
-    static_assert(std::formattable<MyNamespace::Alpha, char>);
-    static_assert(std::formattable<MyNamespace::Bravo, char>);
-    static_assert(std::formattable<MyNamespace::Charlie, char>);
-    static_assert(std::formattable<MyNamespace::Delta, char>);
-    static_assert(std::formattable<MyNamespace::Echo, char>);
-    static_assert(std::formattable<MyNamespace::Foxtrot, char>);
-    static_assert(std::formattable<MyNamespace::Golf, char>);
-    static_assert(std::formattable<MyNamespace::Hotel, char>);
     static_assert(FormatByStrMethod<MyNamespace::Alpha>);
     static_assert(FormatByStrMethod<MyNamespace::Bravo>);
     static_assert(FormatByStrMethod<MyNamespace::Charlie>);
@@ -163,6 +155,14 @@ void test_rs_unicode_format_concepts() {
     static_assert(AutoFormat<MyNamespace::Foxtrot>);
     static_assert(AutoFormat<MyNamespace::Golf>);
     static_assert(AutoFormat<MyNamespace::Hotel>);
+    static_assert(std::formattable<MyNamespace::Alpha, char>);
+    static_assert(std::formattable<MyNamespace::Bravo, char>);
+    static_assert(std::formattable<MyNamespace::Charlie, char>);
+    static_assert(std::formattable<MyNamespace::Delta, char>);
+    static_assert(std::formattable<MyNamespace::Echo, char>);
+    static_assert(std::formattable<MyNamespace::Foxtrot, char>);
+    static_assert(std::formattable<MyNamespace::Golf, char>);
+    static_assert(std::formattable<MyNamespace::Hotel, char>);
 
 }
 

@@ -1,23 +1,13 @@
 #pragma once
 
 #include <algorithm>
-#include <cstddef>
-#include <cstdio>
-#include <cstdlib>
 #include <exception>
-#include <filesystem>
 #include <format>
-#include <memory>
 #include <print>
 #include <ranges>
 #include <regex>
 #include <string>
-#include <typeinfo>
 #include <vector>
-
-#ifdef __GNUC__
-    #include <cxxabi.h>
-#endif
 
 #ifdef _WIN32
     #include <io.h>
@@ -84,86 +74,6 @@ namespace RS::UnitTest {
             std::println("{}{}{}", xtest, name, xt_reset);
             test();
         }
-    }
-
-    template <typename T>
-    std::string format_object(const T& t) {
-        if constexpr (requires { std::formatter<T>(); }) {
-            return std::format("{}", t);
-        } else if constexpr (requires (T t) { t.str(); }) {
-            return static_cast<std::string>(t.str());
-        } else if constexpr (requires (T t) { to_string(t); }) {
-            return static_cast<std::string>(to_string(t));
-        } else {
-            static_assert(dependent_false<T>, "No formatter for this type");
-        }
-    }
-
-    template <std::ranges::range R>
-    std::string format_range(const R& range) {
-        std::string str;
-        for (const auto& x: range) {
-            str += format_object(x) + ',';
-        }
-        if (! str.empty()) {
-            str.pop_back();
-        }
-        return str;
-    }
-
-    template <std::ranges::range R>
-    std::string format_map(const R& range) {
-        std::string str;
-        for (const auto& x: range) {
-            str += format_object(x.first) + ':' + format_object(x.second) + ',';
-        }
-        if (! str.empty()) {
-            str.pop_back();
-        }
-        return str;
-    }
-
-    inline bool read_file_contents(const std::filesystem::path& path, std::string& out) {
-
-        auto file_ptr = std::fopen(path.c_str(), "rb");
-
-        if (file_ptr == nullptr) {
-            return false;
-        }
-
-        std::fseek(file_ptr, 0, SEEK_END);
-        auto size = static_cast<std::size_t>(std::ftell(file_ptr));
-        std::fseek(file_ptr, 0, SEEK_SET);
-        out.resize(size);
-        std::fread(out.data(), 1, size, file_ptr);
-
-        return true;
-
-    }
-
-    inline std::string demangle(std::string name) {
-
-        #ifdef __GNUC__
-
-            // https://gcc.gnu.org/onlinedocs/libstdc++/libstdc++-html-USERS-4.3/a01696.html
-
-            auto status = 0;
-            auto demangle_ptr = abi::__cxa_demangle(name.data(), nullptr, nullptr, &status);
-            std::unique_ptr<char, decltype(&std::free)> name_ptr(demangle_ptr, &std::free);
-
-            if (name_ptr) {
-                name = name_ptr.get();
-            }
-
-        #endif
-
-        return name;
-
-    }
-
-    template <typename T>
-    std::string type_name() {
-        return demangle(typeid(T).name());
     }
 
 }
@@ -313,23 +223,5 @@ namespace RS::UnitTest {
     } \
     catch (...) { \
         FAIL("Unexpected exception"); \
-    } \
-} while (false)
-
-// Compare the contents of two files. Each argument is expected to evaluate to
-// a string or a filesystem::path. Fails if the contents are not identical,
-// or if either file does not exist or is a directory.
-
-#define TEST_FILES(file1, file2) do { \
-    std::filesystem::path _test_path1 {file1}; \
-    std::filesystem::path _test_path2 {file2}; \
-    std::string _test_content1, _test_content2; \
-    if (! ::RS::UnitTest::read_file_contents(_test_path1, _test_content1)) { \
-        FAIL("File not found: {}", _test_path1.string()); \
-    } else if (! ::RS::UnitTest::read_file_contents(_test_path2, _test_content2)) { \
-        FAIL("File not found: {}", _test_path2.string()); \
-    } else if (_test_content1 != _test_content2) { \
-        FAIL("File contents do not match\n\t{}\n\t{}", \
-            _test_path1.string(), _test_path2.string()); \
     } \
 } while (false)

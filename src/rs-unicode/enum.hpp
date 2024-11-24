@@ -2,9 +2,11 @@
 
 #include "rs-unicode/format.hpp"
 #include <concepts>
+#include <cstdlib>
 #include <format>
 #include <set>
 #include <string>
+#include <string_view>
 #include <type_traits>
 #include <unordered_map>
 #include <utility>

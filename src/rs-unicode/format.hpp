@@ -17,48 +17,52 @@ namespace RS::Unicode {
         template <typename> constexpr auto dependent_false = false;
 
         template <typename T>
+        concept StringOrView = std::convertible_to<T, std::string>
+            || std::convertible_to<T, std::string_view>;
+
+        template <typename T>
         concept FormatMarker = requires(T t) {
             rs_unicode_format(t);
         };
 
         template <typename T>
         concept FormatByStrMethod = requires (const T& t) {
-            { t.str() } -> std::convertible_to<std::string>;
+            { t.str() } -> StringOrView;
         };
 
         template <typename T>
         concept FormatByStrMethodWithFlags = requires (const T& t, std::string_view s) {
-            { t.str(s) } -> std::convertible_to<std::string>;
+            { t.str(s) } -> StringOrView;
         };
 
         template <typename T>
         concept FormatByStrMethodWithSize = requires (const T& t, std::size_t n) {
-            { t.str(n) } -> std::convertible_to<std::string>;
+            { t.str(n) } -> StringOrView;
         };
 
         template <typename T>
         concept FormatByStrMethodWithBoth = requires (const T& t, std::string_view s, std::size_t n) {
-            { t.str(s, n) } -> std::convertible_to<std::string>;
+            { t.str(s, n) } -> StringOrView;
         };
 
         template <typename T>
         concept FormatByToString = requires (const T& t) {
-            { to_string(t) } -> std::convertible_to<std::string>;
+            { to_string(t) } -> StringOrView;
         };
 
         template <typename T>
         concept FormatByToStringWithFlags = requires (const T& t, std::string_view s) {
-            { to_string(t, s) } -> std::convertible_to<std::string>;
+            { to_string(t, s) } -> StringOrView;
         };
 
         template <typename T>
         concept FormatByToStringWithSize = requires (const T& t, std::size_t n) {
-            { to_string(t, n) } -> std::convertible_to<std::string>;
+            { to_string(t, n) } -> StringOrView;
         };
 
         template <typename T>
         concept FormatByToStringWithBoth = requires (const T& t, std::string_view s, std::size_t n) {
-            { to_string(t, s, n) } -> std::convertible_to<std::string>;
+            { to_string(t, s, n) } -> StringOrView;
         };
 
         template <typename T>
