@@ -617,6 +617,7 @@ with open (property_list_file, "w", newline="\n") as hpp:
         // Do not include this file directly
         // Include "rs-unicode/character.hpp" instead
 
+        #include "rs-unicode/enum.hpp"
         #include "rs-unicode/property-map.hpp"
         #include <array>
         #include <string_view>
@@ -627,10 +628,10 @@ with open (property_list_file, "w", newline="\n") as hpp:
 
     for prop in sorted(enum_tables):
         values = enum_tables[prop]
-        hpp.write(f"    enum class {prop}: unsigned char {{\n")
+        hpp.write(f"    RS_UNICODE_ENUM({prop}, unsigned char,\n")
         for value in values:
             hpp.write(f"        {value},\n")
-        hpp.write(f"    }};\n\n")
+        hpp.write(f"    )\n\n")
 
     for prop in sorted(property_cpp_info_table):
         info = property_cpp_info_table[prop]
@@ -721,7 +722,7 @@ with open (output_path, "w", newline="\n") as cpp:
 
                 std::string result = prefix;
 
-                for (auto g: graphemes_view(str)) {
+                for (auto g: grapheme_view(str)) {
                     result += g;
                     result += ';';
                 }

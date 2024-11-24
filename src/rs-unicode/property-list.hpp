@@ -3,22 +3,23 @@
 // Do not include this file directly
 // Include "rs-unicode/character.hpp" instead
 
+#include "rs-unicode/enum.hpp"
 #include "rs-unicode/property-map.hpp"
 #include <array>
 #include <string_view>
 
 namespace RS::Unicode {
 
-    enum class East_Asian_Width: unsigned char {
+    RS_UNICODE_ENUM(East_Asian_Width, unsigned char,
         N,
         A,
         F,
         H,
         Na,
         W,
-    };
+    )
 
-    enum class General_Category: unsigned char {
+    RS_UNICODE_ENUM(General_Category, unsigned char,
         Cn,
         Cc,
         Cf,
@@ -49,9 +50,9 @@ namespace RS::Unicode {
         Zl,
         Zp,
         Zs,
-    };
+    )
 
-    enum class Grapheme_Cluster_Break: unsigned char {
+    RS_UNICODE_ENUM(Grapheme_Cluster_Break, unsigned char,
         Other,
         CR,
         Control,
@@ -66,9 +67,9 @@ namespace RS::Unicode {
         T,
         V,
         ZWJ,
-    };
+    )
 
-    enum class Indic_Conjunct_Break: unsigned char {
+    RS_UNICODE_ENUM(Indic_Conjunct_Break, unsigned char,
         None,
         Case_Ignorable,
         Consonant,
@@ -78,9 +79,9 @@ namespace RS::Unicode {
         Grapheme_Extend,
         Grapheme_Link,
         Linker,
-    };
+    )
 
-    enum class Line_Break: unsigned char {
+    RS_UNICODE_ENUM(Line_Break, unsigned char,
         XX,
         AI,
         AK,
@@ -129,7 +130,7 @@ namespace RS::Unicode {
         WJ,
         ZW,
         ZWJ,
-    };
+    )
 
     int canonical_combining_class(char32_t c);
     std::u32string_view canonical_decomposition_mapping(char32_t c);

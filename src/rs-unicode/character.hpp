@@ -1,5 +1,6 @@
 #pragma once
 
+#include "rs-unicode/enum.hpp"
 #include "rs-unicode/property-list.hpp"
 #include <cstddef>
 #include <limits>
@@ -53,9 +54,9 @@ namespace RS::Unicode {
             || (c >= 0xac00 && c <= 0xd7fb);
     }
 
-    enum class Hangul_Syllable_Type: unsigned char {
+    RS_UNICODE_ENUM(Hangul_Syllable_Type, unsigned char,
         NA, L, LV, LVT, T, V,
-    };
+    )
 
     constexpr Hangul_Syllable_Type hangul_syllable_type(char32_t c) noexcept {
         if ((c >= 0x1100 && c <= 0x115f) || (c >= 0xa960 && c <= 0xa97c)) {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "rs-unicode/character.hpp"
+#include "rs-unicode/enum.hpp"
 #include <compare>
 #include <cstddef>
 #include <functional>
@@ -138,14 +139,14 @@ namespace RS::Unicode {
 
     // String metrics
 
-    enum class Unit: unsigned char {
+    RS_UNICODE_ENUM(Unit, unsigned char,
         bytes,      // UTF-8 code units
         utf16,      // UTF-16 code units
         scalars,    // Unicode scalar values (default)
         graphemes,  // Grapheme clusters
         columns,    // Virtual columns based on East Asian width, defaulting to narrow
         wide,       // Same as columns, but defaulting to wide
-    };
+    )
 
     std::size_t length(std::string_view str, Unit u = Unit::scalars);
 
