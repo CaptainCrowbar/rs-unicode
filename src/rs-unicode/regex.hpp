@@ -15,7 +15,7 @@
 
 namespace RS::Unicode {
 
-    enum class RegexFlags: std::uint16_t {
+    RS_UNICODE_BITMASK(RegexFlags, std::uint16_t,
 
         none,
 
@@ -35,9 +35,7 @@ namespace RS::Unicode {
         noteol         = 0x2000,  // $ does not match end                [Match or format]  PCRE2_NOTEOL                        --     --
         partial        = 0x4000,  // Partial matching                    [Match only]       PCRE2_PARTIAL_HARD                  --     --
 
-    };
-
-    RS_UNICODE_DEFINE_BITMASK_OPERATORS(RegexFlags)
+    )
 
     class Regex {
 
