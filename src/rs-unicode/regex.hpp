@@ -117,7 +117,7 @@ namespace RS::Unicode {
 
     };
 
-    [[maybe_unused]] void rs_unicode_format(Regex::match);
+    void rs_unicode_format(Regex::match);
 
     class Regex::match_iterator {
 
