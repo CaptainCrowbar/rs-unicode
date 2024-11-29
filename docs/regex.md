@@ -24,9 +24,11 @@ enum class RegexFlags: std::uint16_t;
 
 | Flag             | Description                                          | Phase    | Prefix             |
 | ----             | -----------                                          | -----    | ------             |
-| `none`           | No flags                                             | Any      |                    |
+| `none`           | No flags                                             | n/a      |                    |
 | `anchor`         | The match must start at the beginning of the string  | Any      |                    |
 | `byte`           | Byte mode matching (default is UTF-8 mode)           | Compile  | <nobr>(?b)</nobr>  |
+| `copy`           | Copy matched substrings instead of referencing       | Search   |                    |
+| `dfa`            | Use the alternative DFA algorithm                    | Search   |                    |
 | `dotall`         | Dot matches any character including LF               | Compile  | <nobr>(?s)</nobr>  |
 | `extended`       | Free form pattern layout                             | Compile  | <nobr>(?x)</nobr>  |
 | `firstline`      | The match must start in the first line               | Compile  |                    |
@@ -162,7 +164,7 @@ Swap two objects.
 static std::pair<int, int> Regex::pcre_version() noexcept;
 ```
 
-Returns the version number of the PCRE library, as a `(major,minor)` pair.
+Returns the version number of the PCRE library, as a _(major,minor)_ pair.
 
 ## Exceptions
 
@@ -217,12 +219,18 @@ subject string, not the start of the search. If the group failed to match,
 `pos()` and `endpos()` will return `npos,` and `len()` will return zero.
 
 The `str()` function, or its `operator[]` equivalent, returns the substring
-matching the regex or a given capture group. They will return a null view
-(one whose `data()` pointer is null) if the pattern failed to match, or for a
-capture group that was not matched. Groups that matched an empty substring
-will also return an empty view, but in this case the view's `data()` will
-point to the appropriate location in the subject string. The string view
-operator is equivalent to `str(0).`
+matching the regex or a given capture group. They will return a default
+constructed `string_view` if the pattern failed to match, or for a capture
+group that was not matched. Groups that matched an empty substring will also
+return an empty view, but in this case the view will still point to the
+appropriate location in the subject string. The string view operator is
+equivalent to `str(0).`
+
+Normally a successful match object contains pointers into the original subject
+string. Accessing a match object after the subject string has been changed or
+destroyed invokes undefined behaviour. This can be avoided by using the
+`Regex::copy` flag if you need the match object to still be usable after the
+subject string is gone.
 
 ## Iterators
 

@@ -51,6 +51,7 @@ void test_rs_unicode_regex_flags();
 void test_rs_unicode_regex_grep();
 void test_rs_unicode_regex_split();
 void test_rs_unicode_regex_format();
+void test_rs_unicode_regex_dfa();
 void test_rs_unicode_string_casing_to_lowercase();
 void test_rs_unicode_string_casing_to_uppercase();
 void test_rs_unicode_string_casing_to_titlecase();
@@ -130,6 +131,7 @@ int main(int argc, char** argv) {
     call_me_maybe(test_rs_unicode_regex_grep, "test_rs_unicode_regex_grep");
     call_me_maybe(test_rs_unicode_regex_split, "test_rs_unicode_regex_split");
     call_me_maybe(test_rs_unicode_regex_format, "test_rs_unicode_regex_format");
+    call_me_maybe(test_rs_unicode_regex_dfa, "test_rs_unicode_regex_dfa");
     call_me_maybe(test_rs_unicode_string_casing_to_lowercase, "test_rs_unicode_string_casing_to_lowercase");
     call_me_maybe(test_rs_unicode_string_casing_to_uppercase, "test_rs_unicode_string_casing_to_uppercase");
     call_me_maybe(test_rs_unicode_string_casing_to_titlecase, "test_rs_unicode_string_casing_to_titlecase");

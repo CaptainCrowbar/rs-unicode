@@ -243,3 +243,28 @@ void test_rs_unicode_regex_format() {
     TEST_EQUAL(out, "hELLO WORLD, GOODBYE");
 
 }
+
+void test_rs_unicode_regex_dfa() {
+
+    Regex re;
+    Regex::match m;
+
+    TRY(re = Regex("[a-z]+", Regex::dfa));
+    TEST_EQUAL(re.groups(), 1u);
+    TRY(m = re("Hello world"));
+    TEST(m);
+    TEST_EQUAL(m.pos(), 1u);
+    TEST_EQUAL(m.len(), 4u);
+    TEST_EQUAL(m.str(), "ello");
+    TEST_EQUAL(m[0], "ello");
+
+    TRY(re = Regex("[a-z]+", Regex::dfa | Regex::icase));
+    TEST_EQUAL(re.groups(), 1u);
+    TRY(m = re("Hello world"));
+    TEST(m);
+    TEST_EQUAL(m.pos(), 0u);
+    TEST_EQUAL(m.len(), 5u);
+    TEST_EQUAL(m.str(), "Hello");
+    TEST_EQUAL(m[0], "Hello");
+
+}

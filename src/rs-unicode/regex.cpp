@@ -21,6 +21,8 @@ namespace RS::Unicode {
 
         constexpr auto match_time_flags =
             Regex::anchor
+            | Regex::copy
+            | Regex::dfa
             | Regex::full
             | Regex::notbol
             | Regex::notempty
@@ -69,6 +71,7 @@ namespace RS::Unicode {
         std::uint32_t match_options(RegexFlags flags) noexcept {
             std::uint32_t options = 0;
             if (!! (flags & RegexFlags::anchor))         { options |= PCRE2_ANCHORED; }
+            if (!! (flags & RegexFlags::copy))           { options |= PCRE2_COPY_MATCHED_SUBJECT; }
             if (!! (flags & RegexFlags::full))           { options |= PCRE2_ANCHORED | PCRE2_ENDANCHORED; }
             if (!! (flags & RegexFlags::notbol))         { options |= PCRE2_NOTBOL; }
             if (!! (flags & RegexFlags::notempty))       { options |= PCRE2_NOTEMPTY; }
@@ -165,9 +168,8 @@ namespace RS::Unicode {
 
         auto bad_flags = flags & ~ match_time_flags;
 
-        if (bad_flags != RegexFlags::none) {
-            throw error(std::format("Invalid flags in regex match: 0x{:x}",
-                static_cast<std::uint16_t>(bad_flags)));
+        if (!! bad_flags) {
+            throw error(std::format("Invalid flags for regex match: {}", bad_flags));
         } else if (code_ == nullptr || offset > subject.size()) {
             return {};
         }
@@ -183,7 +185,17 @@ namespace RS::Unicode {
         match result;
         result.subject_ = subject;
         auto subject_ptr = reinterpret_cast<PCRE2_SPTR>(subject.data());
-        auto rc = pcre2_match(pc(code_), subject_ptr, subject.size(), offset, options, match_ptr, nullptr);
+        std::vector<int> workspace;
+        int rc;
+
+        if (!! (flags & dfa)) {
+            workspace.resize(20);
+            rc = pcre2_dfa_match(pc(code_), subject_ptr, subject.size(), offset, options, match_ptr, nullptr,
+                workspace.data(), workspace.size());
+            rc = std::min(rc, 1);
+        } else {
+            rc = pcre2_match(pc(code_), subject_ptr, subject.size(), offset, options, match_ptr, nullptr);
+        }
 
         if (rc > 0) {
             result.groups_.resize(static_cast<std::size_t>(rc));
@@ -220,9 +232,8 @@ namespace RS::Unicode {
 
         auto bad_flags = flags & ~ format_time_flags;
 
-        if (bad_flags != RegexFlags::none) {
-            throw error(std::format("Invalid flags in regex format: 0x{:x}",
-                static_cast<std::uint16_t>(bad_flags)));
+        if (!! bad_flags) {
+            throw error(std::format("Invalid flags for regex format: {}", bad_flags));
         } else if (code_ == nullptr) {
             return std::string{subject};
         }
