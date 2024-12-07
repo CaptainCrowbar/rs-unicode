@@ -7,6 +7,7 @@
 #include "rs-unicode/property-map.hpp"
 #include <array>
 #include <string_view>
+#include <utility>
 
 namespace RS::Unicode {
 
@@ -155,6 +156,7 @@ namespace RS::Unicode {
     char32_t canonical_composition_mapping(std::u32string_view str);
     std::u32string_view case_folding(char32_t c);
     const std::array<std::u32string_view, 3>& special_casing(char32_t c);
+    std::pair<char32_t, char32_t> subscript_superscript_base_table(char32_t c);
 
     inline char primary_category(char32_t c) {
         auto index = static_cast<unsigned>(general_category(c));

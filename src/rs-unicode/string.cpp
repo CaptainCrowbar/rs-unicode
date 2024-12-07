@@ -655,6 +655,32 @@ namespace RS::Unicode {
         return utf32_to_utf8(result);
     }
 
+    // Subscripts and superscripts
+
+    std::optional<std::string> to_subscript(std::string_view str) {
+        std::string out;
+        for (auto ch: decoded_utf8_view(str)) {
+            auto sub = subscript_character(ch);
+            if (sub == 0) {
+                return {};
+            }
+            append_utf8(sub, out);
+        }
+        return out;
+    }
+
+    std::optional<std::string> to_superscript(std::string_view str) {
+        std::string out;
+        for (auto ch: decoded_utf8_view(str)) {
+            auto super = superscript_character(ch);
+            if (super == 0) {
+                return {};
+            }
+            append_utf8(super, out);
+        }
+        return out;
+    }
+
     // Other string functions
 
     namespace {

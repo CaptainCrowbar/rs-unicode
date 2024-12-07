@@ -154,6 +154,17 @@ std::string to_nfd(std::string_view str);
 
 Normalization functions. We only support NFC and NFD formats.
 
+## Subscripts and superscripts
+
+```c++
+std::optional<std::string> to_subscript(std::string_view str);
+std::optional<std::string> to_superscript(std::string_view str);
+```
+
+Convert a string to subscripts or superscripts. These will return null if the
+input string contains characters that have no corresponding subscript or
+superscript character in Unicode.
+
 ## String manipulation functions
 
 ```c++

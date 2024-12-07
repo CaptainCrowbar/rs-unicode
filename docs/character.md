@@ -244,3 +244,19 @@ const std::array<std::u32string_view, 3>& special_casing(char32_t c);
 ```
 
 Properties of, or returning, strings.
+
+## Subscript and superscript functions
+
+```c++
+char32_t subscript_character(char32_t c);
+char32_t superscript_character(char32_t c);
+```
+
+These functions convert a character to its subscript or superscript form,
+where these exist in Unicode. They will return zero if there is no
+corresponding subscript or superscript character.
+
+There are three ambiguous characters that have two slightly different
+superscript forms. In these cases I have chosen the one that seems in
+practise to be more likely, in most fonts, to have a glyph in the same style
+as other superscripts.

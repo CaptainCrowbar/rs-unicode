@@ -74,4 +74,12 @@ namespace RS::Unicode {
         }
     }
 
+    inline char32_t subscript_character(char32_t c) {
+        return subscript_superscript_base_table(c).first;
+    }
+
+    inline char32_t superscript_character(char32_t c) {
+        return subscript_superscript_base_table(c).second;
+    }
+
 }

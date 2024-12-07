@@ -1,5 +1,7 @@
 #include "rs-unicode/string.hpp"
 #include "test/unit-test.hpp"
+#include <optional>
+#include <string>
 
 using namespace RS::Unicode;
 
@@ -51,5 +53,17 @@ void test_rs_unicode_string_casing_to_casefold() {
     TEST_EQUAL(to_casefold("hello world"),     "hello world");
     TEST_EQUAL(to_casefold("Hello World"),     "hello world");
     TEST_EQUAL(to_casefold("αβγδε"),           "αβγδε");
+
+}
+
+void test_rs_unicode_string_subscripts_and_superscripts() {
+
+    std::string s;
+    std::optional<std::string> t;
+
+    s = "0a";     TRY(t = to_subscript(s));    TEST(t.has_value()); TEST_EQUAL(t.value(), "\u2080\u2090");
+    s = "0Aaz";   TRY(t = to_superscript(s));  TEST(t.has_value()); TEST_EQUAL(t.value(), "\u2070\u1d2c\u1d43\u1dbb");
+    s = "0AZaz";  TRY(t = to_subscript(s));    TEST(! t.has_value());
+    s = "0AZaz";  TRY(t = to_superscript(s));  TEST(! t.has_value());
 
 }

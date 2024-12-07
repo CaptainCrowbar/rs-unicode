@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <functional>
 #include <iterator>
+#include <optional>
 #include <ranges>
 #include <string>
 #include <string_view>
@@ -161,6 +162,11 @@ namespace RS::Unicode {
 
     std::string to_nfc(std::string_view str);
     std::string to_nfd(std::string_view str);
+
+    // Subscripts and superscripts
+
+    std::optional<std::string> to_subscript(std::string_view str);
+    std::optional<std::string> to_superscript(std::string_view str);
 
     // String manipulation functions
 

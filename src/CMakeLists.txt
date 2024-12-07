@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.30)
 # version.hpp.
 
 project(rs-unicode
-    VERSION 0.1.7
+    VERSION 0.1.8
     LANGUAGES CXX
 )
 
@@ -63,6 +63,7 @@ add_library(${library} STATIC
     rs-unicode/ucd-simple-titlecase-mapping.cpp
     rs-unicode/ucd-simple-uppercase-mapping.cpp
     rs-unicode/ucd-special-casing.cpp
+    rs-unicode/ucd-subscript-superscript.cpp
     rs-unicode/ucd-white-space.cpp
     rs-unicode/ucd-xid-continue.cpp
     rs-unicode/ucd-xid-start.cpp
@@ -80,7 +81,7 @@ add_executable(${unittest}
     test/legacy-test.cpp
     test/property-map-test.cpp
     test/regex-test.cpp
-    test/string-casing-test.cpp
+    test/string-conversion-test.cpp
     test/string-iterators-test.cpp
     test/string-literals-test.cpp
     test/string-manipulation-test.cpp
