@@ -189,6 +189,11 @@ void test_rs_unicode_regex_grep() {
     TEST_EQUAL(rs::distance(matches), 2);
     TEST_EQUAL(std::format("{}", matches), "[ello, world]");
 
+    TRY(re = "(?i)[a-z]{2}"_re);
+    TRY(matches = re.grep("Hello world"));
+    TEST_EQUAL(rs::distance(matches), 4);
+    TEST_EQUAL(std::format("{}", matches), "[He, ll, wo, rl]");
+
 }
 
 void test_rs_unicode_regex_split() {
