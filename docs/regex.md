@@ -126,7 +126,8 @@ Regex::match Regex::operator()(std::string_view subject,
 Search for a pattern within a string. Optionally a starting offset can be
 supplied; if this is not zero, any potential match will start no earlier than
 this point, but look-behind assertions can still see the earlier part of the
-subject string.
+subject string. These will throw `Regex::error` if the search turns out to be
+too complicated for the underlying PCRE library.
 
 ```c++
 [match_iterator range] Regex::grep(std::string_view subject,
@@ -134,7 +135,8 @@ subject string.
 ```
 
 Find all non-overlapping matches in the subject string. The returned iterators
-dereference to a `Regex::match.`
+dereference to a `Regex::match.` This will throw `Regex::error` if the search
+is too complicated.
 
 ```c++
 [split_iterator range] Regex::split(std::string_view subject,
@@ -142,7 +144,8 @@ dereference to a `Regex::match.`
 ```
 
 Split the subject string on every non-overlapping match. The returned
-iterators dereference to a `std::string_view.`
+iterators dereference to a `std::string_view.` This will throw `Regex::error`
+if the search is too complicated.
 
 ```c++
 std::string Regex::format(std::string_view subject, std::string_view replace,
@@ -151,7 +154,9 @@ std::string Regex::format(std::string_view subject, std::string_view replace,
 
 Transform the subject string, replacing the first matching substring with the
 transformed replacement string. If the `Regex::global` flag is used, all
-non-overlapping matches will be replaced.
+non-overlapping matches will be replaced. This will throw `Regex::error` if
+the replacement string contains invalid syntax, or the search is too
+complicated.
 
 ```c++
 void Regex::swap(Regex& re) noexcept;
@@ -232,6 +237,32 @@ destroyed invokes undefined behaviour. This can be avoided by using the
 `Regex::copy` flag if you need the match object to still be usable after the
 subject string is gone.
 
+## Regex transform class
+
+```c++
+class Regex::transform {
+public:
+    transform() = default;
+    explicit transform(const Regex& pattern, std::string_view replace,
+        RegexFlags flags = {});
+    explicit transform(std::string_view pattern, std::string_view replace,
+        RegexFlags flags = {});
+    std::string operator()(std::string_view subject,
+        RegexFlags flags = {}) const;
+};
+```
+
+This performs a regex formatting transformation on a string, the same
+operation as the `Regex::format()` function. A transform object is
+constructed from a regex pattern and a replacement string; the pattern can be
+supplied either as a plain string or a precompiled regex. The function call
+operator performs the transformation.
+
+The constructors will throw `Regex::error` if the pattern or replacement
+string contains invalid syntax, or is too complicated for PCRE to handle. The
+function call operators will throw `Regex::error` if the search is too
+complicated.
+
 ## Iterators
 
 To save space, not all iterator class members are documented explicitly. You
@@ -250,6 +281,8 @@ public:
 ```
 
 Forward iterator over the matches returned by the `Regex::grep()` function.
+The increment operator will throw `Regex::error` if the search is too
+complicated.
 
 ### Regex split iterator
 
@@ -263,6 +296,8 @@ public:
 ```
 
 Forward iterator over the segments returned by the `Regex::split()` function.
+The increment operator will throw `Regex::error` if the search is too
+complicated.
 
 ## Literals
 

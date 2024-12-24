@@ -347,4 +347,19 @@ namespace RS::Unicode {
         }
     }
 
+    // Transform class
+
+    Regex::transform::transform(const Regex& pattern, std::string_view replace, RegexFlags flags):
+    regex_(pattern),
+    replace_(replace),
+    flags_(flags) {}
+
+    Regex::transform::transform(std::string_view pattern, std::string_view replace, RegexFlags flags):
+    regex_(pattern, flags),
+    replace_(replace) {}
+
+    std::string Regex::transform::operator()(std::string_view subject, RegexFlags flags) const {
+        return regex_.format(subject, replace_, flags_ | flags);
+    }
+
 }

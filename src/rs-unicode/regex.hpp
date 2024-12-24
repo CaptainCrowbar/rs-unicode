@@ -50,6 +50,7 @@ namespace RS::Unicode {
         class match;
         class match_iterator;
         class split_iterator;
+        class transform;
 
         Regex() = default;
         explicit Regex(std::string_view pattern, RegexFlags flags = {});
@@ -185,6 +186,24 @@ namespace RS::Unicode {
         split_iterator(const Regex& regex, std::string_view subject, RegexFlags flags, std::size_t offset);
 
         void next();
+
+    };
+
+    class Regex::transform {
+
+    public:
+
+        transform() = default;
+        explicit transform(const Regex& pattern, std::string_view replace, RegexFlags flags = {});
+        explicit transform(std::string_view pattern, std::string_view replace, RegexFlags flags = {});
+
+        std::string operator()(std::string_view subject, RegexFlags flags = {}) const;
+
+    private:
+
+        Regex regex_;
+        std::string replace_;
+        RegexFlags flags_ {};
 
     };
 

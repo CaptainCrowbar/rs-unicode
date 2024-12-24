@@ -249,6 +249,49 @@ void test_rs_unicode_regex_format() {
 
 }
 
+void test_rs_unicode_regex_transform() {
+
+    Regex re;
+    Regex::transform tr;
+    std::string in, out, rep;
+
+    TRY(out = tr(in));
+    TEST_EQUAL(out, "");
+
+    in = "Hello world, goodbye";
+    TRY(out = tr(in));
+    TEST_EQUAL(out, in);
+
+    TRY(re = "\\w+"_re);
+    TRY(tr = Regex::transform(re, "*"));
+    TRY(out = tr(in));
+    TEST_EQUAL(out, "* world, goodbye");
+    TRY(out = tr(in, Regex::global));
+    TEST_EQUAL(out, "* *, *");
+
+    TRY(re = "\\w+"_re);
+    TRY(tr = Regex::transform(re, "*", Regex::global));
+    TRY(out = tr(in));
+    TEST_EQUAL(out, "* *, *");
+
+    TRY(tr = Regex::transform("[a-z]+", "*"));
+    TRY(out = tr(in));
+    TEST_EQUAL(out, "H* world, goodbye");
+    TRY(out = tr(in, Regex::global));
+    TEST_EQUAL(out, "H* *, *");
+
+    TRY(tr = Regex::transform("([A-Z]+)|([a-z]+)", "\\L$1\\U$2\\E"));
+    TRY(out = tr(in));
+    TEST_EQUAL(out, "hello world, goodbye");
+    TRY(out = tr(in, Regex::global));
+    TEST_EQUAL(out, "hELLO WORLD, GOODBYE");
+
+    TRY(tr = Regex::transform("([A-Z]+)|([a-z]+)", "\\L$1\\U$2\\E", Regex::global));
+    TRY(out = tr(in, Regex::global));
+    TEST_EQUAL(out, "hELLO WORLD, GOODBYE");
+
+}
+
 void test_rs_unicode_regex_dfa() {
 
     Regex re;
