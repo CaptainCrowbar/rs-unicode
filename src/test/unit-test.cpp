@@ -84,8 +84,8 @@ int main(int argc, char** argv) {
 
     main_args = std::vector<std::string>(argv + 1, argv + argc);
     std::println("");
-    std::println("{}Running unit tests{}", xhead, xt_reset);
-    std::println("{}{}{}", xrule, rule, xt_reset);
+    std::println("{}Running unit tests{}", xhead, xreset);
+    std::println("{}{}{}", xrule, rule, xreset);
 
     call_me_maybe(test_rs_unicode_character_properties_general_category, "test_rs_unicode_character_properties_general_category");
     call_me_maybe(test_rs_unicode_character_properties_caonical_combining_class, "test_rs_unicode_character_properties_caonical_combining_class");
@@ -163,12 +163,12 @@ int main(int argc, char** argv) {
     call_me_maybe(test_rs_unicode_string_normalization, "test_rs_unicode_string_normalization");
     call_me_maybe(test_rs_unicode_version, "test_rs_unicode_version");
 
-    std::println("{}{}{}", xrule, rule, xt_reset);
+    std::println("{}{}{}", xrule, rule, xreset);
 
     if (failures == 0) {
-        std::println("{}OK - all tests passed{}", xpass, xt_reset);
+        std::println("{}OK - all tests passed{}", xpass, xreset);
     } else {
-        std::println("{}*** Test failures: {}{}", xfail, failures, xt_reset);
+        std::println("{}*** Test failures: {}{}", xfail, failures, xreset);
     }
 
     std::println("");

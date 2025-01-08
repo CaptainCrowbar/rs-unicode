@@ -55,8 +55,8 @@ int main(int argc, char** argv) {
 
     main_args = std::vector<std::string>(argv + 1, argv + argc);
     std::println("");
-    std::println("{}Running unit tests{}", xhead, xt_reset);
-    std::println("{}{}{}", xrule, rule, xt_reset);
+    std::println("{}Running unit tests{}", xhead, xreset);
+    std::println("{}{}{}", xrule, rule, xreset);
 
 EOF
 
@@ -66,12 +66,12 @@ done
 
 cat << EOF >> $test_harness
 
-    std::println("{}{}{}", xrule, rule, xt_reset);
+    std::println("{}{}{}", xrule, rule, xreset);
 
     if (failures == 0) {
-        std::println("{}OK - all tests passed{}", xpass, xt_reset);
+        std::println("{}OK - all tests passed{}", xpass, xreset);
     } else {
-        std::println("{}*** Test failures: {}{}", xfail, failures, xt_reset);
+        std::println("{}*** Test failures: {}{}", xfail, failures, xreset);
     }
 
     std::println("");

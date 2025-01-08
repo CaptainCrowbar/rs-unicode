@@ -1,16 +1,22 @@
 #pragma once
 
 #include <algorithm>
+#include <cmath>
+#include <cstddef>
+#include <cstdio>
+#include <cstdlib>
 #include <exception>
+#include <filesystem>
 #include <format>
 #include <print>
 #include <ranges>
 #include <regex>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #ifdef _WIN32
-    #include <io.h>
+    #include <windows.h>
 #else
     #include <unistd.h>
 #endif
@@ -19,30 +25,31 @@ namespace RS::UnitTest {
 
     const inline auto tty =
         #ifdef _WIN32
-            _isatty(1) != 0;
+            [] {
+                DWORD mode = 0;
+                return GetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), &mode) != 0;
+            }();
         #else
             isatty(1) != 0;
         #endif
 
+    // black    = esc [30m
+    // red      = esc [31m
+    // green    = esc [32m
+    // yellow   = esc [33m
+    // blue     = esc [34m
+    // magenta  = esc [35m
+    // cyan     = esc [36m
+    // white    = esc [37m
+
+    const inline std::string_view xreset  = tty ? "\x1b[0m" : "";   // reset colours
+    const inline std::string_view xhead   = tty ? "\x1b[33m" : "";  // yellow
+    const inline std::string_view xrule   = tty ? "\x1b[36m" : "";  // cyan
+    const inline std::string_view xtest   = tty ? "\x1b[33m" : "";  // yellow
+    const inline std::string_view xpass   = tty ? "\x1b[32m" : "";  // green
+    const inline std::string_view xfail   = tty ? "\x1b[31m" : "";  // red
+
     const inline std::string rule(30, '=');
-    const inline std::string xt_reset = tty ? "\x1b[0m" : "";
-
-    inline std::string xt_rgb(int r, int g, int b) {
-        if (tty) {
-            auto index = 36 * r + 6 * g + b + 16;
-            return "\x1b[38;5;" + std::to_string(index) + "m";
-        } else {
-            return {};
-        }
-    }
-
-    const inline auto xhead = xt_rgb(5, 5, 3);
-    const inline auto xrule = xt_rgb(3, 4, 5);
-    const inline auto xtest = xt_rgb(5, 5, 3);
-    const inline auto xpass = xt_rgb(2, 5, 2);
-    const inline auto xfail = xt_rgb(5, 3, 1);
-
-    template <typename> constexpr auto dependent_false = false;
 
     inline auto failures = 0;
     inline std::vector<std::string> main_args;
@@ -52,28 +59,35 @@ namespace RS::UnitTest {
         std::string text;
 
         bool operator()(std::string pattern) const {
-
-            std::regex_constants::syntax_option_type flags = {};
-
-            if (pattern.ends_with("/i")) {
-                flags |= std::regex_constants::icase;
-                pattern.resize(pattern.size() - 2);
-            }
-
-            std::regex regex(pattern, flags);
-            auto rc = std::regex_search(text, regex);
-
-            return rc;
-
+            std::regex regex(pattern);
+            return std::regex_search(text, regex);
         }
 
     };
 
-    inline void call_me_maybe(void (*test)(), const std::string& name) {
+    inline void call_me_maybe(void (*test)(), std::string name) {
         if (main_args.empty() || std::ranges::any_of(main_args, TextMatch{name})) {
-            std::println("{}{}{}", xtest, name, xt_reset);
+            std::println("{}{}{}", xtest, name, xreset);
             test();
         }
+    }
+
+    inline bool read_file_contents(const std::filesystem::path& path, std::string& out) {
+
+        auto file_ptr = std::fopen(path.c_str(), "rb");
+
+        if (file_ptr == nullptr) {
+            return false;
+        }
+
+        std::fseek(file_ptr, 0, SEEK_END);
+        auto size = static_cast<std::size_t>(std::ftell(file_ptr));
+        std::fseek(file_ptr, 0, SEEK_SET);
+        out.resize(size);
+        std::fread(out.data(), 1, size, file_ptr);
+
+        return true;
+
     }
 
 }
@@ -82,7 +96,7 @@ namespace RS::UnitTest {
 
 #define FAIL(...) do { \
     std::println("{}... Test failed [{}:{}]{}\n\t{}", \
-        ::RS::UnitTest::xfail, __FILE__, __LINE__, ::RS::UnitTest::xt_reset, std::format(__VA_ARGS__)); \
+        ::RS::UnitTest::xfail, __FILE__, __LINE__, ::RS::UnitTest::xreset, std::format(__VA_ARGS__)); \
     ++::RS::UnitTest::failures; \
 } while (false)
 
@@ -154,6 +168,30 @@ namespace RS::UnitTest {
     } \
     catch (const std::exception& _test_except) { \
         FAIL("Unexpected exception: {}", _test_except.what()); \
+    } \
+    catch (...) { \
+        FAIL("Unexpected exception"); \
+    } \
+} while (false)
+
+// Compare two floating point expressions. Fails if the expressions differ by
+// more than the tolerance in either direction, or if any exception is
+// thrown.
+
+#define TEST_NEAR(lhs, rhs, tolerance) do { \
+    try { \
+        auto _test_lhs = static_cast<double>(lhs); \
+        auto _test_rhs = static_cast<double>(rhs); \
+        auto _test_tolerance = static_cast<double>(tolerance); \
+        auto _test_delta = std::abs(_test_lhs - _test_rhs); \
+        if (_test_delta > _test_tolerance) { \
+            FAIL("Difference between expressions is too great\n" \
+                "\t{} = {}\n\t{} = {}\n\ttolerance = {}", \
+                # lhs, _test_lhs, # rhs, _test_rhs, _test_tolerance); \
+        } \
+    } \
+    catch (const std::exception& ex) { \
+        FAIL("Unexpected exception: {}", ex.what()); \
     } \
     catch (...) { \
         FAIL("Unexpected exception"); \
