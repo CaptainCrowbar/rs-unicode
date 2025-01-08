@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# Download the UCD reference data from the Unicode website
+# Download the UCD reference data from the Unicode website.
 
-# The Unicode version is hardcoded here and should not be updated until
-# compatibility with the table extraction code has been checked and any
-# necessary changes have been made.
+# The Unicode version is hardcoded here, instead of just using "latest", and
+# should not be updated until compatibility with the table extraction code
+# has been checked and any necessary changes have been made.
 
-ucd_version=15.1.0
+ucd_version=16.0.0
 ucd_url="https://www.unicode.org/Public/zipped/$ucd_version/UCD.zip"
 
 set -o errexit

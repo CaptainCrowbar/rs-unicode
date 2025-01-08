@@ -78,7 +78,6 @@ namespace RS::Unicode {
         Extend,
         Grapheme_Base,
         Grapheme_Extend,
-        Grapheme_Link,
         Linker,
     )
 

@@ -7,7 +7,7 @@
 namespace RS::Unicode {
 
     inline std::array<int, 3> version() noexcept {
-        return {{ 0, 1, 11 }};
+        return {{ 0, 1, 12 }};
     }
 
     inline std::string version_string() {

@@ -146,7 +146,7 @@ void test_rs_unicode_character_properties_grapheme_cluster_break() {
     TEST_EQUAL(to_int(grapheme_cluster_break(0xd7c6)),    to_int(Grapheme_Cluster_Break::V));
     TEST_EQUAL(to_int(grapheme_cluster_break(0xd7fb)),    to_int(Grapheme_Cluster_Break::T));
     TEST_EQUAL(to_int(grapheme_cluster_break(0x1'1f02)),  to_int(Grapheme_Cluster_Break::Prepend));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0x1'd16d)),  to_int(Grapheme_Cluster_Break::SpacingMark));
+    TEST_EQUAL(to_int(grapheme_cluster_break(0x1'd16d)),  to_int(Grapheme_Cluster_Break::Extend));
     TEST_EQUAL(to_int(grapheme_cluster_break(0x1'f1e6)),  to_int(Grapheme_Cluster_Break::Regional_Indicator));
     TEST_EQUAL(to_int(grapheme_cluster_break(0x1'f1ff)),  to_int(Grapheme_Cluster_Break::Regional_Indicator));
     TEST_EQUAL(to_int(grapheme_cluster_break(0xe'01ef)),  to_int(Grapheme_Cluster_Break::Extend));
