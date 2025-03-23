@@ -6,13 +6,28 @@
 
 namespace RS::Unicode {
 
-    inline std::array<int, 3> version() noexcept {
-        return {{ 0, 1, 12 }};
+    namespace Detail {
+
+        inline std::string version_to_string(std::array<int, 3> v) {
+            return std::format("{}.{}.{}", v[0], v[1], v[2]);
+        }
+
     }
 
-    inline std::string version_string() {
-        auto v = version();
-        return std::format("{}.{}.{}", v[0], v[1], v[2]);
+    inline std::array<int, 3> library_version() noexcept {
+        return { 0, 1, 12 };
+    }
+
+    inline std::array<int, 3> unicode_version() noexcept {
+        return { 16, 0, 0 };
+    }
+
+    inline std::string library_version_string() {
+        return Detail::version_to_string(library_version());
+    }
+
+    inline std::string unicode_version_string() {
+        return Detail::version_to_string(unicode_version());
     }
 
 }
