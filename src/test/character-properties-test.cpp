@@ -360,32 +360,32 @@ void test_rs_unicode_character_properties_identifiers() {
     TEST(is_id_compat_math_continue(U'∞'));
     TEST(! is_id_compat_math_continue(max_unicode));
 
-    TEST(! is_recommended_id_start(0));
-    TEST(! is_recommended_id_start(U'!'));
-    TEST(! is_recommended_id_start(U'0'));
-    TEST(is_recommended_id_start(U'A'));
-    TEST(is_recommended_id_start(U'_'));
-    TEST(! is_recommended_id_start(U'¡'));
-    TEST(! is_recommended_id_start(U'²'));
-    TEST(! is_recommended_id_start(U'¹'));
-    TEST(is_recommended_id_start(U'Ω'));
-    TEST(is_recommended_id_start(U'∂'));
-    TEST(is_recommended_id_start(U'∇'));
-    TEST(is_recommended_id_start(U'∞'));
-    TEST(! is_recommended_id_start(max_unicode));
+    TEST(! is_combined_id_start(0));
+    TEST(! is_combined_id_start(U'!'));
+    TEST(! is_combined_id_start(U'0'));
+    TEST(is_combined_id_start(U'A'));
+    TEST(is_combined_id_start(U'_'));
+    TEST(! is_combined_id_start(U'¡'));
+    TEST(! is_combined_id_start(U'²'));
+    TEST(! is_combined_id_start(U'¹'));
+    TEST(is_combined_id_start(U'Ω'));
+    TEST(is_combined_id_start(U'∂'));
+    TEST(is_combined_id_start(U'∇'));
+    TEST(is_combined_id_start(U'∞'));
+    TEST(! is_combined_id_start(max_unicode));
 
-    TEST(! is_recommended_id_continue(0));
-    TEST(! is_recommended_id_continue(U'!'));
-    TEST(is_recommended_id_continue(U'0'));
-    TEST(is_recommended_id_continue(U'A'));
-    TEST(is_recommended_id_continue(U'_'));
-    TEST(! is_recommended_id_continue(U'¡'));
-    TEST(is_recommended_id_continue(U'²'));
-    TEST(is_recommended_id_continue(U'¹'));
-    TEST(is_recommended_id_continue(U'Ω'));
-    TEST(is_recommended_id_continue(U'∂'));
-    TEST(is_recommended_id_continue(U'∇'));
-    TEST(is_recommended_id_continue(U'∞'));
-    TEST(! is_recommended_id_continue(max_unicode));
+    TEST(! is_combined_id_continue(0));
+    TEST(! is_combined_id_continue(U'!'));
+    TEST(is_combined_id_continue(U'0'));
+    TEST(is_combined_id_continue(U'A'));
+    TEST(is_combined_id_continue(U'_'));
+    TEST(! is_combined_id_continue(U'¡'));
+    TEST(is_combined_id_continue(U'²'));
+    TEST(is_combined_id_continue(U'¹'));
+    TEST(is_combined_id_continue(U'Ω'));
+    TEST(is_combined_id_continue(U'∂'));
+    TEST(is_combined_id_continue(U'∇'));
+    TEST(is_combined_id_continue(U'∞'));
+    TEST(! is_combined_id_continue(max_unicode));
 
 }

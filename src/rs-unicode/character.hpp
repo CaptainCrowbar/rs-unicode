@@ -78,11 +78,11 @@ namespace RS::Unicode {
         return subscript_superscript_base_table(c).second;
     }
 
-    inline bool is_recommended_id_start(char32_t c) {
+    inline bool is_combined_id_start(char32_t c) {
         return is_xid_start(c) || is_id_compat_math_start(c) || c == U'_';
     }
 
-    inline bool is_recommended_id_continue(char32_t c) {
+    inline bool is_combined_id_continue(char32_t c) {
         return is_xid_continue(c) || is_id_compat_math_continue(c);
     }
 

@@ -259,8 +259,8 @@ and
 [https://www.unicode.org/reports/tr55/#Identifiers](Unicode TR55 §3.1).
 
 ```c++
-bool is_recommended_id_start(char32_t c);
-bool is_recommended_id_continue(char32_t c);
+bool is_combined_id_start(char32_t c);
+bool is_combined_id_continue(char32_t c);
 ```
 
 These reflect the unions of the `XID_*` and `ID_Compat_Math_*` character sets,
