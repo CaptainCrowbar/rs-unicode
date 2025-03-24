@@ -967,19 +967,12 @@ z = int(match[3])
 with open(output_path, "r") as header:
     body = header.read()
 
-match = re.search(r"std::array<int, 3> unicode_version\(\)", body)
+match = re.search(r"return \{ \d+, \d+, \d+ \}; // Unicode version", body)
 
 if not match:
-    raise ValueError(f"Can't parse version header: unicode_version() function not found")
+    raise ValueError(f"Unicode version not found in version header")
 
-pos = match.end()
-pattern = re.compile(r"return *\{ *\d+, *\d+, *\d+ *\};")
-match = pattern.search(body, pos)
-
-if not match:
-    raise ValueError(f"Can't parse version header: unicode_version() body not found")
-
-new_version = f"return {{ {x}, {y}, {z} }};"
+new_version = f"return {{ {x}, {y}, {z} }}; // Unicode version"
 body = body[:match.start()] + new_version + body[match.end():]
 
 with open(output_path, "w") as header:

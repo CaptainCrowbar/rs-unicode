@@ -41,7 +41,7 @@ v3=${version##*.}
 (( ++v3 ))
 echo "Version $v1.$v2.$v3"
 
-sed -E "s/(VERSION) [0-9]+\.[0-9]+\.[0-9]+/\1 $v1.$v2.$v3/" "$cmakefile" > "$temp"
+sed -E "s!(VERSION) [0-9]+\.[0-9]+\.[0-9]+!\1 $v1.$v2.$v3!" "$cmakefile" > "$temp"
 mv "$temp" "$cmakefile"
-sed -E "s/(return) {{[0-9, ]+}};/\1 {{ $v1, $v2, $v3 }};/" "$header" > "$temp"
+sed -E "s!(return) {[0-9, ]+}; (// Library version)!\1 { $v1, $v2, $v3 }; \2!" "$header" > "$temp"
 mv "$temp" "$header"
