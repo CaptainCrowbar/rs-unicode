@@ -74,6 +74,8 @@ property_info_table = {
     "Full_Composition_Exclusion"       : PropertyInfo("bool",   False,    "DerivedNormalizationProps.txt",        None,  None                            ),
     "East_Asian_Width"                 : PropertyInfo("enum",   "N",      "EastAsianWidth.txt",                   None,  None                            ),
     "Line_Break"                       : PropertyInfo("enum",   "XX",     "LineBreak.txt",                        None,  None                            ),
+    "ID_Compat_Math_Continue"          : PropertyInfo("bool",   False,    "PropList.txt",                         None,  None                            ),
+    "ID_Compat_Math_Start"             : PropertyInfo("bool",   False,    "PropList.txt",                         None,  None                            ),
     "Pattern_Syntax"                   : PropertyInfo("bool",   False,    "PropList.txt",                         None,  None                            ),
     "Pattern_White_Space"              : PropertyInfo("bool",   False,    "PropList.txt",                         None,  None                            ),
     "White_Space"                      : PropertyInfo("bool",   False,    "PropList.txt",                         None,  None                            ),

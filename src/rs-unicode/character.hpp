@@ -38,10 +38,6 @@ namespace RS::Unicode {
             || (c & 0xfffe) == 0xfffe;
     }
 
-    inline bool is_xid_nonstart(char32_t c) {
-        return is_xid_continue(c) && ! is_xid_start(c);
-    }
-
     constexpr bool is_private_use(char32_t c) noexcept {
         return (c >= 0xe000 && c <= 0xf8ff)
             || (c >= 0xf'0000 && c <= 0xf'fffd)
@@ -80,6 +76,14 @@ namespace RS::Unicode {
 
     inline char32_t superscript_character(char32_t c) {
         return subscript_superscript_base_table(c).second;
+    }
+
+    inline bool is_recommended_id_start(char32_t c) {
+        return is_xid_start(c) || is_id_compat_math_start(c) || c == U'_';
+    }
+
+    inline bool is_recommended_id_continue(char32_t c) {
+        return is_xid_continue(c) || is_id_compat_math_continue(c);
     }
 
 }

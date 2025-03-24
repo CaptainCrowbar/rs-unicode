@@ -146,6 +146,8 @@ namespace RS::Unicode {
     bool is_default_ignorable(char32_t c);
     bool is_extended_pictographic(char32_t c);
     bool is_full_composition_exclusion(char32_t c);
+    bool is_id_compat_math_continue(char32_t c);
+    bool is_id_compat_math_start(char32_t c);
     bool is_pattern_syntax(char32_t c);
     bool is_pattern_white_space(char32_t c);
     bool is_white_space(char32_t c);

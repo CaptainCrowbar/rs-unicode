@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.30)
 # version.hpp.
 
 project(rs-unicode
-    VERSION 0.1.12
+    VERSION 0.1.15
     LANGUAGES CXX
 )
 
@@ -55,6 +55,8 @@ add_library(${library} STATIC
     rs-unicode/ucd-full-composition-exclusion.cpp
     rs-unicode/ucd-general-category.cpp
     rs-unicode/ucd-grapheme-cluster-break.cpp
+    rs-unicode/ucd-id-compat-math-continue.cpp
+    rs-unicode/ucd-id-compat-math-start.cpp
     rs-unicode/ucd-indic-conjunct-break.cpp
     rs-unicode/ucd-line-break.cpp
     rs-unicode/ucd-pattern-syntax.cpp

@@ -184,6 +184,9 @@ enum class Line_Break: unsigned char {
 
 ## Character property functions
 
+Properties related to the use of characters in identifiers in programming
+languages are described separately below.
+
 ```c++
 bool is_alphanumeric(char32_t c); // General_Category L* or N*
 bool is_ascii(char32_t c); // Code points up to 0x7f
@@ -200,9 +203,6 @@ bool is_private_use(char32_t c);
 bool is_surrogate(char32_t c);
 bool is_unicode(char32_t c); // Up to 0x10'ffff, excluding surrogates
 bool is_white_space(char32_t c);
-bool is_xid_continue(char32_t c);
-bool is_xid_nonstart(char32_t c);
-bool is_xid_start(char32_t c);
 ```
 
 Boolean valued properties.
@@ -232,6 +232,40 @@ char primary_category(char32_t c); // From General_Category
 ```
 
 Integer valued properties.
+
+## Identifier character functions
+
+```c++
+bool is_xid_start(char32_t c);
+bool is_xid_continue(char32_t c);
+```
+
+These reflect the `XID_Start` and `XID_Continue` properties, intended to be
+the default character sets for the first and subsequent characters of
+identifiers in markup and programming languages, as described in
+[https://www.unicode.org/reports/tr31/](Unicode TR31).
+
+```c++
+bool is_id_compat_math_start(char32_t c);
+bool is_id_compat_math_continue(char32_t c);
+```
+
+These reflect the `ID_Compat_Math_Start` and `ID_Compat_Math_Continue`
+properties, intended to be added to the default character sets for the first
+and subsequent characters of identifiers in programming languages that may be
+used for mathematical and scientific applications, as described in
+[https://www.unicode.org/reports/tr31/#Mathematical_Compatibility_Notation_Profile](Unicode TR31 §7.1)
+and
+[https://www.unicode.org/reports/tr55/#Identifiers](Unicode TR55 §3.1).
+
+```c++
+bool is_recommended_id_start(char32_t c);
+bool is_recommended_id_continue(char32_t c);
+```
+
+These reflect the unions of the `XID_*` and `ID_Compat_Math_*` character sets,
+and also apply the common convention of accepting the underscore as a start
+character.
 
 ## Compound character property functions
 

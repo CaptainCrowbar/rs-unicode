@@ -261,30 +261,6 @@ void test_rs_unicode_character_properties_pattern_syntax() {
 
 }
 
-void test_rs_unicode_character_properties_xid_continue() {
-
-    TEST(! is_xid_continue(0));
-    TEST(! is_xid_continue('!'));
-    TEST(is_xid_continue('0'));
-    TEST(is_xid_continue('A'));
-    TEST(! is_xid_continue(0xa1)); // inverted exclamation mark
-    TEST(is_xid_continue(0x3a9)); // greek capital letter omega
-    TEST(! is_xid_continue(max_unicode));
-
-}
-
-void test_rs_unicode_character_properties_xid_start() {
-
-    TEST(! is_xid_start(0));
-    TEST(! is_xid_start('!'));
-    TEST(! is_xid_start('0'));
-    TEST(is_xid_start('A'));
-    TEST(! is_xid_start(0xa1)); // inverted exclamation mark
-    TEST(is_xid_start(0x3a9)); // greek capital letter omega
-    TEST(! is_xid_start(max_unicode));
-
-}
-
 void test_rs_unicode_character_properties_noncharacter() {
 
     TEST(! is_noncharacter(0));
@@ -343,5 +319,73 @@ void test_rs_unicode_character_properties_subscripts_and_superscripts() {
     TEST_EQUAL(to_u32(superscript_character(U'a')),  0x1d43u);  // U+0061 latin small letter a
     TEST_EQUAL(to_u32(subscript_character(U'z')),    0u);       // U+007a latin small letter z
     TEST_EQUAL(to_u32(superscript_character(U'z')),  0x1dbbu);  // U+007a latin small letter z
+
+}
+
+void test_rs_unicode_character_properties_identifiers() {
+
+    TEST(! is_xid_start(0));
+    TEST(! is_xid_start(U'!'));
+    TEST(! is_xid_start(U'0'));
+    TEST(is_xid_start(U'A'));
+    TEST(! is_xid_start(U'_'));
+    TEST(! is_xid_start(U'¡'));
+    TEST(is_xid_start(U'Ω'));
+    TEST(! is_xid_start(max_unicode));
+
+    TEST(! is_xid_continue(0));
+    TEST(! is_xid_continue(U'!'));
+    TEST(is_xid_continue(U'0'));
+    TEST(is_xid_continue(U'A'));
+    TEST(is_xid_continue(U'_'));
+    TEST(! is_xid_continue(U'¡'));
+    TEST(is_xid_continue(U'Ω'));
+    TEST(! is_xid_continue(max_unicode));
+
+    TEST(! is_id_compat_math_start(0));
+    TEST(! is_id_compat_math_start(U'A'));
+    TEST(! is_id_compat_math_start(U'²'));
+    TEST(! is_id_compat_math_start(U'¹'));
+    TEST(is_id_compat_math_start(U'∂'));
+    TEST(is_id_compat_math_start(U'∇'));
+    TEST(is_id_compat_math_start(U'∞'));
+    TEST(! is_id_compat_math_start(max_unicode));
+
+    TEST(! is_id_compat_math_continue(0));
+    TEST(! is_id_compat_math_continue(U'A'));
+    TEST(is_id_compat_math_continue(U'²'));
+    TEST(is_id_compat_math_continue(U'¹'));
+    TEST(is_id_compat_math_continue(U'∂'));
+    TEST(is_id_compat_math_continue(U'∇'));
+    TEST(is_id_compat_math_continue(U'∞'));
+    TEST(! is_id_compat_math_continue(max_unicode));
+
+    TEST(! is_recommended_id_start(0));
+    TEST(! is_recommended_id_start(U'!'));
+    TEST(! is_recommended_id_start(U'0'));
+    TEST(is_recommended_id_start(U'A'));
+    TEST(is_recommended_id_start(U'_'));
+    TEST(! is_recommended_id_start(U'¡'));
+    TEST(! is_recommended_id_start(U'²'));
+    TEST(! is_recommended_id_start(U'¹'));
+    TEST(is_recommended_id_start(U'Ω'));
+    TEST(is_recommended_id_start(U'∂'));
+    TEST(is_recommended_id_start(U'∇'));
+    TEST(is_recommended_id_start(U'∞'));
+    TEST(! is_recommended_id_start(max_unicode));
+
+    TEST(! is_recommended_id_continue(0));
+    TEST(! is_recommended_id_continue(U'!'));
+    TEST(is_recommended_id_continue(U'0'));
+    TEST(is_recommended_id_continue(U'A'));
+    TEST(is_recommended_id_continue(U'_'));
+    TEST(! is_recommended_id_continue(U'¡'));
+    TEST(is_recommended_id_continue(U'²'));
+    TEST(is_recommended_id_continue(U'¹'));
+    TEST(is_recommended_id_continue(U'Ω'));
+    TEST(is_recommended_id_continue(U'∂'));
+    TEST(is_recommended_id_continue(U'∇'));
+    TEST(is_recommended_id_continue(U'∞'));
+    TEST(! is_recommended_id_continue(max_unicode));
 
 }
