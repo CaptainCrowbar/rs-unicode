@@ -1,7 +1,6 @@
 #pragma once
 
 #include "rs-unicode/character.hpp"
-#include "rs-unicode/encoding.hpp"
 #include <cstdint>
 #include <string>
 #include <string_view>

@@ -132,11 +132,17 @@ namespace RS::Unicode {
         }
 
         std::string LegacyEncoding::from_utf8(std::string_view input) const {
+            if (page_ == 0) {
+                return static_cast<std::string>(input);
+            }
             auto wstr = mbcs_to_wstring(input, page_);
             return wstring_to_mbcs(wstr, CP_UTF8);
         }
 
         std::string LegacyEncoding::to_utf8(std::string_view input) const {
+            if (page_ == 0) {
+                return static_cast<std::string>(input);
+            }
             auto wstr = mbcs_to_wstring(input, CP_UTF8);
             return wstring_to_mbcs(wstr, page_);
         }
@@ -253,11 +259,17 @@ namespace RS::Unicode {
         }
 
         std::string LegacyEncoding::from_utf8(std::string_view input) const {
+            if (name_.empty()) {
+                return static_cast<std::string>(input);
+            }
             Iconv ic(name_.data(), utf);
             return ic(input, "?");
         }
 
         std::string LegacyEncoding::to_utf8(std::string_view input) const {
+            if (name_.empty()) {
+                return static_cast<std::string>(input);
+            }
             Iconv ic(utf, name_.data());
             return ic(input, "\xef\xbf\xbd"); // U+FFFD
         }
