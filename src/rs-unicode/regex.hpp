@@ -1,8 +1,9 @@
 #pragma once
 
 #include "rs-unicode/character.hpp"
-#include "rs-unicode/enum.hpp"
-#include "rs-unicode/format.hpp"
+#include "rs-core/enum.hpp"
+#include "rs-core/format.hpp"
+#include "rs-core/global.hpp"
 #include <compare>
 #include <cstddef>
 #include <cstdint>
@@ -16,7 +17,7 @@
 
 namespace RS::Unicode {
 
-    RS_UNICODE_BITMASK(RegexFlags, std::uint32_t,
+    RS_BITMASK(RegexFlags, std::uint32_t,
 
         none,
 
@@ -109,6 +110,7 @@ namespace RS::Unicode {
         std::string_view str(std::size_t index = 0) const noexcept;
         std::string_view operator[](std::size_t index) const noexcept { return str(index); }
         operator std::string_view() const noexcept { return str(0); }
+        std::string_view rs_core_format() const noexcept { return str(0); }
 
     private:
 
@@ -119,8 +121,6 @@ namespace RS::Unicode {
         bool partial_ = false;
 
     };
-
-    void rs_unicode_format(Regex::match);
 
     class Regex::match_iterator {
 

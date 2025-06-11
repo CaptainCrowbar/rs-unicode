@@ -29,25 +29,21 @@ the old one) was the best approach at this point.
 
 ## Index of headers
 
-* Unicode librray
-    * [`rs-unicode/character.hpp` -- Character properties](character.html)
-    * [`rs-unicode/encoding.hpp` -- Character encodings](encoding.html)
-    * [`rs-unicode/legacy.hpp` -- Legacy encodings](legacy.html)
-    * [`rs-unicode/regex.hpp` -- Regular expressions](regex.html)
-    * [`rs-unicode/string.hpp` -- String manipulation](string.html)
-    * [`rs-unicode/version.hpp` -- Version information](version.html)
-* Infrastructure
-    * _(These are not directly related to Unicode, but are used throughout the
-       main library and are exported because they are likely to be generally
-       useful.)_
-    * [`rs-unicode/enum.hpp` -- Enumeration helpers](enum.html)
-    * [`rs-unicode/format.hpp` -- Formatting helpers](format.html)
+* [`rs-unicode/character.hpp` -- Character properties](character.html)
+* [`rs-unicode/encoding.hpp` -- Character encodings](encoding.html)
+* [`rs-unicode/legacy.hpp` -- Legacy encodings](legacy.html)
+* [`rs-unicode/regex.hpp` -- Regular expressions](regex.html)
+* [`rs-unicode/string.hpp` -- String manipulation](string.html)
+* [`rs-unicode/version.hpp` -- Version information](version.html)
 
 ## Using the library
 
-There is a `CMakeLists.txt` file that can build and install the library using
-the usual [CMake](https://cmake.org) conventions. Command line usage will
-typically look like this:
+You will need my header-only
+[core utility library](https://github.com/CaptainCrowbar/rs-core).
+
+There is a `CMakeLists.txt` file that can build and install the Unicode
+library using the usual [CMake](https://cmake.org) conventions. Command line
+usage will typically look like this:
 
 ```bash
 cd wherever/you/installed/rs-unicode
@@ -71,8 +67,9 @@ systems, you may also need `-liconv.`
 ## General implementation notes
 
 In a library that does string manipulation, any function that constructs or
-modifies a string runs the risk of a memory allocation error. This possibility
-is not usually explicitly documented because it is so ubiquitous. Unless the
-documentation explicitly says otherwise, any function that is not marked
-`noexcept` may throw `std::bad_alloc,` in addition to any other exceptions
-documented for it.
+modifies a string runs the risk of a memory allocation error. This
+possibility is not usually explicitly documented because it is so ubiquitous.
+Unless the documentation explicitly says otherwise, any function that is not
+marked `noexcept` should be assumed to be capable of throwing
+`std::bad_alloc,` in addition to any exceptions explicitly documented for
+it.

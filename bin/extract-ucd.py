@@ -703,8 +703,9 @@ with open(property_list_file, "w", newline="\n") as hpp:
         // Do not include this file directly
         // Include "rs-unicode/character.hpp" instead
 
-        #include "rs-unicode/enum.hpp"
         #include "rs-unicode/property-map.hpp"
+        #include "rs-core/global.hpp"
+        #include "rs-core/enum.hpp"
         #include <array>
         #include <string_view>
         #include <utility>
@@ -715,7 +716,7 @@ with open(property_list_file, "w", newline="\n") as hpp:
 
     for prop in sorted(enum_tables):
         values = enum_tables[prop]
-        hpp.write(f"    RS_UNICODE_ENUM({prop}, unsigned char,\n")
+        hpp.write(f"    RS_ENUM({prop}, unsigned char,\n")
         for value in values:
             hpp.write(f"        {value},\n")
         hpp.write(f"    )\n\n")

@@ -1,7 +1,8 @@
 #pragma once
 
 #include "rs-unicode/character.hpp"
-#include "rs-unicode/enum.hpp"
+#include "rs-core/enum.hpp"
+#include "rs-core/global.hpp"
 #include <compare>
 #include <cstddef>
 #include <functional>
@@ -140,7 +141,7 @@ namespace RS::Unicode {
 
     // String metrics
 
-    RS_UNICODE_ENUM(Unit, unsigned char,
+    RS_ENUM(Unit, unsigned char,
         bytes,      // UTF-8 code units
         utf16,      // UTF-16 code units
         scalars,    // Unicode scalar values (default)

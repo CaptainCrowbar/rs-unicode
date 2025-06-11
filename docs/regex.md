@@ -229,7 +229,8 @@ constructed `string_view` if the pattern failed to match, or for a capture
 group that was not matched. Groups that matched an empty substring will also
 return an empty view, but in this case the view will still point to the
 appropriate location in the subject string. The string view operator is
-equivalent to `str(0).`
+equivalent to `str(0);` this is also what you will get if you pass a match
+object to `std::format()` or `std::print().`
 
 Normally a successful match object contains pointers into the original subject
 string. Accessing a match object after the subject string has been changed or

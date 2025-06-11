@@ -1,5 +1,6 @@
 #pragma once
 
+#include "rs-core/global.hpp"
 #include <algorithm>
 #include <compare>
 #include <initializer_list>

@@ -1,7 +1,8 @@
 #pragma once
 
 #include "rs-unicode/character.hpp"
-#include "rs-unicode/enum.hpp"
+#include "rs-core/enum.hpp"
+#include "rs-core/global.hpp"
 #include <array>
 #include <compare>
 #include <cstddef>
@@ -51,7 +52,7 @@ namespace RS::Unicode {
 
     // Categorization of UTF code units
 
-    RS_UNICODE_ENUM(Utf8UnitKind, unsigned char,
+    RS_ENUM(Utf8UnitKind, unsigned char,
         single,    // 0x00-7f        Single byte ASCII character
         leading2,  // 0xc2-df        First byte of a 2 byte character
         leading3,  // 0xe0-ef        First byte of a 3 byte character
@@ -60,7 +61,7 @@ namespace RS::Unicode {
         illegal,   // 0xc0-c1,f5-ff  Not used
     )
 
-    RS_UNICODE_ENUM(Utf16UnitKind, unsigned char,
+    RS_ENUM(Utf16UnitKind, unsigned char,
         single,  // 0x0000-d7ff,e000-ffff  Single unit BMP character
         high,    // 0xd800-dbff            High surrogate (first half) of an astral plane character
         low,     // 0xdc00-dfff            Low surrogate (second half) of an astral plane character
@@ -141,7 +142,7 @@ namespace RS::Unicode {
 
     // String encoding and decoding functions
 
-    RS_UNICODE_ENUM(Convert, int,
+    RS_ENUM(Convert, int,
         unchecked,
         checked,
         replace,

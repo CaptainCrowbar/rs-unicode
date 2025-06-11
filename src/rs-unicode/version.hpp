@@ -15,7 +15,7 @@ namespace RS::Unicode {
     }
 
     inline std::array<int, 3> library_version() noexcept {
-        return { 0, 1, 22 }; // Library version
+        return { 0, 2, 1 }; // Library version
     }
 
     inline std::array<int, 3> unicode_version() noexcept {

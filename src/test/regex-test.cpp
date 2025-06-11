@@ -25,7 +25,7 @@ void test_rs_unicode_regex_match() {
     TEST_EQUAL(re.groups(), 0u);
     TRY(m = re("Hello world"));
     TEST(! m);
-    TEST_EQUAL(m.pos(), npos);
+    TEST_EQUAL(m.pos(), RS::npos);
     TEST_EQUAL(m.len(), 0u);
     TEST_EQUAL(m.str(), "");
     TEST_EQUAL(m[0], "");

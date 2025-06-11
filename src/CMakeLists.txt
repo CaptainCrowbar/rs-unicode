@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.30)
 # version.hpp.
 
 project(rs-unicode
-    VERSION 0.1.22
+    VERSION 0.2.1
     LANGUAGES CXX
 )
 
@@ -78,8 +78,6 @@ add_executable(${unittest}
     test/encoding-conversion-test.cpp
     test/encoding-general-test.cpp
     test/encoding-iterators-test.cpp
-    test/enum-test.cpp
-    test/format-test.cpp
     test/legacy-test.cpp
     test/property-map-test.cpp
     test/regex-test.cpp

@@ -15,12 +15,6 @@ namespace RS::Unicode;
 ## Constants
 
 ```c++
-constexpr std::size_t npos = std::string::npos;
-```
-
-Defined for convenience.
-
-```c++
 constexpr char32_t min_surrogate     = 0xd800;
 constexpr char32_t max_surrogate     = 0xdfff;
 constexpr char32_t byte_order_mark   = 0xfeff;

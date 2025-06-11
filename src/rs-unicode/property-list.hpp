@@ -3,15 +3,16 @@
 // Do not include this file directly
 // Include "rs-unicode/character.hpp" instead
 
-#include "rs-unicode/enum.hpp"
 #include "rs-unicode/property-map.hpp"
+#include "rs-core/global.hpp"
+#include "rs-core/enum.hpp"
 #include <array>
 #include <string_view>
 #include <utility>
 
 namespace RS::Unicode {
 
-    RS_UNICODE_ENUM(East_Asian_Width, unsigned char,
+    RS_ENUM(East_Asian_Width, unsigned char,
         N,
         A,
         F,
@@ -20,7 +21,7 @@ namespace RS::Unicode {
         W,
     )
 
-    RS_UNICODE_ENUM(General_Category, unsigned char,
+    RS_ENUM(General_Category, unsigned char,
         Cn,
         Cc,
         Cf,
@@ -53,7 +54,7 @@ namespace RS::Unicode {
         Zs,
     )
 
-    RS_UNICODE_ENUM(Grapheme_Cluster_Break, unsigned char,
+    RS_ENUM(Grapheme_Cluster_Break, unsigned char,
         Other,
         CR,
         Control,
@@ -70,7 +71,7 @@ namespace RS::Unicode {
         ZWJ,
     )
 
-    RS_UNICODE_ENUM(Indic_Conjunct_Break, unsigned char,
+    RS_ENUM(Indic_Conjunct_Break, unsigned char,
         None,
         Case_Ignorable,
         Consonant,
@@ -81,7 +82,7 @@ namespace RS::Unicode {
         Linker,
     )
 
-    RS_UNICODE_ENUM(Line_Break, unsigned char,
+    RS_ENUM(Line_Break, unsigned char,
         XX,
         AI,
         AK,

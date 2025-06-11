@@ -1,19 +1,14 @@
 #pragma once
 
-#include "rs-unicode/enum.hpp"
 #include "rs-unicode/property-list.hpp"
+#include "rs-core/enum.hpp"
+#include "rs-core/global.hpp"
 #include <cstddef>
 #include <limits>
 
 namespace RS::Unicode {
 
-    // Sanity check
-
-    static_assert(std::numeric_limits<unsigned char>::digits == 8);
-
     // Constants
-
-    constexpr auto npos = static_cast<std::size_t>(-1);
 
     constexpr char32_t min_surrogate     = 0xd800;
     constexpr char32_t max_surrogate     = 0xdfff;
@@ -50,7 +45,7 @@ namespace RS::Unicode {
             || (c >= 0xac00 && c <= 0xd7fb);
     }
 
-    RS_UNICODE_ENUM(Hangul_Syllable_Type, unsigned char,
+    RS_ENUM(Hangul_Syllable_Type, unsigned char,
         NA, L, LV, LVT, T, V,
     )
 
