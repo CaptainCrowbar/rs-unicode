@@ -1,5 +1,5 @@
 #include "rs-unicode/property-map.hpp"
-#include "test/unit-test.hpp"
+#include "rs-core/unit-test.hpp"
 
 using namespace RS::Unicode;
 

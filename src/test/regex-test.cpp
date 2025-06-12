@@ -1,5 +1,5 @@
 #include "rs-unicode/regex.hpp"
-#include "test/unit-test.hpp"
+#include "rs-core/unit-test.hpp"
 #include <algorithm>
 #include <format>
 #include <iterator>

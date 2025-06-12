@@ -1,5 +1,5 @@
 #include "rs-unicode/version.hpp"
-#include "test/unit-test.hpp"
+#include "rs-core/unit-test.hpp"
 #include <print>
 
 using namespace RS::Unicode;

@@ -3,8 +3,6 @@
 #include "rs-unicode/property-list.hpp"
 #include "rs-core/enum.hpp"
 #include "rs-core/global.hpp"
-#include <cstddef>
-#include <limits>
 
 namespace RS::Unicode {
 

@@ -2,7 +2,7 @@
 // Do not edit
 
 #include "rs-unicode/string.hpp"
-#include "test/unit-test.hpp"
+#include "rs-core/unit-test.hpp"
 #include <array>
 #include <cstddef>
 #include <string>

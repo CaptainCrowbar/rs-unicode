@@ -1,6 +1,6 @@
 #include "rs-unicode/string.hpp"
 #include "rs-unicode/character.hpp"
-#include "test/unit-test.hpp"
+#include "rs-core/unit-test.hpp"
 #include <string>
 #include <string_view>
 #include <utility>

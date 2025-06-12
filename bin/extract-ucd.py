@@ -788,7 +788,7 @@ with open(output_path, "w", newline="\n") as cpp:
         // Do not edit
 
         #include "rs-unicode/string.hpp"
-        #include "test/unit-test.hpp"
+        #include "rs-core/unit-test.hpp"
         #include <cstddef>
         #include <string>
         #include <vector>
@@ -881,7 +881,7 @@ with open(output_path, "w", newline="\n") as cpp:
         // Do not edit
 
         #include "rs-unicode/string.hpp"
-        #include "test/unit-test.hpp"
+        #include "rs-core/unit-test.hpp"
         #include <array>
         #include <cstddef>
         #include <string>

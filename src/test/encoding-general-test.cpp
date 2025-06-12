@@ -1,5 +1,5 @@
 #include "rs-unicode/encoding.hpp"
-#include "test/unit-test.hpp"
+#include "rs-core/unit-test.hpp"
 #include <string_view>
 
 using namespace RS::Unicode;

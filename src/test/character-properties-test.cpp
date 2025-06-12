@@ -1,6 +1,6 @@
 #include "rs-unicode/character.hpp"
 #include "rs-unicode/encoding.hpp"
-#include "test/unit-test.hpp"
+#include "rs-core/unit-test.hpp"
 #include <cstdint>
 
 using namespace RS::Unicode;

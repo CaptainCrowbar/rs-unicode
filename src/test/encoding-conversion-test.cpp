@@ -1,5 +1,5 @@
 #include "rs-unicode/encoding.hpp"
-#include "test/unit-test.hpp"
+#include "rs-core/unit-test.hpp"
 #include <cstddef>
 #include <cstdint>
 #include <format>
