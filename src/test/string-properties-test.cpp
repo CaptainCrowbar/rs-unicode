@@ -1,5 +1,8 @@
 #include "rs-unicode/string.hpp"
 #include "rs-core/unit-test.hpp"
+#include <cstddef>
+#include <string>
+#include <utility>
 
 using namespace RS::Unicode;
 
@@ -105,5 +108,69 @@ void test_rs_unicode_string_properties_wide_column_length() {
     TEST_EQUAL(length("😀👍👩",                              Unit::wide),  6u);   // simple emoji
     TEST_EQUAL(length("😀👍🏽👩🏽",                              Unit::wide),  6u);   // modified emoji
     TEST_EQUAL(length("🇳🇿🇺🇸🇩🇪🇦🇺",                            Unit::wide),  8u);   // flags
+
+}
+
+void test_rs_unicode_string_properties_line_and_column() {
+
+    std::string text;
+    std::pair<std::size_t, std::size_t> lc;
+
+    TRY(lc = line_and_column(text, 0));        TEST_EQUAL(lc.first, 0u);  TEST_EQUAL(lc.second, 0u);
+    TRY(lc = line_and_column(text, 999));      TEST_EQUAL(lc.first, 0u);  TEST_EQUAL(lc.second, 0u);
+    TRY((lc = line_and_column("Hello", 42)));  TEST_EQUAL(lc.first, 0u);  TEST_EQUAL(lc.second, 5u);
+
+    text =
+        "Hello world\n"
+        "Goodnight moon\n"
+        "Here comes the sun\n";
+
+    TRY(lc = line_and_column(text, 0));    TEST_EQUAL(lc.first, 0u);  TEST_EQUAL(lc.second, 0u);
+    TRY(lc = line_and_column(text, 10));   TEST_EQUAL(lc.first, 0u);  TEST_EQUAL(lc.second, 10u);
+    TRY(lc = line_and_column(text, 12));   TEST_EQUAL(lc.first, 1u);  TEST_EQUAL(lc.second, 0u);
+    TRY(lc = line_and_column(text, 25));   TEST_EQUAL(lc.first, 1u);  TEST_EQUAL(lc.second, 13u);
+    TRY(lc = line_and_column(text, 27));   TEST_EQUAL(lc.first, 2u);  TEST_EQUAL(lc.second, 0u);
+    TRY(lc = line_and_column(text, 44));   TEST_EQUAL(lc.first, 2u);  TEST_EQUAL(lc.second, 17u);
+    TRY(lc = line_and_column(text, 46));   TEST_EQUAL(lc.first, 3u);  TEST_EQUAL(lc.second, 0u);
+    TRY(lc = line_and_column(text, 999));  TEST_EQUAL(lc.first, 3u);  TEST_EQUAL(lc.second, 0u);
+
+    text =
+        "αβγδε\n"
+        "😀👍👩\n"
+        "😀👍🏽👩🏽\n"
+        "🇳🇿🇺🇸🇩🇪🇦🇺\n";
+
+    TRY(lc = line_and_column(text, 0, Unit::scalars));    TEST_EQUAL(lc.first, 0u);  TEST_EQUAL(lc.second, 0u);
+    TRY(lc = line_and_column(text, 10, Unit::scalars));   TEST_EQUAL(lc.first, 0u);  TEST_EQUAL(lc.second, 5u);
+    TRY(lc = line_and_column(text, 11, Unit::scalars));   TEST_EQUAL(lc.first, 1u);  TEST_EQUAL(lc.second, 0u);
+    TRY(lc = line_and_column(text, 23, Unit::scalars));   TEST_EQUAL(lc.first, 1u);  TEST_EQUAL(lc.second, 3u);
+    TRY(lc = line_and_column(text, 24, Unit::scalars));   TEST_EQUAL(lc.first, 2u);  TEST_EQUAL(lc.second, 0u);
+    TRY(lc = line_and_column(text, 44, Unit::scalars));   TEST_EQUAL(lc.first, 2u);  TEST_EQUAL(lc.second, 5u);
+    TRY(lc = line_and_column(text, 45, Unit::scalars));   TEST_EQUAL(lc.first, 3u);  TEST_EQUAL(lc.second, 0u);
+    TRY(lc = line_and_column(text, 77, Unit::scalars));   TEST_EQUAL(lc.first, 3u);  TEST_EQUAL(lc.second, 8u);
+    TRY(lc = line_and_column(text, 78, Unit::scalars));   TEST_EQUAL(lc.first, 4u);  TEST_EQUAL(lc.second, 0u);
+    TRY(lc = line_and_column(text, 999, Unit::scalars));  TEST_EQUAL(lc.first, 4u);  TEST_EQUAL(lc.second, 0u);
+
+    TRY(lc = line_and_column(text, 0, Unit::graphemes));    TEST_EQUAL(lc.first, 0u);  TEST_EQUAL(lc.second, 0u);
+    TRY(lc = line_and_column(text, 10, Unit::graphemes));   TEST_EQUAL(lc.first, 0u);  TEST_EQUAL(lc.second, 5u);
+    TRY(lc = line_and_column(text, 11, Unit::graphemes));   TEST_EQUAL(lc.first, 1u);  TEST_EQUAL(lc.second, 0u);
+    TRY(lc = line_and_column(text, 23, Unit::graphemes));   TEST_EQUAL(lc.first, 1u);  TEST_EQUAL(lc.second, 3u);
+    TRY(lc = line_and_column(text, 24, Unit::graphemes));   TEST_EQUAL(lc.first, 2u);  TEST_EQUAL(lc.second, 0u);
+    TRY(lc = line_and_column(text, 44, Unit::graphemes));   TEST_EQUAL(lc.first, 2u);  TEST_EQUAL(lc.second, 3u);
+    TRY(lc = line_and_column(text, 45, Unit::graphemes));   TEST_EQUAL(lc.first, 3u);  TEST_EQUAL(lc.second, 0u);
+    TRY(lc = line_and_column(text, 77, Unit::graphemes));   TEST_EQUAL(lc.first, 3u);  TEST_EQUAL(lc.second, 4u);
+    TRY(lc = line_and_column(text, 78, Unit::graphemes));   TEST_EQUAL(lc.first, 4u);  TEST_EQUAL(lc.second, 0u);
+    TRY(lc = line_and_column(text, 999, Unit::graphemes));  TEST_EQUAL(lc.first, 4u);  TEST_EQUAL(lc.second, 0u);
+
+    TRY(lc = line_and_column(text, 0, Unit::columns));    TEST_EQUAL(lc.first, 0u);  TEST_EQUAL(lc.second, 0u);
+    TRY(lc = line_and_column(text, 10, Unit::columns));   TEST_EQUAL(lc.first, 0u);  TEST_EQUAL(lc.second, 5u);
+    TRY(lc = line_and_column(text, 11, Unit::columns));   TEST_EQUAL(lc.first, 1u);  TEST_EQUAL(lc.second, 0u);
+    TRY(lc = line_and_column(text, 23, Unit::columns));   TEST_EQUAL(lc.first, 1u);  TEST_EQUAL(lc.second, 6u);
+    TRY(lc = line_and_column(text, 24, Unit::columns));   TEST_EQUAL(lc.first, 2u);  TEST_EQUAL(lc.second, 0u);
+    TRY(lc = line_and_column(text, 44, Unit::columns));   TEST_EQUAL(lc.first, 2u);  TEST_EQUAL(lc.second, 6u);
+    TRY(lc = line_and_column(text, 45, Unit::columns));   TEST_EQUAL(lc.first, 3u);  TEST_EQUAL(lc.second, 0u);
+    TRY(lc = line_and_column(text, 77, Unit::columns));   TEST_EQUAL(lc.first, 3u);  TEST_EQUAL(lc.second, 8u);
+    TRY(lc = line_and_column(text, 78, Unit::columns));   TEST_EQUAL(lc.first, 4u);  TEST_EQUAL(lc.second, 0u);
+    TRY(lc = line_and_column(text, 999, Unit::columns));  TEST_EQUAL(lc.first, 4u);  TEST_EQUAL(lc.second, 0u);
 
 }

@@ -305,6 +305,15 @@ namespace RS::Unicode {
         }
     }
 
+    std::pair<std::size_t, std::size_t> line_and_column(std::string_view text, std::size_t pos, Unit u) noexcept {
+        auto prefix = text.substr(0, pos);
+        auto line = std::ranges::count(prefix, '\n');
+        auto start_line = prefix.find_last_of('\n') + 1;
+        auto last_line = prefix.substr(start_line);
+        auto column = length(last_line, u);
+        return {line, column};
+    }
+
     // Case conversion functions
 
     namespace {

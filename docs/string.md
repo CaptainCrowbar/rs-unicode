@@ -14,8 +14,8 @@ namespace RS::Unicode;
 
 ## Important
 
-**All functions in this header assume that their input is valid UTF-8 (or
-other UTF). Behaviour is undefined if they are passed invalid encoding.**
+**All functions in this header assume that their input is valid UTF-8.
+Behaviour is undefined if they are passed invalid encoding.**
 
 ## Types
 
@@ -123,6 +123,16 @@ characters are counted as zero width (note that this includes tabs and line
 breaks). In practise this will only be an approximation; most nominally "fixed
 width" fonts contain small irregularities that prevent text containing
 characters from different scripts from lining up perfectly.
+
+```c++
+std::pair<std::size_t, std::size_t> line_and_column(std::string_view text,
+    std::size_t pos, Unit u = Unit::scalars) noexcept;
+```
+
+Converts a byte offset to a line and column number within a string. Only LF
+characters are recognised as line breaks. Columns are counted according to
+the units argument. The input position is clamped to the length of the
+string. All measures are zero based.
 
 ## Case conversion
 

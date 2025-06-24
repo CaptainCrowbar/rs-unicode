@@ -74,6 +74,7 @@ void test_rs_unicode_string_properties_utf32_length();
 void test_rs_unicode_string_properties_grapheme_length();
 void test_rs_unicode_string_properties_column_length();
 void test_rs_unicode_string_properties_wide_column_length();
+void test_rs_unicode_string_properties_line_and_column();
 void test_rs_unicode_string_grapheme_breaks();
 void test_rs_unicode_string_normalization();
 void test_rs_unicode_version();
@@ -152,6 +153,7 @@ int main(int argc, char** argv) {
     call_me_maybe(test_rs_unicode_string_properties_grapheme_length, "test_rs_unicode_string_properties_grapheme_length");
     call_me_maybe(test_rs_unicode_string_properties_column_length, "test_rs_unicode_string_properties_column_length");
     call_me_maybe(test_rs_unicode_string_properties_wide_column_length, "test_rs_unicode_string_properties_wide_column_length");
+    call_me_maybe(test_rs_unicode_string_properties_line_and_column, "test_rs_unicode_string_properties_line_and_column");
     call_me_maybe(test_rs_unicode_string_grapheme_breaks, "test_rs_unicode_string_grapheme_breaks");
     call_me_maybe(test_rs_unicode_string_normalization, "test_rs_unicode_string_normalization");
     call_me_maybe(test_rs_unicode_version, "test_rs_unicode_version");

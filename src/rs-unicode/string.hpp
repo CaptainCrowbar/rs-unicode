@@ -151,6 +151,8 @@ namespace RS::Unicode {
     )
 
     std::size_t length(std::string_view str, Unit u = Unit::scalars);
+    std::pair<std::size_t, std::size_t> line_and_column(std::string_view text,
+        std::size_t pos, Unit u = Unit::scalars) noexcept;
 
     // Case conversion
 
