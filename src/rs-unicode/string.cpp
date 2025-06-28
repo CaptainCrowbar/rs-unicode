@@ -963,6 +963,86 @@ namespace RS::Unicode {
 
     }
 
+    // String search functions
+
+    std::string_view find_first_of(std::string_view str, char32_t c) noexcept {
+        auto utf32 = decoded_utf8_view(str);
+        auto it = rs::find(utf32, c);
+        return it == utf32.end() ? std::string_view() : it.view();
+    }
+
+    std::string_view find_first_of(std::string_view str, std::string_view chars) noexcept {
+        return find_first_of(str, utf8_to_utf32(chars));
+    }
+
+    std::string_view find_first_of(std::string_view str, std::u32string_view chars) noexcept {
+        auto utf32 = decoded_utf8_view(str);
+        auto it = rs::find_first_of(utf32, chars);
+        return it == utf32.end() ? std::string_view() : it.view();
+    }
+
+    std::string_view find_first_of(std::string_view str, CharacterPredicate pred) {
+        auto utf32 = decoded_utf8_view(str);
+        auto it = rs::find_if(utf32, pred);
+        return it == utf32.end() ? std::string_view() : it.view();
+    }
+
+    std::string_view find_first_not_of(std::string_view str, char32_t c) noexcept {
+        return find_first_not_of(str, [=] (char32_t c2) { return c == c2; });
+    }
+
+    std::string_view find_first_not_of(std::string_view str, std::string_view chars) noexcept {
+        return find_first_not_of(str, utf8_to_utf32(chars));
+    }
+
+    std::string_view find_first_not_of(std::string_view str, std::u32string_view chars) noexcept {
+        return find_first_not_of(str, [=] (char32_t c) { return chars.contains(c); });
+    }
+
+    std::string_view find_first_not_of(std::string_view str, CharacterPredicate pred) {
+        auto utf32 = decoded_utf8_view(str);
+        auto it = rs::find_if_not(utf32, pred);
+        return it == utf32.end() ? std::string_view() : it.view();
+    }
+
+    std::string_view find_last_of(std::string_view str, char32_t c) noexcept {
+        auto utf32 = decoded_utf8_view(str);
+        auto it = rs::find_last(utf32, c).begin();
+        return it == utf32.end() ? std::string_view() : it.view();
+    }
+
+    std::string_view find_last_of(std::string_view str, std::string_view chars) noexcept {
+        return find_last_of(str, utf8_to_utf32(chars));
+    }
+
+    std::string_view find_last_of(std::string_view str, std::u32string_view chars) noexcept {
+        return find_last_of(str, [=] (char32_t c) { return chars.contains(c); });
+    }
+
+    std::string_view find_last_of(std::string_view str, CharacterPredicate pred) {
+        auto utf32 = decoded_utf8_view(str);
+        auto it = rs::find_last_if(utf32, pred).begin();
+        return it == utf32.end() ? std::string_view() : it.view();
+    }
+
+    std::string_view find_last_not_of(std::string_view str, char32_t c) noexcept {
+        return find_last_not_of(str, [=] (char32_t c2) { return c == c2; });
+    }
+
+    std::string_view find_last_not_of(std::string_view str, std::string_view chars) noexcept {
+        return find_last_not_of(str, utf8_to_utf32(chars));
+    }
+
+    std::string_view find_last_not_of(std::string_view str, std::u32string_view chars) noexcept {
+        return find_last_not_of(str, [=] (char32_t c) { return chars.contains(c); });
+    }
+
+    std::string_view find_last_not_of(std::string_view str, CharacterPredicate pred) {
+        auto utf32 = decoded_utf8_view(str);
+        auto it = rs::find_last_if_not(utf32, pred).begin();
+        return it == utf32.end() ? std::string_view() : it.view();
+    }
+
     namespace Literals {
 
         // String literals

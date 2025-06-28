@@ -221,6 +221,25 @@ namespace RS::Unicode {
     std::string word_wrap(std::string_view text, std::size_t width = npos,
         std::size_t indent1 = 0, std::size_t indent2 = npos, Unit u = Unit::columns);
 
+    // String search functions
+
+    std::string_view find_first_of(std::string_view str, char32_t c) noexcept;
+    std::string_view find_first_of(std::string_view str, std::string_view chars) noexcept;
+    std::string_view find_first_of(std::string_view str, std::u32string_view chars) noexcept;
+    std::string_view find_first_of(std::string_view str, CharacterPredicate pred);
+    std::string_view find_first_not_of(std::string_view str, char32_t c) noexcept;
+    std::string_view find_first_not_of(std::string_view str, std::string_view chars) noexcept;
+    std::string_view find_first_not_of(std::string_view str, std::u32string_view chars) noexcept;
+    std::string_view find_first_not_of(std::string_view str, CharacterPredicate pred);
+    std::string_view find_last_of(std::string_view str, char32_t c) noexcept;
+    std::string_view find_last_of(std::string_view str, std::string_view chars) noexcept;
+    std::string_view find_last_of(std::string_view str, std::u32string_view chars) noexcept;
+    std::string_view find_last_of(std::string_view str, CharacterPredicate pred);
+    std::string_view find_last_not_of(std::string_view str, char32_t c) noexcept;
+    std::string_view find_last_not_of(std::string_view str, std::string_view chars) noexcept;
+    std::string_view find_last_not_of(std::string_view str, std::u32string_view chars) noexcept;
+    std::string_view find_last_not_of(std::string_view str, CharacterPredicate pred);
+
     // String literals
 
     namespace Literals {

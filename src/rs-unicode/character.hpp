@@ -8,6 +8,9 @@ namespace RS::Unicode {
 
     // Constants
 
+    using RS::ascii_whitespace;
+    using RS::npos;
+
     constexpr char32_t min_surrogate     = 0xd800;
     constexpr char32_t max_surrogate     = 0xdfff;
     constexpr char32_t byte_order_mark   = 0xfeff;

@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.30)
 # version.hpp.
 
 project(rs-unicode
-    VERSION 0.2.3
+    VERSION 0.2.4
     LANGUAGES CXX
 )
 
@@ -86,6 +86,7 @@ add_executable(${unittest}
     test/string-literals-test.cpp
     test/string-manipulation-test.cpp
     test/string-properties-test.cpp
+    test/string-search-test.cpp
     test/ucd-grapheme-break-test.cpp
     test/ucd-normalization-test.cpp
     test/unit-test.cpp

@@ -271,6 +271,49 @@ used for all lines if `indent2=npos.` The width includes the indentation. If
 a single word is too long to fit in the width, it will be allowed to violate
 the right margin.
 
+## String search functions
+
+```c++
+std::string_view find_first_of(std::string_view str,
+    char32_t c) noexcept;
+std::string_view find_first_of(std::string_view str,
+    std::string_view chars) noexcept;
+std::string_view find_first_of(std::string_view str,
+    std::u32string_view chars) noexcept;
+std::string_view find_first_of(std::string_view str,
+    CharacterPredicate pred);
+std::string_view find_first_not_of(std::string_view str,
+    char32_t c) noexcept;
+std::string_view find_first_not_of(std::string_view str,
+    std::string_view chars) noexcept;
+std::string_view find_first_not_of(std::string_view str,
+    std::u32string_view chars) noexcept;
+std::string_view find_first_not_of(std::string_view str,
+    CharacterPredicate pred);
+std::string_view find_last_of(std::string_view str,
+    char32_t c) noexcept;
+std::string_view find_last_of(std::string_view str,
+    std::string_view chars) noexcept;
+std::string_view find_last_of(std::string_view str,
+    std::u32string_view chars) noexcept;
+std::string_view find_last_of(std::string_view str,
+    CharacterPredicate pred);
+std::string_view find_last_not_of(std::string_view str,
+    char32_t c) noexcept;
+std::string_view find_last_not_of(std::string_view str,
+    std::string_view chars) noexcept;
+std::string_view find_last_not_of(std::string_view str,
+    std::u32string_view chars) noexcept;
+std::string_view find_last_not_of(std::string_view str,
+    CharacterPredicate pred);
+```
+
+Find the first or last UTF-8 encoded character matching, or failing to match,
+a specific character, any one of a set of characters (passed as either UTF-8
+or UTF-32), or any character matching a predicate. On success, the function
+returns a string view over the encoded character; on failure, it returns a
+null (default constructed) string view.
+
 ## String literals
 
 ```c++
