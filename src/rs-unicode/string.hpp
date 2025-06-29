@@ -3,10 +3,10 @@
 #include "rs-unicode/character.hpp"
 #include "rs-core/enum.hpp"
 #include "rs-core/global.hpp"
+#include "rs-core/iterator.hpp"
 #include <compare>
 #include <cstddef>
 #include <functional>
-#include <iterator>
 #include <optional>
 #include <ranges>
 #include <string>
@@ -22,23 +22,16 @@ namespace RS::Unicode {
 
     // Grapheme clusters
 
-    class GraphemeIterator {
+    class GraphemeIterator:
+    public ForwardIterator<GraphemeIterator, const std::string_view> {
 
     public:
-
-        using difference_type = std::ptrdiff_t;
-        using iterator_category = std::forward_iterator_tag;
-        using pointer = const std::string_view*;
-        using reference = const std::string_view&;
-        using value_type = std::string_view;
 
         GraphemeIterator() = default;
         explicit GraphemeIterator(std::string_view str): tail_(str) { next(); }
 
         const std::string_view& operator*() const noexcept { return current_; }
-        const std::string_view* operator->() const noexcept { return &**this; }
         GraphemeIterator& operator++();
-        GraphemeIterator operator++(int) { auto i = *this; ++*this; return i; }
         bool operator==(const GraphemeIterator& i) const noexcept;
 
     private:
@@ -58,15 +51,10 @@ namespace RS::Unicode {
 
     // String segmentation
 
-    class SplitIterator {
+    class SplitIterator:
+    public ForwardIterator<SplitIterator, const std::string_view> {
 
     public:
-
-        using difference_type = std::ptrdiff_t;
-        using iterator_category = std::forward_iterator_tag;
-        using pointer = const std::string_view*;
-        using reference = const std::string_view&;
-        using value_type = std::string_view;
 
         SplitIterator() = default;
         explicit SplitIterator(std::string_view str);
@@ -75,9 +63,7 @@ namespace RS::Unicode {
         explicit SplitIterator(std::string_view str, CharacterPredicate delimiter);
 
         const std::string_view& operator*() const noexcept { return current_; }
-        const std::string_view* operator->() const noexcept { return &**this; }
         SplitIterator& operator++();
-        SplitIterator operator++(int) { auto i = *this; ++*this; return i; }
         bool operator==(const SplitIterator& i) const noexcept;
 
     private:

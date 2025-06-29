@@ -4,10 +4,10 @@
 #include "rs-core/enum.hpp"
 #include "rs-core/format.hpp"
 #include "rs-core/global.hpp"
+#include "rs-core/iterator.hpp"
 #include <compare>
 #include <cstddef>
 #include <cstdint>
-#include <iterator>
 #include <ranges>
 #include <stdexcept>
 #include <string>
@@ -122,20 +122,13 @@ namespace RS::Unicode {
 
     };
 
-    class Regex::match_iterator {
+    class Regex::match_iterator:
+    public ForwardIterator<Regex::match_iterator, const match> {
 
     public:
 
-        using difference_type = std::ptrdiff_t;
-        using iterator_category = std::forward_iterator_tag;
-        using pointer = const match*;
-        using reference = const match&;
-        using value_type = match;
-
         const match& operator*() const noexcept { return match_; }
-        const match* operator->() const noexcept { return &**this; }
         match_iterator& operator++() { next(match_.endpos()); return *this; }
-        match_iterator operator++(int) { auto i = *this; ++*this; return i; }
         bool operator==(const match_iterator& i) const noexcept { return match_.pos() == i.match_.pos(); }
         bool operator==(std::nullptr_t) const noexcept { return ! match_; }
 
@@ -155,20 +148,13 @@ namespace RS::Unicode {
 
     };
 
-    class Regex::split_iterator {
+    class Regex::split_iterator:
+    public ForwardIterator<Regex::split_iterator, const std::string_view> {
 
     public:
 
-        using difference_type = std::ptrdiff_t;
-        using iterator_category = std::forward_iterator_tag;
-        using pointer = const std::string_view*;
-        using reference = const std::string_view&;
-        using value_type = std::string_view;
-
         const std::string_view& operator*() const noexcept { return current_; }
-        const std::string_view* operator->() const noexcept { return &**this; }
         split_iterator& operator++() { next(); return *this; }
-        split_iterator operator++(int) { auto i = *this; ++*this; return i; }
         bool operator==(const split_iterator& i) const noexcept { return current_.data() == i.current_.data(); }
         bool operator==(std::nullptr_t) const noexcept { return current_.data() == nullptr; }
 

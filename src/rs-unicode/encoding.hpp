@@ -3,11 +3,11 @@
 #include "rs-unicode/character.hpp"
 #include "rs-core/enum.hpp"
 #include "rs-core/global.hpp"
+#include "rs-core/iterator.hpp"
 #include <array>
 #include <compare>
 #include <cstddef>
 #include <format>
-#include <iterator>
 #include <optional>
 #include <ranges>
 #include <stdexcept>
@@ -162,25 +162,17 @@ namespace RS::Unicode {
 
     // Encoding and decoding iterators
 
-    class DecodeUtf8Iterator {
+    class DecodeUtf8Iterator:
+    public BidirectionalIterator<DecodeUtf8Iterator, const char32_t> {
 
     public:
-
-        using difference_type = std::ptrdiff_t;
-        using iterator_category = std::bidirectional_iterator_tag;
-        using pointer = const char32_t*;
-        using reference = const char32_t&;
-        using value_type = char32_t;
 
         DecodeUtf8Iterator() = default;
         explicit DecodeUtf8Iterator(const char* utf8) noexcept: utf8_(utf8) {}
 
         const char32_t& operator*() const noexcept;
-        const char32_t* operator->() const noexcept { return &**this; }
         DecodeUtf8Iterator& operator++() noexcept;
-        DecodeUtf8Iterator operator++(int) noexcept { auto i = *this; ++*this; return i; }
         DecodeUtf8Iterator& operator--() noexcept;
-        DecodeUtf8Iterator operator--(int) noexcept { auto i = *this; --*this; return i; }
         bool operator==(const DecodeUtf8Iterator& i) const noexcept { return utf8_ == i.utf8_; }
         const char* ptr() const noexcept { return utf8_; }
         std::string_view view() const noexcept;
@@ -199,25 +191,17 @@ namespace RS::Unicode {
         return std::ranges::subrange{i, j};
     }
 
-    class EncodeUtf8Iterator {
+    class EncodeUtf8Iterator:
+    public BidirectionalIterator<EncodeUtf8Iterator, const char> {
 
     public:
-
-        using difference_type = std::ptrdiff_t;
-        using iterator_category = std::bidirectional_iterator_tag;
-        using pointer = const char*;
-        using reference = const char&;
-        using value_type = char;
 
         EncodeUtf8Iterator() = default;
         explicit EncodeUtf8Iterator(const char32_t* utf32) noexcept: utf32_(utf32) {}
 
         const char& operator*() const noexcept;
-        const char* operator->() const noexcept { return &**this; }
         EncodeUtf8Iterator& operator++() noexcept;
-        EncodeUtf8Iterator operator++(int) noexcept { auto i = *this; ++*this; return i; }
         EncodeUtf8Iterator& operator--() noexcept;
-        EncodeUtf8Iterator operator--(int) noexcept { auto i = *this; --*this; return i; }
         bool operator==(const EncodeUtf8Iterator& i) const noexcept { return utf32_ == i.utf32_ && index_ == i.index_; }
 
     private:
