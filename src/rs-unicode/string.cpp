@@ -1,5 +1,4 @@
 #include "rs-unicode/string.hpp"
-#include "rs-unicode/encoding.hpp"
 #include <algorithm>
 #include <bit>
 #include <cstdlib>

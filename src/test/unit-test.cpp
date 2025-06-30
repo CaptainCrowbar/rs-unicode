@@ -61,6 +61,8 @@ void test_rs_unicode_iterators_grapheme_view();
 void test_rs_unicode_iterators_split_view();
 void test_rs_unicode_iterators_split_vector();
 void test_rs_unicode_string_literals();
+void test_rs_unicode_string_manipulation_concepts();
+void test_rs_unicode_string_manipulation_cat();
 void test_rs_unicode_string_manipulation_join();
 void test_rs_unicode_string_manipulation_padding();
 void test_rs_unicode_string_manipulation_partition();
@@ -144,6 +146,8 @@ int main(int argc, char** argv) {
     call_me_maybe(test_rs_unicode_iterators_split_view, "test_rs_unicode_iterators_split_view");
     call_me_maybe(test_rs_unicode_iterators_split_vector, "test_rs_unicode_iterators_split_vector");
     call_me_maybe(test_rs_unicode_string_literals, "test_rs_unicode_string_literals");
+    call_me_maybe(test_rs_unicode_string_manipulation_concepts, "test_rs_unicode_string_manipulation_concepts");
+    call_me_maybe(test_rs_unicode_string_manipulation_cat, "test_rs_unicode_string_manipulation_cat");
     call_me_maybe(test_rs_unicode_string_manipulation_join, "test_rs_unicode_string_manipulation_join");
     call_me_maybe(test_rs_unicode_string_manipulation_padding, "test_rs_unicode_string_manipulation_padding");
     call_me_maybe(test_rs_unicode_string_manipulation_partition, "test_rs_unicode_string_manipulation_partition");

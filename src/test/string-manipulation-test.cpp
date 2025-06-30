@@ -9,6 +9,91 @@
 using namespace RS::Unicode;
 using namespace std::literals;
 
+void test_rs_unicode_string_manipulation_concepts() {
+
+    using namespace RS::Unicode::Detail;
+
+    static_assert(CatStringType<std::string>);
+    static_assert(CatStringType<std::u8string>);
+    static_assert(CatStringType<std::u16string>);
+    static_assert(CatStringType<std::u32string>);
+    static_assert(CatStringType<std::wstring>);
+    static_assert(CatStringType<std::string_view>);
+    static_assert(CatStringType<std::u8string_view>);
+    static_assert(CatStringType<std::u16string_view>);
+    static_assert(CatStringType<std::u32string_view>);
+    static_assert(CatStringType<std::wstring_view>);
+    static_assert(CatStringType<char>);
+    static_assert(CatStringType<char8_t>);
+    static_assert(CatStringType<char16_t>);
+    static_assert(CatStringType<char32_t>);
+    static_assert(CatStringType<wchar_t>);
+    static_assert(CatStringType<char*>);
+    static_assert(CatStringType<char8_t*>);
+    static_assert(CatStringType<char16_t*>);
+    static_assert(CatStringType<char32_t*>);
+    static_assert(CatStringType<wchar_t*>);
+    static_assert(CatStringType<const char*>);
+    static_assert(CatStringType<const char8_t*>);
+    static_assert(CatStringType<const char16_t*>);
+    static_assert(CatStringType<const char32_t*>);
+    static_assert(CatStringType<const wchar_t*>);
+    static_assert(CatStringType<bool>);
+    static_assert(CatStringType<int>);
+    static_assert(CatStringType<unsigned long long>);
+
+    static_assert(! CatStringType<void>);
+    static_assert(! CatStringType<void*>);
+    static_assert(! CatStringType<const void*>);
+    static_assert(! CatStringType<std::vector<char>>);
+
+}
+
+void test_rs_unicode_string_manipulation_cat() {
+
+    using namespace RS::Unicode::Detail;
+
+    std::string s;
+
+    s = "#";  TRY(cat_once(s, "αβγδε"));         TEST_EQUAL(s, "#αβγδε");
+    s = "#";  TRY(cat_once(s, u8"αβγδε"));       TEST_EQUAL(s, "#αβγδε");
+    s = "#";  TRY(cat_once(s, u"αβγδε"));        TEST_EQUAL(s, "#αβγδε");
+    s = "#";  TRY(cat_once(s, U"αβγδε"));        TEST_EQUAL(s, "#αβγδε");
+    s = "#";  TRY(cat_once(s, L"αβγδε"));        TEST_EQUAL(s, "#αβγδε");
+    s = "#";  TRY(cat_once(s, "αβγδε"s));        TEST_EQUAL(s, "#αβγδε");
+    s = "#";  TRY(cat_once(s, u8"αβγδε"s));      TEST_EQUAL(s, "#αβγδε");
+    s = "#";  TRY(cat_once(s, u"αβγδε"s));       TEST_EQUAL(s, "#αβγδε");
+    s = "#";  TRY(cat_once(s, U"αβγδε"s));       TEST_EQUAL(s, "#αβγδε");
+    s = "#";  TRY(cat_once(s, L"αβγδε"s));       TEST_EQUAL(s, "#αβγδε");
+    s = "#";  TRY(cat_once(s, "αβγδε"sv));       TEST_EQUAL(s, "#αβγδε");
+    s = "#";  TRY(cat_once(s, u8"αβγδε"sv));     TEST_EQUAL(s, "#αβγδε");
+    s = "#";  TRY(cat_once(s, u"αβγδε"sv));      TEST_EQUAL(s, "#αβγδε");
+    s = "#";  TRY(cat_once(s, U"αβγδε"sv));      TEST_EQUAL(s, "#αβγδε");
+    s = "#";  TRY(cat_once(s, L"αβγδε"sv));      TEST_EQUAL(s, "#αβγδε");
+    s = "#";  TRY(cat_once(s, 'x'));             TEST_EQUAL(s, "#x");
+    s = "#";  TRY(cat_once(s, u8'x'));           TEST_EQUAL(s, "#x");
+    s = "#";  TRY(cat_once(s, u'α'));            TEST_EQUAL(s, "#α");
+    s = "#";  TRY(cat_once(s, U'α'));            TEST_EQUAL(s, "#α");
+    s = "#";  TRY(cat_once(s, L'α'));            TEST_EQUAL(s, "#α");
+    s = "#";  TRY(cat_once(s, true));            TEST_EQUAL(s, "#true");
+    s = "#";  TRY(cat_once(s, 42));              TEST_EQUAL(s, "#42");
+    s = "#";  TRY(cat_once(s, -42));             TEST_EQUAL(s, "#-42");
+    s = "#";  TRY(cat_once(s, 123'456'789ull));  TEST_EQUAL(s, "#123456789");
+
+    TRY(s = cat());                             TEST_EQUAL(s, "");
+    TRY(s = cat("Hello"));                      TEST_EQUAL(s, "Hello");
+    TRY(s = cat("Hello"s));                     TEST_EQUAL(s, "Hello");
+    TRY(s = cat(u8"Hello"s));                   TEST_EQUAL(s, "Hello");
+    TRY(s = cat(u"Hello"s));                    TEST_EQUAL(s, "Hello");
+    TRY(s = cat(U"Hello"s));                    TEST_EQUAL(s, "Hello");
+    TRY(s = cat("Hello", ' ', "world"));        TEST_EQUAL(s, "Hello world");
+    TRY(s = cat(u8"Hello", u8' ', u8"world"));  TEST_EQUAL(s, "Hello world");
+    TRY(s = cat(u"Hello", u' ', u"world"));     TEST_EQUAL(s, "Hello world");
+    TRY(s = cat(U"Hello", U' ', U"world"));     TEST_EQUAL(s, "Hello world");
+    TRY(s = cat("The answer is ", 42));         TEST_EQUAL(s, "The answer is 42");
+
+}
+
 void test_rs_unicode_string_manipulation_join() {
 
     std::vector<std::string> v;

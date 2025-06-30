@@ -178,6 +178,30 @@ superscript character in Unicode.
 ## String manipulation functions
 
 ```c++
+template <[see below]... TS> std::string cat(TS&&... args);
+```
+
+Concatenate a sequence of string-like objects into a single string,
+transcoding to UTF-8 where necessary. Any of the following types will be
+accepted:
+
+* 8-bit types (as a special exception to the normal requirement for valid
+  encoding, these will be copied verbatim without any restrictions on their
+  content):
+    * `std::string` or `std::u8string`
+    * `std::string_view` or `std::u8string_view`
+    * `char` or `char8_t`
+    * `const char*` or `const char8_t*`
+* 16-bit or 32-bit types (these follow the normal UB-on-invalid-UTF rule):
+    * `std::u16string, std::u32string, std::wstring`
+    * `std::u16string_view, std::u32string_view, std::wstring_view`
+    * `char16_t, char32_t, wchar_t`
+    * `const char16_t*, const char32_t*, const wchar_t*`
+* Other types:
+    * `bool` formatted as `"true"` or `"false"`
+    * Any standard integral type not already covered, formatted using `std::to_string()`
+
+```c++
 template <rs::range R> std::string join(const R& range,
     std::string_view delimiter = {});
 ```

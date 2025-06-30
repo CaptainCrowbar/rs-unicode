@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.30)
 # version.hpp.
 
 project(rs-unicode
-    VERSION 0.2.5
+    VERSION 0.2.6
     LANGUAGES CXX
 )
 

@@ -1,10 +1,12 @@
 #pragma once
 
 #include "rs-unicode/character.hpp"
+#include "rs-unicode/encoding.hpp"
 #include "rs-core/enum.hpp"
 #include "rs-core/global.hpp"
 #include "rs-core/iterator.hpp"
 #include <compare>
+#include <concepts>
 #include <cstddef>
 #include <functional>
 #include <optional>
@@ -158,6 +160,84 @@ namespace RS::Unicode {
     std::optional<std::string> to_superscript(std::string_view str);
 
     // String manipulation functions
+
+    namespace Detail {
+
+        inline void cat_once(std::string& s, const std::string& t) { s += t; }
+        inline void cat_once(std::string& s, const std::u8string& t) { s.append(reinterpret_cast<const char*>(t.data()), t.size()); }
+        inline void cat_once(std::string& s, const std::u16string& t) { s += utf32_to_utf8(utf16_to_utf32(t)); }
+        inline void cat_once(std::string& s, const std::u32string& t) { s += utf32_to_utf8(t); }
+        inline void cat_once(std::string& s, const std::string_view& t) { s += t; }
+        inline void cat_once(std::string& s, const std::u8string_view& t) { s.append(reinterpret_cast<const char*>(t.data()), t.size()); }
+        inline void cat_once(std::string& s, const std::u16string_view& t) { s += utf32_to_utf8(utf16_to_utf32(t)); }
+        inline void cat_once(std::string& s, const std::u32string_view& t) { s += utf32_to_utf8(t); }
+
+        inline void cat_once(std::string& s, const std::wstring& t) {
+            if constexpr (sizeof(wchar_t) == 2) {
+                std::u16string_view u16(reinterpret_cast<const char16_t*>(t.data()), t.size());
+                cat_once(s, u16);
+            } else {
+                std::u32string_view u32(reinterpret_cast<const char32_t*>(t.data()), t.size());
+                cat_once(s, u32);
+            }
+        }
+
+        inline void cat_once(std::string& s, const std::wstring_view& t) {
+            if constexpr (sizeof(wchar_t) == 2) {
+                std::u16string_view u16(reinterpret_cast<const char16_t*>(t.data()), t.size());
+                cat_once(s, u16);
+            } else {
+                std::u32string_view u32(reinterpret_cast<const char32_t*>(t.data()), t.size());
+                cat_once(s, u32);
+            }
+        }
+
+        inline void cat_once(std::string& s, char t) { s += t; }
+        inline void cat_once(std::string& s, char8_t t) { s += static_cast<char>(t); }
+        inline void cat_once(std::string& s, char16_t t) { append_utf8(static_cast<char32_t>(t), s); }
+        inline void cat_once(std::string& s, char32_t t) { append_utf8(t, s); }
+        inline void cat_once(std::string& s, wchar_t t) { append_utf8(static_cast<char32_t>(t), s); }
+        inline void cat_once(std::string& s, const char* t) { s += t; }
+        inline void cat_once(std::string& s, const char8_t* t) { s += reinterpret_cast<const char*>(t); }
+        inline void cat_once(std::string& s, const char16_t* t) { cat_once(s, std::u16string_view(t)); }
+        inline void cat_once(std::string& s, const char32_t* t) { cat_once(s, std::u32string_view(t)); }
+        inline void cat_once(std::string& s, const wchar_t* t) { cat_once(s, std::wstring_view(t)); }
+        inline void cat_once(std::string& s, bool t) { s += t ? "true" : "false"; }
+
+        template <std::integral T>
+        void cat_once(std::string& s, T t) {
+            s += std::to_string(t);
+        }
+
+        template <typename T>
+        void cat_once(std::string&, const T*) = delete;
+
+        template <typename T>
+        concept CatStringType = requires (std::string& s, T t) {
+            cat_once(s, t);
+        };
+
+        inline void cat_many(std::string&) {}
+
+        template <CatStringType T>
+        void cat_many(std::string& s, T&& t) {
+            cat_once(s, std::forward<T>(t));
+        }
+
+        template <CatStringType T, CatStringType... TS>
+        void cat_many(std::string& s, T&& t, TS&&... ts) {
+            cat_once(s, std::forward<T>(t));
+            cat_many(s, std::forward<TS>(ts)...);
+        }
+
+    }
+
+    template <Detail::CatStringType... TS>
+    std::string cat(TS&&... ts) {
+        std::string s;
+        Detail::cat_many(s, std::forward<TS>(ts)...);
+        return s;
+    }
 
     template <std::ranges::range R>
     std::string join(const R& range, std::string_view delimiter = {}) {
