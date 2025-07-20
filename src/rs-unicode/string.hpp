@@ -311,6 +311,7 @@ namespace RS::Unicode {
     namespace Literals {
 
         std::string operator""_doc(const char* ptr, std::size_t len);
+        std::vector<std::string> operator""_qw(const char* ptr, std::size_t len);
 
     }
 

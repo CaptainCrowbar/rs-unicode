@@ -1,11 +1,13 @@
 #include "rs-unicode/string.hpp"
 #include "rs-core/unit-test.hpp"
+#include <format>
 #include <string>
+#include <vector>
 
 using namespace RS::Unicode;
 using namespace RS::Unicode::Literals;
 
-void test_rs_unicode_string_literals() {
+void test_rs_unicode_string_literals_doc() {
 
     std::string s;
 
@@ -171,5 +173,35 @@ void test_rs_unicode_string_literals() {
         "        Bravo\n"
         "    Charlie\n"
     );
+
+}
+
+void test_rs_unicode_string_literals_qw() {
+
+    std::vector<std::string> v;
+
+    TRY(v = ""_qw);
+    TEST_EQUAL(v.size(), 0u);
+    TEST_EQUAL(std::format("{}", v), R"([])");
+
+    TRY(v = " \r\n"_qw);
+    TEST_EQUAL(v.size(), 0u);
+    TEST_EQUAL(std::format("{}", v), R"([])");
+
+    TRY(v = "Alpha"_qw);
+    TEST_EQUAL(v.size(), 1u);
+    TEST_EQUAL(std::format("{}", v), R"(["Alpha"])");
+
+    TRY(v = "Alpha Bravo"_qw);
+    TEST_EQUAL(v.size(), 2u);
+    TEST_EQUAL(std::format("{}", v), R"(["Alpha", "Bravo"])");
+
+    TRY(v = "Alpha Bravo Charlie"_qw);
+    TEST_EQUAL(v.size(), 3u);
+    TEST_EQUAL(std::format("{}", v), R"(["Alpha", "Bravo", "Charlie"])");
+
+    TRY(v = "\r\nAlpha\r\nBravo\r\nCharlie\r\n"_qw);
+    TEST_EQUAL(v.size(), 3u);
+    TEST_EQUAL(std::format("{}", v), R"(["Alpha", "Bravo", "Charlie"])");
 
 }

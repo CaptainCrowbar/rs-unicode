@@ -1043,9 +1043,9 @@ namespace RS::Unicode {
         return it == utf32.end() ? std::string_view() : it.view();
     }
 
-    namespace Literals {
+    // String literals
 
-        // String literals
+    namespace Literals {
 
         std::string operator""_doc(const char* ptr, std::size_t len) {
 
@@ -1087,6 +1087,11 @@ namespace RS::Unicode {
 
             return result;
 
+        }
+
+        std::vector<std::string> operator""_qw(const char* ptr, std::size_t len) {
+            std::string_view source(ptr, len);
+            return split_vector(source);
         }
 
     }

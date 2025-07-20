@@ -340,15 +340,15 @@ null (default constructed) string view.
 
 ## String literals
 
+All of these are in `namespace RS::Unicode::Literals.`
+
 ```c++
-namespace Literals {
-    std::string operator""_doc(const char* ptr, std::size_t len);
-}
+std::string operator""_doc(const char* ptr, std::size_t len);
 ```
 
-Define a multiline raw string literal without breaking the indentation of the
-surrounding context. Any leading whitespace common to all lines of the string
-is removed from all lines. A leading line break is ignored.
+Constructs a multiline raw string literal without breaking the indentation of
+the surrounding context. Any leading whitespace common to all lines of the
+string is removed from all lines. A leading line break is ignored.
 
 Example:
 
@@ -365,4 +365,28 @@ This is equivalent to:
 auto str =
     "Hello world\n"
     "    Goodnight moon\n";
+```
+
+```c++
+std::vector<std::string> operator""_qw(const char* ptr, std::size_t len);
+```
+
+Constructs a vector of strings by breaking up the supplied string at every
+subsequence of white space characters. Leading and trailing whitespace are
+ignored; this will never put any empty strings in the vector.
+
+Example:
+
+```c++
+auto vec = "Alpha Bravo Charlie"_qw;
+```
+
+This is equivalent to:
+
+```c++
+std::vector<std::string> vec {
+    "Alpha",
+    "Bravo",
+    "Charlie",
+};
 ```
