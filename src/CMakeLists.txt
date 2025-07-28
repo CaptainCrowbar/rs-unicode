@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.30)
 # version.hpp.
 
 project(rs-unicode
-    VERSION 0.2.8
+    VERSION 0.2.9
     LANGUAGES CXX
 )
 
@@ -19,7 +19,8 @@ if(MSVC)
     add_compile_options(/EHsc /Gy /MP /O2 /sdl /utf-8 /W4 /WX)
 else()
     set(THREADS_PREFER_PTHREAD_FLAG TRUE)
-    add_compile_options(-fdiagnostics-color=always -finput-charset=UTF-8 -march=native -O2 -Wall -Wextra -Wpedantic -Werror)
+    add_compile_options(-fdiagnostics-color=always -finput-charset=UTF-8 -march=native -O2
+        -Wall -Wextra -Wpedantic -Werror -Wconversion -Wshadow)
     if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         add_compile_options(-Wsuggest-override -Wsuggest-destructor-override)
     endif()
