@@ -72,7 +72,7 @@ The regular expression class. This is basically a wrapper around
 using enum RegexFlags;
 ```
 
-Member constants (see below).
+Member constants (see above).
 
 ```c++
 class Regex::error;
