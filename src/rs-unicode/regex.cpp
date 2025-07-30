@@ -98,12 +98,8 @@ namespace RS::Unicode {
     // Regex class
 
     Regex::Regex(std::string_view pattern, RegexFlags flags):
+    pattern_(pattern),
     flags_(flags) {
-
-        if (pattern.starts_with("(?b)")) {
-            pattern = pattern.substr(4);
-            flags_ |= byte;
-        }
 
         auto pattern_ptr = reinterpret_cast<PCRE2_SPTR>(pattern.data());
         auto options = compile_options(flags_);
@@ -123,6 +119,7 @@ namespace RS::Unicode {
 
     Regex::Regex(const Regex& re):
     code_(pcre2_code_copy(pc(re.code_))),
+    pattern_(re.pattern_),
     flags_(re.flags_) {
         if (code_ == nullptr) {
             throw error("pcre2_code_copy() failed");
@@ -131,6 +128,7 @@ namespace RS::Unicode {
 
     Regex::Regex(Regex&& re) noexcept:
     code_(std::exchange(re.code_, nullptr)),
+    pattern_(std::move(re.pattern_)),
     flags_(re.flags_) {}
 
     Regex& Regex::operator=(const Regex& re) {
@@ -143,6 +141,7 @@ namespace RS::Unicode {
 
     Regex& Regex::operator=(Regex&& re) noexcept {
         code_ = std::exchange(re.code_, nullptr);
+        pattern_ = std::move(re.pattern_);
         flags_ = re.flags_;
         return *this;
     }

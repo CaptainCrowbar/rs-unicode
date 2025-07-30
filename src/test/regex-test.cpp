@@ -22,6 +22,8 @@ void test_rs_unicode_regex_match() {
     Regex re;
     Regex::match m;
 
+    TEST_EQUAL(re.pattern(), "");
+    TEST_EQUAL(re.flags(), Regex::none);
     TEST_EQUAL(re.groups(), 0u);
     TRY(m = re("Hello world"));
     TEST(! m);
@@ -31,6 +33,8 @@ void test_rs_unicode_regex_match() {
     TEST_EQUAL(m[0], "");
 
     TRY(re = "[a-z]+"_re);
+    TEST_EQUAL(re.pattern(), "[a-z]+");
+    TEST_EQUAL(re.flags(), Regex::none);
     TEST_EQUAL(re.groups(), 1u);
     TRY(m = re("Hello world"));
     TEST(m);
@@ -40,6 +44,8 @@ void test_rs_unicode_regex_match() {
     TEST_EQUAL(m[0], "ello");
 
     TRY(re = Regex("[a-z]+", Regex::icase));
+    TEST_EQUAL(re.pattern(), "[a-z]+");
+    TEST_EQUAL(re.flags(), Regex::icase);
     TEST_EQUAL(re.groups(), 1u);
     TRY(m = re("Hello world"));
     TEST(m);

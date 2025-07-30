@@ -21,23 +21,23 @@ namespace RS::Unicode {
 
         none,
 
-        anchor         = 0x0000'0001ul,  // Must start at beginning             [Any]              PCRE2_ANCHORED                      --     --
-        byte           = 0x0000'0002ul,  // Byte mode (default is UTF-8)        [Compile only]     ~ (PCRE2_UCP | PCRE2_UTF)           (?b)*  --
-        copy           = 0x0000'0004ul,  // Copy matched substrings             [Match only]       PCRE2_COPY_MATCHED_SUBJECT          --     --
-        dfa            = 0x0000'0008ul,  // Use DFA algorithm                   [Match only]       --                                  --     --
-        dotall         = 0x0000'0010ul,  // . matches LF                        [Compile only]     PCRE2_DOTALL                        (?s)   Perl /s
-        extended       = 0x0000'0020ul,  // Free form layout                    [Compile only]     PCRE2_EXTENDED                      (?x)   Perl /x
-        firstline      = 0x0000'0040ul,  // Must start in first line            [Compile only]     PCRE2_FIRSTLINE                     --     --
-        full           = 0x0000'0080ul,  // Match complete string               [Any]              PCRE2_ANCHORED | PCRE2_ENDANCHORED  --     --
-        global         = 0x0000'0100ul,  // Replace all matches                 [Format only]      PCRE2_SUBSTITUTE_GLOBAL             --     Perl /g
-        icase          = 0x0000'0200ul,  // Case insensitive                    [Compile only]     PCRE2_CASELESS                      (?i)   Perl /i
-        multiline      = 0x0000'0400ul,  // ^ and $ match each line             [Compile only]     PCRE2_MULTILINE                     (?m)   Perl /m
-        nocapture      = 0x0000'0800ul,  // Groups are not captured             [Compile only]     PCRE2_NO_AUTO_CAPTURE               --     --
-        notbol         = 0x0000'1000ul,  // ^ does not match beginning          [Match or format]  PCRE2_NOTBOL                        --     --
-        notempty       = 0x0000'2000ul,  // Do not match empty string           [Match or format]  PCRE2_NOTEMPTY                      --     --
-        notemptystart  = 0x0000'4000ul,  // Do not match empty string at start  [Match or format]  PCRE2_NOTEMPTY_ATSTART              --     --
-        noteol         = 0x0000'8000ul,  // $ does not match end                [Match or format]  PCRE2_NOTEOL                        --     --
-        partial        = 0x0001'0000ul,  // Partial matching                    [Match only]       PCRE2_PARTIAL_HARD                  --     --
+        anchor         = 0x0000'0001ul,  // Must start at beginning             [Any]              PCRE2_ANCHORED                      --    --
+        byte           = 0x0000'0002ul,  // Byte mode (default is UTF-8)        [Compile only]     ~ (PCRE2_UCP | PCRE2_UTF)           --    --
+        copy           = 0x0000'0004ul,  // Copy matched substrings             [Match only]       PCRE2_COPY_MATCHED_SUBJECT          --    --
+        dfa            = 0x0000'0008ul,  // Use DFA algorithm                   [Match only]       --                                  --    --
+        dotall         = 0x0000'0010ul,  // . matches LF                        [Compile only]     PCRE2_DOTALL                        (?s)  Perl /s
+        extended       = 0x0000'0020ul,  // Free form layout                    [Compile only]     PCRE2_EXTENDED                      (?x)  Perl /x
+        firstline      = 0x0000'0040ul,  // Must start in first line            [Compile only]     PCRE2_FIRSTLINE                     --    --
+        full           = 0x0000'0080ul,  // Match complete string               [Any]              PCRE2_ANCHORED | PCRE2_ENDANCHORED  --    --
+        global         = 0x0000'0100ul,  // Replace all matches                 [Format only]      PCRE2_SUBSTITUTE_GLOBAL             --    Perl /g
+        icase          = 0x0000'0200ul,  // Case insensitive                    [Compile only]     PCRE2_CASELESS                      (?i)  Perl /i
+        multiline      = 0x0000'0400ul,  // ^ and $ match each line             [Compile only]     PCRE2_MULTILINE                     (?m)  Perl /m
+        nocapture      = 0x0000'0800ul,  // Groups are not captured             [Compile only]     PCRE2_NO_AUTO_CAPTURE               --    --
+        notbol         = 0x0000'1000ul,  // ^ does not match beginning          [Match or format]  PCRE2_NOTBOL                        --    --
+        notempty       = 0x0000'2000ul,  // Do not match empty string           [Match or format]  PCRE2_NOTEMPTY                      --    --
+        notemptystart  = 0x0000'4000ul,  // Do not match empty string at start  [Match or format]  PCRE2_NOTEMPTY_ATSTART              --    --
+        noteol         = 0x0000'8000ul,  // $ does not match end                [Match or format]  PCRE2_NOTEOL                        --    --
+        partial        = 0x0001'0000ul,  // Partial matching                    [Match only]       PCRE2_PARTIAL_HARD                  --    --
 
     )
 
@@ -61,6 +61,8 @@ namespace RS::Unicode {
         Regex& operator=(const Regex& re);
         Regex& operator=(Regex&& re) noexcept;
 
+        std::string pattern() const { return pattern_; }
+        RegexFlags flags() const noexcept { return flags_; }
         std::size_t groups() const noexcept;
         match search(std::string_view subject, RegexFlags flags = {}, std::size_t offset = 0) const;
         match operator()(std::string_view subject, RegexFlags flags = {}, std::size_t offset = 0) const;
@@ -75,6 +77,7 @@ namespace RS::Unicode {
     private:
 
         void* code_ {};
+        std::string pattern_;
         RegexFlags flags_ {};
 
     };

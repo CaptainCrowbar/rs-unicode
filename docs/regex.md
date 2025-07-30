@@ -26,7 +26,7 @@ enum class RegexFlags: std::uint16_t;
 | ----             | -----------                                          | -----    | ------             |
 | `none`           | No flags                                             | n/a      |                    |
 | `anchor`         | The match must start at the beginning of the string  | Any      |                    |
-| `byte`           | Byte mode matching (default is UTF-8 mode)           | Compile  | <nobr>(?b)</nobr>  |
+| `byte`           | Byte mode matching (default is UTF-8 mode)           | Compile  |                    |
 | `copy`           | Copy matched substrings instead of referencing       | Search   |                    |
 | `dfa`            | Use the alternative DFA algorithm                    | Search   |                    |
 | `dotall`         | Dot matches any character including LF               | Compile  | <nobr>(?s)</nobr>  |
@@ -107,6 +107,16 @@ Regex& Regex::operator=(Regex&& re) noexcept;
 ```
 
 Other life cycle functions.
+
+```c++
+std::string Regex::pattern() const;
+RegexFlags Regex::flags() const noexcept;
+```
+
+These return the pattern string and flags. These are returned exactly as
+provided to the constructor, and do not take implied modifiers into account;
+for example, the `icase` flag will not be reported here if it was supplied
+through the `"(?i)"` prefix instead of an explicit flag.
 
 ```c++
 std::size_t Regex::groups() const noexcept;
