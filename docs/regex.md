@@ -313,7 +313,9 @@ complicated.
 ## Literals
 
 ```c++
-Regex operator""_re(const char* ptr, std::size_t len);
+namespace Literals {
+    Regex operator""_re(const char* ptr, std::size_t len);
+}
 ```
 
 Custom literal that constructs a regular expression. Some of the compile time
