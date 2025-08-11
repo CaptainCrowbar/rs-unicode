@@ -348,7 +348,9 @@ std::string operator""_doc(const char* ptr, std::size_t len);
 
 Constructs a multiline raw string literal without breaking the indentation of
 the surrounding context. Any leading whitespace common to all lines of the
-string is removed from all lines. A leading line break is ignored.
+string is removed from all lines. A leading line break is ignored. Either
+spaces or tabs can be used for indentation, but behaviour is undefined if a
+mixture of both spaces and tabs are present in the left margin.
 
 Example:
 
