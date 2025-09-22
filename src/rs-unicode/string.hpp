@@ -9,6 +9,7 @@
 #include <concepts>
 #include <cstddef>
 #include <functional>
+#include <iterator>
 #include <optional>
 #include <ranges>
 #include <string>
@@ -25,7 +26,7 @@ namespace RS::Unicode {
     // Grapheme clusters
 
     class GraphemeIterator:
-    public ForwardIterator<GraphemeIterator, const std::string_view> {
+    public Iterator<GraphemeIterator, const std::string_view, std::forward_iterator_tag> {
 
     public:
 
@@ -54,7 +55,7 @@ namespace RS::Unicode {
     // String segmentation
 
     class SplitIterator:
-    public ForwardIterator<SplitIterator, const std::string_view> {
+    public Iterator<SplitIterator, const std::string_view, std::forward_iterator_tag> {
 
     public:
 

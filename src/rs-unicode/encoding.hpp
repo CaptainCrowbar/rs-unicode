@@ -8,6 +8,7 @@
 #include <compare>
 #include <cstddef>
 #include <format>
+#include <iterator>
 #include <optional>
 #include <ranges>
 #include <stdexcept>
@@ -163,7 +164,7 @@ namespace RS::Unicode {
     // Encoding and decoding iterators
 
     class DecodeUtf8Iterator:
-    public BidirectionalIterator<DecodeUtf8Iterator, const char32_t> {
+    public Iterator<DecodeUtf8Iterator, const char32_t, std::bidirectional_iterator_tag> {
 
     public:
 
@@ -192,7 +193,7 @@ namespace RS::Unicode {
     }
 
     class EncodeUtf8Iterator:
-    public BidirectionalIterator<EncodeUtf8Iterator, const char> {
+    public Iterator<EncodeUtf8Iterator, const char, std::bidirectional_iterator_tag> {
 
     public:
 

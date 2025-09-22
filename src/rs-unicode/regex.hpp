@@ -8,6 +8,7 @@
 #include <compare>
 #include <cstddef>
 #include <cstdint>
+#include <iterator>
 #include <ranges>
 #include <stdexcept>
 #include <string>
@@ -126,7 +127,7 @@ namespace RS::Unicode {
     };
 
     class Regex::match_iterator:
-    public ForwardIterator<Regex::match_iterator, const match> {
+    public Iterator<Regex::match_iterator, const match, std::forward_iterator_tag> {
 
     public:
 
@@ -152,7 +153,7 @@ namespace RS::Unicode {
     };
 
     class Regex::split_iterator:
-    public ForwardIterator<Regex::split_iterator, const std::string_view> {
+    public Iterator<Regex::split_iterator, const std::string_view, std::forward_iterator_tag> {
 
     public:
 
