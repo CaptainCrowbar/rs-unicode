@@ -33,14 +33,14 @@ class GraphemeIterator {
     using value_type = std::string_view;
     GraphemeIterator() = default;
     explicit GraphemeIterator(std::string_view str);
-    const std::string_view& operator*() const noexcept { return current_; }
+    const std::string_view& operator*() const noexcept;
 };
 
 [grapheme iterator range] grapheme_view(std::string_view str);
 ```
 
 Iterator over the grapheme clusters in a UTF-8 string. It dereferences to a
-string view representing a single grapheme cluster.
+string view representing a single extended grapheme cluster.
 
 ## String segmentation
 
