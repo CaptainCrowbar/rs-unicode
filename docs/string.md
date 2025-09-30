@@ -56,7 +56,7 @@ class SplitIterator {
         std::u32string_view delimiter);
     explicit SplitIterator(std::string_view str,
         CharacterPredicate delimiter);
-    const std::string_view& operator*() const noexcept { return current_; }
+    const std::string_view& operator*() const noexcept;
 };
 
 [split iterator range] split_view(std::string_view str);
