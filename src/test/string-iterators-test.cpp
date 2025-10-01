@@ -5,10 +5,26 @@
 #include <format>
 #include <iterator>
 #include <ranges>
+#include <set>
 #include <string>
+#include <string_view>
+#include <vector>
 
 using namespace RS::Unicode;
 namespace rs = std::ranges;
+
+void test_rs_unicode_iterators_reify() {
+
+    std::set<const char*> pointers {"alpha", "bravo", "charlie"};
+    std::set<std::string_view> views {"delta", "echo", "foxtrot"};
+    std::set<std::string> strings {"golf", "hotel", "india"};
+    std::vector<std::string> vec;
+
+    TRY(vec = reify(pointers));  TEST_EQUAL(std::format("{}", vec), R"(["alpha", "bravo", "charlie"])");
+    TRY(vec = reify(views));     TEST_EQUAL(std::format("{}", vec), R"(["delta", "echo", "foxtrot"])");
+    TRY(vec = reify(strings));   TEST_EQUAL(std::format("{}", vec), R"(["golf", "hotel", "india"])");
+
+}
 
 void test_rs_unicode_iterators_grapheme_view() {
 
@@ -78,100 +94,55 @@ void test_rs_unicode_iterators_grapheme_view() {
 
 void test_rs_unicode_iterators_split_view() {
 
-    auto view = split_view("");                                           TEST_EQUAL(rs::distance(view), 0);  TEST_EQUAL(std::format("{}", view), R"([])");
-    TRY(view = split_view(" "));                                          TEST_EQUAL(rs::distance(view), 0);  TEST_EQUAL(std::format("{}", view), R"([])");
-    TRY(view = split_view("\r\n"));                                       TEST_EQUAL(rs::distance(view), 0);  TEST_EQUAL(std::format("{}", view), R"([])");
-    TRY(view = split_view("Hello"));                                      TEST_EQUAL(rs::distance(view), 1);  TEST_EQUAL(std::format("{}", view), R"(["Hello"])");
-    TRY(view = split_view("Hello world"));                                TEST_EQUAL(rs::distance(view), 2);  TEST_EQUAL(std::format("{}", view), R"(["Hello", "world"])");
-    TRY(view = split_view("\r\nHello\r\nworld\r\n"));                     TEST_EQUAL(rs::distance(view), 2);  TEST_EQUAL(std::format("{}", view), R"(["Hello", "world"])");
-    TRY(view = split_view("Hello world; goodbye"));                       TEST_EQUAL(rs::distance(view), 3);  TEST_EQUAL(std::format("{}", view), R"(["Hello", "world;", "goodbye"])");
-    TRY(view = split_view("Greek αβγδε"));                                TEST_EQUAL(rs::distance(view), 2);  TEST_EQUAL(std::format("{}", view), R"(["Greek", "αβγδε"])");
-    TRY(view = split_view("😀👍👩"));                                    TEST_EQUAL(rs::distance(view), 1);  TEST_EQUAL(std::format("{}", view), R"(["😀👍👩"])");
-    TRY(view = split_view("😀 👍 👩"));                                  TEST_EQUAL(rs::distance(view), 3);  TEST_EQUAL(std::format("{}", view), R"(["😀", "👍", "👩"])");
-    TRY(view = split_view("😀👍🏽👩🏽"));                                    TEST_EQUAL(rs::distance(view), 1);  TEST_EQUAL(std::format("{}", view), R"(["😀👍🏽👩🏽"])");
-    TRY(view = split_view("😀 👍🏽 👩🏽"));                                  TEST_EQUAL(rs::distance(view), 3);  TEST_EQUAL(std::format("{}", view), R"(["😀", "👍🏽", "👩🏽"])");
-    TRY(view = split_view("🇳🇿🇺🇸🇩🇪🇦🇺"));                                  TEST_EQUAL(rs::distance(view), 1);  TEST_EQUAL(std::format("{}", view), R"(["🇳🇿🇺🇸🇩🇪🇦🇺"])");
-    TRY(view = split_view("🇳🇿 🇺🇸 🇩🇪 🇦🇺"));                               TEST_EQUAL(rs::distance(view), 4);  TEST_EQUAL(std::format("{}", view), R"(["🇳🇿", "🇺🇸", "🇩🇪", "🇦🇺"])");
-    TRY(view = split_view("", ""));                                       TEST_EQUAL(rs::distance(view), 0);  TEST_EQUAL(std::format("{}", view), R"([])");
-    TRY(view = split_view("Hello world", ""));                            TEST_EQUAL(rs::distance(view), 1);  TEST_EQUAL(std::format("{}", view), R"(["Hello world"])");
-    TRY(view = split_view("", "+-"));                                     TEST_EQUAL(rs::distance(view), 0);  TEST_EQUAL(std::format("{}", view), R"([])");
-    TRY(view = split_view("+-", "+-"));                                   TEST_EQUAL(rs::distance(view), 2);  TEST_EQUAL(std::format("{}", view), R"(["", ""])");
-    TRY(view = split_view("+-+-", "+-"));                                 TEST_EQUAL(rs::distance(view), 3);  TEST_EQUAL(std::format("{}", view), R"(["", "", ""])");
-    TRY(view = split_view("Hello world", "+-"));                          TEST_EQUAL(rs::distance(view), 1);  TEST_EQUAL(std::format("{}", view), R"(["Hello world"])");
-    TRY(view = split_view("Hello+-world", "+-"));                         TEST_EQUAL(rs::distance(view), 2);  TEST_EQUAL(std::format("{}", view), R"(["Hello", "world"])");
-    TRY(view = split_view("+-Hello+-world+-", "+-"));                     TEST_EQUAL(rs::distance(view), 4);  TEST_EQUAL(std::format("{}", view), R"(["", "Hello", "world", ""])");
-    TRY(view = split_view("+-+-Hello+-+-world+-+-", "+-"));               TEST_EQUAL(rs::distance(view), 7);  TEST_EQUAL(std::format("{}", view), R"(["", "", "Hello", "", "world", "", ""])");
-    TRY(view = split_view("", "🇦🇺"));                                     TEST_EQUAL(rs::distance(view), 0);  TEST_EQUAL(std::format("{}", view), R"([])");
-    TRY(view = split_view("🇦🇺", "🇦🇺"));                                   TEST_EQUAL(rs::distance(view), 2);  TEST_EQUAL(std::format("{}", view), R"(["", ""])");
-    TRY(view = split_view("🇦🇺🇦🇺", "🇦🇺"));                                 TEST_EQUAL(rs::distance(view), 3);  TEST_EQUAL(std::format("{}", view), R"(["", "", ""])");
-    TRY(view = split_view("Hello world", "🇦🇺"));                          TEST_EQUAL(rs::distance(view), 1);  TEST_EQUAL(std::format("{}", view), R"(["Hello world"])");
-    TRY(view = split_view("Hello🇦🇺world", "🇦🇺"));                         TEST_EQUAL(rs::distance(view), 2);  TEST_EQUAL(std::format("{}", view), R"(["Hello", "world"])");
-    TRY(view = split_view("🇦🇺Hello🇦🇺world🇦🇺", "🇦🇺"));                    TEST_EQUAL(rs::distance(view), 4);  TEST_EQUAL(std::format("{}", view), R"(["", "Hello", "world", ""])");
-    TRY(view = split_view("🇦🇺🇦🇺Hello🇦🇺🇦🇺world🇦🇺🇦🇺", "🇦🇺"));             TEST_EQUAL(rs::distance(view), 7);  TEST_EQUAL(std::format("{}", view), R"(["", "", "Hello", "", "world", "", ""])");
-    TRY(view = split_view("", U""));                                      TEST_EQUAL(rs::distance(view), 0);  TEST_EQUAL(std::format("{}", view), R"([])");
-    TRY(view = split_view("Hello world", U""));                           TEST_EQUAL(rs::distance(view), 1);  TEST_EQUAL(std::format("{}", view), R"(["Hello world"])");
-    TRY(view = split_view("", U"⋀⋁"));                                    TEST_EQUAL(rs::distance(view), 0);  TEST_EQUAL(std::format("{}", view), R"([])");
-    TRY(view = split_view("Hello", U"⋀⋁"));                               TEST_EQUAL(rs::distance(view), 1);  TEST_EQUAL(std::format("{}", view), R"(["Hello"])");
-    TRY(view = split_view("Hello⋀world", U"⋀⋁"));                         TEST_EQUAL(rs::distance(view), 2);  TEST_EQUAL(std::format("{}", view), R"(["Hello", "world"])");
-    TRY(view = split_view("Hello⋀world⋁goodbye", U"⋀⋁"));                 TEST_EQUAL(rs::distance(view), 3);  TEST_EQUAL(std::format("{}", view), R"(["Hello", "world", "goodbye"])");
-    TRY(view = split_view("⋁Hello⋀world⋁goodbye⋀", U"⋀⋁"));               TEST_EQUAL(rs::distance(view), 3);  TEST_EQUAL(std::format("{}", view), R"(["Hello", "world", "goodbye"])");
-    TRY(view = split_view("⋀⋁⋀⋁Hello⋀⋁⋀⋁world⋀⋁⋀⋁", U"⋀⋁"));            TEST_EQUAL(rs::distance(view), 2);  TEST_EQUAL(std::format("{}", view), R"(["Hello", "world"])");
-    TRY(view = split_view("", is_pattern_syntax));                        TEST_EQUAL(rs::distance(view), 0);  TEST_EQUAL(std::format("{}", view), R"([])");
-    TRY(view = split_view("Hello", is_pattern_syntax));                   TEST_EQUAL(rs::distance(view), 1);  TEST_EQUAL(std::format("{}", view), R"(["Hello"])");
-    TRY(view = split_view("Hello*world", is_pattern_syntax));             TEST_EQUAL(rs::distance(view), 2);  TEST_EQUAL(std::format("{}", view), R"(["Hello", "world"])");
-    TRY(view = split_view("Hello*world/goodbye", is_pattern_syntax));     TEST_EQUAL(rs::distance(view), 3);  TEST_EQUAL(std::format("{}", view), R"(["Hello", "world", "goodbye"])");
-    TRY(view = split_view("/Hello*world/goodbye*", is_pattern_syntax));   TEST_EQUAL(rs::distance(view), 3);  TEST_EQUAL(std::format("{}", view), R"(["Hello", "world", "goodbye"])");
-    TRY(view = split_view("*/*/Hello*/*/world*/*/", is_pattern_syntax));  TEST_EQUAL(rs::distance(view), 2);  TEST_EQUAL(std::format("{}", view), R"(["Hello", "world"])");
-    TRY(view = split_view("∇∇Hello∇∇world∇∇", is_pattern_syntax));        TEST_EQUAL(rs::distance(view), 2);  TEST_EQUAL(std::format("{}", view), R"(["Hello", "world"])");
-
-}
-
-void test_rs_unicode_iterators_split_vector() {
-
-    auto vec = split_vector("");                                           TEST_EQUAL(vec.size(), 0u);  TEST_EQUAL(std::format("{}", vec), R"([])");
-    TRY(vec = split_vector(" "));                                          TEST_EQUAL(vec.size(), 0u);  TEST_EQUAL(std::format("{}", vec), R"([])");
-    TRY(vec = split_vector("\r\n"));                                       TEST_EQUAL(vec.size(), 0u);  TEST_EQUAL(std::format("{}", vec), R"([])");
-    TRY(vec = split_vector("Hello"));                                      TEST_EQUAL(vec.size(), 1u);  TEST_EQUAL(std::format("{}", vec), R"(["Hello"])");
-    TRY(vec = split_vector("Hello world"));                                TEST_EQUAL(vec.size(), 2u);  TEST_EQUAL(std::format("{}", vec), R"(["Hello", "world"])");
-    TRY(vec = split_vector("\r\nHello\r\nworld\r\n"));                     TEST_EQUAL(vec.size(), 2u);  TEST_EQUAL(std::format("{}", vec), R"(["Hello", "world"])");
-    TRY(vec = split_vector("Hello world; goodbye"));                       TEST_EQUAL(vec.size(), 3u);  TEST_EQUAL(std::format("{}", vec), R"(["Hello", "world;", "goodbye"])");
-    TRY(vec = split_vector("Greek αβγδε"));                                TEST_EQUAL(vec.size(), 2u);  TEST_EQUAL(std::format("{}", vec), R"(["Greek", "αβγδε"])");
-    TRY(vec = split_vector("😀👍👩"));                                    TEST_EQUAL(vec.size(), 1u);  TEST_EQUAL(std::format("{}", vec), R"(["😀👍👩"])");
-    TRY(vec = split_vector("😀 👍 👩"));                                  TEST_EQUAL(vec.size(), 3u);  TEST_EQUAL(std::format("{}", vec), R"(["😀", "👍", "👩"])");
-    TRY(vec = split_vector("😀👍🏽👩🏽"));                                    TEST_EQUAL(vec.size(), 1u);  TEST_EQUAL(std::format("{}", vec), R"(["😀👍🏽👩🏽"])");
-    TRY(vec = split_vector("😀 👍🏽 👩🏽"));                                  TEST_EQUAL(vec.size(), 3u);  TEST_EQUAL(std::format("{}", vec), R"(["😀", "👍🏽", "👩🏽"])");
-    TRY(vec = split_vector("🇳🇿🇺🇸🇩🇪🇦🇺"));                                  TEST_EQUAL(vec.size(), 1u);  TEST_EQUAL(std::format("{}", vec), R"(["🇳🇿🇺🇸🇩🇪🇦🇺"])");
-    TRY(vec = split_vector("🇳🇿 🇺🇸 🇩🇪 🇦🇺"));                               TEST_EQUAL(vec.size(), 4u);  TEST_EQUAL(std::format("{}", vec), R"(["🇳🇿", "🇺🇸", "🇩🇪", "🇦🇺"])");
-    TRY(vec = split_vector("", ""));                                       TEST_EQUAL(vec.size(), 0u);  TEST_EQUAL(std::format("{}", vec), R"([])");
-    TRY(vec = split_vector("Hello world", ""));                            TEST_EQUAL(vec.size(), 1u);  TEST_EQUAL(std::format("{}", vec), R"(["Hello world"])");
-    TRY(vec = split_vector("", "+-"));                                     TEST_EQUAL(vec.size(), 0u);  TEST_EQUAL(std::format("{}", vec), R"([])");
-    TRY(vec = split_vector("+-", "+-"));                                   TEST_EQUAL(vec.size(), 2u);  TEST_EQUAL(std::format("{}", vec), R"(["", ""])");
-    TRY(vec = split_vector("+-+-", "+-"));                                 TEST_EQUAL(vec.size(), 3u);  TEST_EQUAL(std::format("{}", vec), R"(["", "", ""])");
-    TRY(vec = split_vector("Hello world", "+-"));                          TEST_EQUAL(vec.size(), 1u);  TEST_EQUAL(std::format("{}", vec), R"(["Hello world"])");
-    TRY(vec = split_vector("Hello+-world", "+-"));                         TEST_EQUAL(vec.size(), 2u);  TEST_EQUAL(std::format("{}", vec), R"(["Hello", "world"])");
-    TRY(vec = split_vector("+-Hello+-world+-", "+-"));                     TEST_EQUAL(vec.size(), 4u);  TEST_EQUAL(std::format("{}", vec), R"(["", "Hello", "world", ""])");
-    TRY(vec = split_vector("+-+-Hello+-+-world+-+-", "+-"));               TEST_EQUAL(vec.size(), 7u);  TEST_EQUAL(std::format("{}", vec), R"(["", "", "Hello", "", "world", "", ""])");
-    TRY(vec = split_vector("", "🇦🇺"));                                     TEST_EQUAL(vec.size(), 0u);  TEST_EQUAL(std::format("{}", vec), R"([])");
-    TRY(vec = split_vector("🇦🇺", "🇦🇺"));                                   TEST_EQUAL(vec.size(), 2u);  TEST_EQUAL(std::format("{}", vec), R"(["", ""])");
-    TRY(vec = split_vector("🇦🇺🇦🇺", "🇦🇺"));                                TEST_EQUAL(vec.size(), 3u);  TEST_EQUAL(std::format("{}", vec), R"(["", "", ""])");
-    TRY(vec = split_vector("Hello world", "🇦🇺"));                          TEST_EQUAL(vec.size(), 1u);  TEST_EQUAL(std::format("{}", vec), R"(["Hello world"])");
-    TRY(vec = split_vector("Hello🇦🇺world", "🇦🇺"));                         TEST_EQUAL(vec.size(), 2u);  TEST_EQUAL(std::format("{}", vec), R"(["Hello", "world"])");
-    TRY(vec = split_vector("🇦🇺Hello🇦🇺world🇦🇺", "🇦🇺"));                    TEST_EQUAL(vec.size(), 4u);  TEST_EQUAL(std::format("{}", vec), R"(["", "Hello", "world", ""])");
-    TRY(vec = split_vector("🇦🇺🇦🇺Hello🇦🇺🇦🇺world🇦🇺🇦🇺", "🇦🇺"));             TEST_EQUAL(vec.size(), 7u);  TEST_EQUAL(std::format("{}", vec), R"(["", "", "Hello", "", "world", "", ""])");
-    TRY(vec = split_vector("", U""));                                      TEST_EQUAL(vec.size(), 0u);  TEST_EQUAL(std::format("{}", vec), R"([])");
-    TRY(vec = split_vector("Hello world", U""));                           TEST_EQUAL(vec.size(), 1u);  TEST_EQUAL(std::format("{}", vec), R"(["Hello world"])");
-    TRY(vec = split_vector("", U"⋀⋁"));                                    TEST_EQUAL(vec.size(), 0u);  TEST_EQUAL(std::format("{}", vec), R"([])");
-    TRY(vec = split_vector("Hello", U"⋀⋁"));                               TEST_EQUAL(vec.size(), 1u);  TEST_EQUAL(std::format("{}", vec), R"(["Hello"])");
-    TRY(vec = split_vector("Hello⋀world", U"⋀⋁"));                         TEST_EQUAL(vec.size(), 2u);  TEST_EQUAL(std::format("{}", vec), R"(["Hello", "world"])");
-    TRY(vec = split_vector("Hello⋀world⋁goodbye", U"⋀⋁"));                 TEST_EQUAL(vec.size(), 3u);  TEST_EQUAL(std::format("{}", vec), R"(["Hello", "world", "goodbye"])");
-    TRY(vec = split_vector("⋁Hello⋀world⋁goodbye⋀", U"⋀⋁"));              TEST_EQUAL(vec.size(), 3u);  TEST_EQUAL(std::format("{}", vec), R"(["Hello", "world", "goodbye"])");
-    TRY(vec = split_vector("⋀⋁⋀⋁Hello⋀⋁⋀⋁world⋀⋁⋀⋁", U"⋀⋁"));            TEST_EQUAL(vec.size(), 2u);  TEST_EQUAL(std::format("{}", vec), R"(["Hello", "world"])");
-    TRY(vec = split_vector("", is_pattern_syntax));                        TEST_EQUAL(vec.size(), 0u);  TEST_EQUAL(std::format("{}", vec), R"([])");
-    TRY(vec = split_vector("Hello", is_pattern_syntax));                   TEST_EQUAL(vec.size(), 1u);  TEST_EQUAL(std::format("{}", vec), R"(["Hello"])");
-    TRY(vec = split_vector("Hello*world", is_pattern_syntax));             TEST_EQUAL(vec.size(), 2u);  TEST_EQUAL(std::format("{}", vec), R"(["Hello", "world"])");
-    TRY(vec = split_vector("Hello*world/goodbye", is_pattern_syntax));     TEST_EQUAL(vec.size(), 3u);  TEST_EQUAL(std::format("{}", vec), R"(["Hello", "world", "goodbye"])");
-    TRY(vec = split_vector("/Hello*world/goodbye*", is_pattern_syntax));   TEST_EQUAL(vec.size(), 3u);  TEST_EQUAL(std::format("{}", vec), R"(["Hello", "world", "goodbye"])");
-    TRY(vec = split_vector("*/*/Hello*/*/world*/*/", is_pattern_syntax));  TEST_EQUAL(vec.size(), 2u);  TEST_EQUAL(std::format("{}", vec), R"(["Hello", "world"])");
-    TRY(vec = split_vector("∇∇Hello∇∇world∇∇", is_pattern_syntax));        TEST_EQUAL(vec.size(), 2u);  TEST_EQUAL(std::format("{}", vec), R"(["Hello", "world"])");
+    auto parts = split_words("");                                           TEST_EQUAL(rs::distance(parts), 0);  TEST_EQUAL(std::format("{}", parts), R"([])");
+    TRY(parts = split_words(" "));                                          TEST_EQUAL(rs::distance(parts), 0);  TEST_EQUAL(std::format("{}", parts), R"([])");
+    TRY(parts = split_words("\r\n"));                                       TEST_EQUAL(rs::distance(parts), 0);  TEST_EQUAL(std::format("{}", parts), R"([])");
+    TRY(parts = split_words("Hello"));                                      TEST_EQUAL(rs::distance(parts), 1);  TEST_EQUAL(std::format("{}", parts), R"(["Hello"])");
+    TRY(parts = split_words("Hello world"));                                TEST_EQUAL(rs::distance(parts), 2);  TEST_EQUAL(std::format("{}", parts), R"(["Hello", "world"])");
+    TRY(parts = split_words("\r\nHello\r\nworld\r\n"));                     TEST_EQUAL(rs::distance(parts), 2);  TEST_EQUAL(std::format("{}", parts), R"(["Hello", "world"])");
+    TRY(parts = split_words("Hello world; goodbye"));                       TEST_EQUAL(rs::distance(parts), 3);  TEST_EQUAL(std::format("{}", parts), R"(["Hello", "world;", "goodbye"])");
+    TRY(parts = split_words("Greek αβγδε"));                                TEST_EQUAL(rs::distance(parts), 2);  TEST_EQUAL(std::format("{}", parts), R"(["Greek", "αβγδε"])");
+    TRY(parts = split_words("😀👍👩"));                                    TEST_EQUAL(rs::distance(parts), 1);  TEST_EQUAL(std::format("{}", parts), R"(["😀👍👩"])");
+    TRY(parts = split_words("😀 👍 👩"));                                  TEST_EQUAL(rs::distance(parts), 3);  TEST_EQUAL(std::format("{}", parts), R"(["😀", "👍", "👩"])");
+    TRY(parts = split_words("😀👍🏽👩🏽"));                                    TEST_EQUAL(rs::distance(parts), 1);  TEST_EQUAL(std::format("{}", parts), R"(["😀👍🏽👩🏽"])");
+    TRY(parts = split_words("😀 👍🏽 👩🏽"));                                  TEST_EQUAL(rs::distance(parts), 3);  TEST_EQUAL(std::format("{}", parts), R"(["😀", "👍🏽", "👩🏽"])");
+    TRY(parts = split_words("🇳🇿🇺🇸🇩🇪🇦🇺"));                                  TEST_EQUAL(rs::distance(parts), 1);  TEST_EQUAL(std::format("{}", parts), R"(["🇳🇿🇺🇸🇩🇪🇦🇺"])");
+    TRY(parts = split_words("🇳🇿 🇺🇸 🇩🇪 🇦🇺"));                               TEST_EQUAL(rs::distance(parts), 4);  TEST_EQUAL(std::format("{}", parts), R"(["🇳🇿", "🇺🇸", "🇩🇪", "🇦🇺"])");
+    TRY(parts = split_lines(""));                                           TEST_EQUAL(rs::distance(parts), 0);  TEST_EQUAL(std::format("{}", parts), R"([])");
+    TRY(parts = split_lines("\n"));                                         TEST_EQUAL(rs::distance(parts), 1);  TEST_EQUAL(std::format("{}", parts), R"([""])");
+    TRY(parts = split_lines("Hello world"));                                TEST_EQUAL(rs::distance(parts), 1);  TEST_EQUAL(std::format("{}", parts), R"(["Hello world"])");
+    TRY(parts = split_lines("Hello\nworld\n"));                             TEST_EQUAL(rs::distance(parts), 2);  TEST_EQUAL(std::format("{}", parts), R"(["Hello", "world"])");
+    TRY(parts = split_lines("Hello\r\nworld\r\n"));                         TEST_EQUAL(rs::distance(parts), 2);  TEST_EQUAL(std::format("{}", parts), R"(["Hello", "world"])");
+    TRY(parts = split_any("", ""));                                         TEST_EQUAL(rs::distance(parts), 0);  TEST_EQUAL(std::format("{}", parts), R"([])");
+    TRY(parts = split_any("Hello world", ""));                              TEST_EQUAL(rs::distance(parts), 1);  TEST_EQUAL(std::format("{}", parts), R"(["Hello world"])");
+    TRY(parts = split_any("", "⋀⋁"));                                       TEST_EQUAL(rs::distance(parts), 0);  TEST_EQUAL(std::format("{}", parts), R"([])");
+    TRY(parts = split_any("Hello", "⋀⋁"));                                  TEST_EQUAL(rs::distance(parts), 1);  TEST_EQUAL(std::format("{}", parts), R"(["Hello"])");
+    TRY(parts = split_any("Hello⋀world", "⋀⋁"));                            TEST_EQUAL(rs::distance(parts), 2);  TEST_EQUAL(std::format("{}", parts), R"(["Hello", "world"])");
+    TRY(parts = split_any("Hello⋀world⋁goodbye", "⋀⋁"));                    TEST_EQUAL(rs::distance(parts), 3);  TEST_EQUAL(std::format("{}", parts), R"(["Hello", "world", "goodbye"])");
+    TRY(parts = split_any("⋁Hello⋀world⋁goodbye⋀", "⋀⋁"));                  TEST_EQUAL(rs::distance(parts), 3);  TEST_EQUAL(std::format("{}", parts), R"(["Hello", "world", "goodbye"])");
+    TRY(parts = split_any("⋀⋁⋀⋁Hello⋀⋁⋀⋁world⋀⋁⋀⋁", "⋀⋁"));               TEST_EQUAL(rs::distance(parts), 2);  TEST_EQUAL(std::format("{}", parts), R"(["Hello", "world"])");
+    TRY(parts = split_at("", ""));                                          TEST_EQUAL(rs::distance(parts), 0);  TEST_EQUAL(std::format("{}", parts), R"([])");
+    TRY(parts = split_at("Hello world", ""));                               TEST_EQUAL(rs::distance(parts), 1);  TEST_EQUAL(std::format("{}", parts), R"(["Hello world"])");
+    TRY(parts = split_at("", "+-"));                                        TEST_EQUAL(rs::distance(parts), 0);  TEST_EQUAL(std::format("{}", parts), R"([])");
+    TRY(parts = split_at("+-", "+-"));                                      TEST_EQUAL(rs::distance(parts), 2);  TEST_EQUAL(std::format("{}", parts), R"(["", ""])");
+    TRY(parts = split_at("+-+-", "+-"));                                    TEST_EQUAL(rs::distance(parts), 3);  TEST_EQUAL(std::format("{}", parts), R"(["", "", ""])");
+    TRY(parts = split_at("Hello world", "+-"));                             TEST_EQUAL(rs::distance(parts), 1);  TEST_EQUAL(std::format("{}", parts), R"(["Hello world"])");
+    TRY(parts = split_at("Hello+-world", "+-"));                            TEST_EQUAL(rs::distance(parts), 2);  TEST_EQUAL(std::format("{}", parts), R"(["Hello", "world"])");
+    TRY(parts = split_at("+-Hello+-world+-", "+-"));                        TEST_EQUAL(rs::distance(parts), 4);  TEST_EQUAL(std::format("{}", parts), R"(["", "Hello", "world", ""])");
+    TRY(parts = split_at("+-+-Hello+-+-world+-+-", "+-"));                  TEST_EQUAL(rs::distance(parts), 7);  TEST_EQUAL(std::format("{}", parts), R"(["", "", "Hello", "", "world", "", ""])");
+    TRY(parts = split_at("", "🇦🇺"));                                        TEST_EQUAL(rs::distance(parts), 0);  TEST_EQUAL(std::format("{}", parts), R"([])");
+    TRY(parts = split_at("🇦🇺", "🇦🇺"));                                      TEST_EQUAL(rs::distance(parts), 2);  TEST_EQUAL(std::format("{}", parts), R"(["", ""])");
+    TRY(parts = split_at("🇦🇺🇦🇺", "🇦🇺"));                                    TEST_EQUAL(rs::distance(parts), 3);  TEST_EQUAL(std::format("{}", parts), R"(["", "", ""])");
+    TRY(parts = split_at("Hello world", "🇦🇺"));                             TEST_EQUAL(rs::distance(parts), 1);  TEST_EQUAL(std::format("{}", parts), R"(["Hello world"])");
+    TRY(parts = split_at("Hello🇦🇺world", "🇦🇺"));                            TEST_EQUAL(rs::distance(parts), 2);  TEST_EQUAL(std::format("{}", parts), R"(["Hello", "world"])");
+    TRY(parts = split_at("🇦🇺Hello🇦🇺world🇦🇺", "🇦🇺"));                       TEST_EQUAL(rs::distance(parts), 4);  TEST_EQUAL(std::format("{}", parts), R"(["", "Hello", "world", ""])");
+    TRY(parts = split_at("🇦🇺🇦🇺Hello🇦🇺🇦🇺world🇦🇺🇦🇺", "🇦🇺"));                TEST_EQUAL(rs::distance(parts), 7);  TEST_EQUAL(std::format("{}", parts), R"(["", "", "Hello", "", "world", "", ""])");
+    TRY(parts = split_where("", is_pattern_syntax));                        TEST_EQUAL(rs::distance(parts), 0);  TEST_EQUAL(std::format("{}", parts), R"([])");
+    TRY(parts = split_where("Hello", is_pattern_syntax));                   TEST_EQUAL(rs::distance(parts), 1);  TEST_EQUAL(std::format("{}", parts), R"(["Hello"])");
+    TRY(parts = split_where("Hello*world", is_pattern_syntax));             TEST_EQUAL(rs::distance(parts), 2);  TEST_EQUAL(std::format("{}", parts), R"(["Hello", "world"])");
+    TRY(parts = split_where("Hello*world/goodbye", is_pattern_syntax));     TEST_EQUAL(rs::distance(parts), 3);  TEST_EQUAL(std::format("{}", parts), R"(["Hello", "world", "goodbye"])");
+    TRY(parts = split_where("/Hello*world/goodbye*", is_pattern_syntax));   TEST_EQUAL(rs::distance(parts), 3);  TEST_EQUAL(std::format("{}", parts), R"(["Hello", "world", "goodbye"])");
+    TRY(parts = split_where("*/*/Hello*/*/world*/*/", is_pattern_syntax));  TEST_EQUAL(rs::distance(parts), 2);  TEST_EQUAL(std::format("{}", parts), R"(["Hello", "world"])");
+    TRY(parts = split_where("∇∇Hello∇∇world∇∇", is_pattern_syntax));        TEST_EQUAL(rs::distance(parts), 2);  TEST_EQUAL(std::format("{}", parts), R"(["Hello", "world"])");
 
 }

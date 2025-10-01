@@ -25,6 +25,17 @@ using CharacterPredicate = std::function<bool(char32_t)>;
 
 Callback type used in some of these functions.
 
+## Utility functions
+
+```c++
+template <ReadableRange<std::string_view> Range>
+    std::vector<std::string> reify(const Range& range);
+```
+
+Convenience function to turn any range of objects viewable as strings into a
+concrete vector of string objects, containing copies of the original string
+views.
+
 ## Grapheme clusters
 
 ```c++
@@ -49,53 +60,50 @@ class SplitIterator {
     using iterator_category = std::forward_iterator_tag;
     using value_type = std::string_view;
     SplitIterator() = default;
-    explicit SplitIterator(std::string_view str);
-    explicit SplitIterator(std::string_view str,
-        std::string_view delimiter);
-    explicit SplitIterator(std::string_view str,
-        std::u32string_view delimiter);
-    explicit SplitIterator(std::string_view str,
-        CharacterPredicate delimiter);
     const std::string_view& operator*() const noexcept;
+    static SplitIterator words(std::string_view str);
+    static SplitIterator lines(std::string_view str);
+    static SplitIterator any(std::string_view str,
+        std::string_view delimiter);
+    static SplitIterator at(std::string_view str,
+        std::string_view delimiter);
+    static SplitIterator where(std::string_view str,
+        CharacterPredicate delimiter);
 };
-
-[split iterator range] split_view(std::string_view str);
-[split iterator range] split_view(std::string_view str,
-    std::string_view delimiter);
-[split iterator range] split_view(std::string_view str,
-    std::u32string_view delimiter);
-[split iterator range] split_view(std::string_view str,
-    CharacterPredicate delimiter);
 ```
 
-Iterator over parts of a string. The segmentation method depends on the
-delimiter argument:
+Iterator over parts of a string. An iterator that has reached the end of its
+underlying string will compare equal to a default constructed iterator. The
+static functions construct iterators using the following delimiter algorithms
+for segmentation:
 
-* Default: Split on any subsequence of `White_Space` characters.
-* String view argument: Split on each occurrence of the substring. The number
-  of segments will always be one more than the number of occurrences of the
-  delimiter, unless the subject string is empty. This is the only version
-  that can generate empty segments.
-* UTF-32 string view argument: Split on any subsequence of these scalar
-  values.
-* Predicate argument: Split on any subsequence of scalar values that match
-  this predicate. Behaviour is undefined if a null function is passed.
+* `words()` -- Split on any subsequence of `White_Space` characters.
+* `lines()` -- Split on any occurrence of `LF` or `CR+LF.` A final empty line
+  will not be included if the string ends with a line delimiter.
+* `any()` -- Split on any subsequence of these USVs.
+* `at()` -- Split on each occurrence of the substring. The number of segments
+  will always be one more than the number of occurrences of the delimiter,
+  unless the subject string is empty. This is the only version that can
+  generate empty segments.
+* `where()` -- Split on any subsequence of USVs that match this predicate.
+  Behaviour is undefined if a null function is passed.
 
-For the second and third versions, if the delimiter is empty (but the subject
-string is not), the complete subject string will be treated as a single
-unbroken segment.
+For the `any()` and `at()` algorithms, if the delimiter is empty but the
+subject string is not, the complete subject string will be returned as a
+single unbroken segment.
 
 ```c++
-std::vector<std::string> split_vector(std::string_view str);
-std::vector<std::string> split_vector(std::string_view str,
+[split iterator range] split_words(std::string_view str);
+[split iterator range] split_lines(std::string_view str);
+[split iterator range] split_any(std::string_view str,
     std::string_view delimiter);
-std::vector<std::string> split_vector(std::string_view str,
-    std::u32string_view delimiter);
-std::vector<std::string> split_vector(std::string_view str,
+[split iterator range] split_at(std::string_view str,
+    std::string_view delimiter);
+[split iterator range] split_where(std::string_view str,
     CharacterPredicate delimiter);
 ```
 
-Convenience functions to turn a split view into a vector of strings.
+Convenience functions to generate a range of split iterators over a string.
 
 ## String metrics
 
@@ -149,8 +157,8 @@ may be longer than the input string, but can never be shorter. Normalization
 may not be preserved.
 
 The `to_titlecase()` function uses the same simple segmentation algorithm as
-the default version of `split_view(),` and then applies title casing to the
-first alphanumeric character (general category starts with `L` or `N`) in a
+the default version of `split(),` and then applies title casing to the first
+alphanumeric character (general category starts with `L` or `N`) in a
 segment, and lower casing to all subsequent characters. Anything more
 sophisticated will require the caller to handle word segmentation itself, and
 then call `to_titlecase()` on each word.
@@ -226,19 +234,21 @@ character has zero or variable width.
 
 ```c++
 std::pair<std::string_view, std::string_view>
-    partition(std::string_view str) noexcept;
+    partition_words(std::string_view str) noexcept;
 std::pair<std::string_view, std::string_view>
-    partition(std::string_view str, std::string_view delimiter) noexcept;
+    partition_lines(std::string_view str) noexcept;
 std::pair<std::string_view, std::string_view>
-    partition(std::string_view str, std::u32string_view delimiter) noexcept;
+    partition_any(std::string_view str, std::string_view delimiter) noexcept;
 std::pair<std::string_view, std::string_view>
-    partition(std::string_view str, CharacterPredicate delimiter) noexcept;
+    partition_at(std::string_view str, std::string_view delimiter) noexcept;
+std::pair<std::string_view, std::string_view>
+    partition_where(std::string_view str, CharacterPredicate delimiter) noexcept;
 ```
 
 Split a string at the first occurrence of one or more delimiter characters.
 The delimiter options work the same as for `SplitIterator.` If no delimiters
 are found, or the delimiter list is empty, this returns the original string
-and an empty string.
+and a null (default constructed) string view.
 
 ```c++
 std::string repeat(char32_t c, std::size_t n);
@@ -258,28 +268,28 @@ number of replacements to be made; by default there is no limit.
 
 ```c++
 std::string_view trim(std::string_view str);
-std::string_view trim(std::string_view str, std::string_view substr);
-std::string_view trim(std::string_view str, std::u32string_view chars);
-std::string_view trim(std::string_view str, CharacterPredicate pred);
+std::string_view trim_chars(std::string_view str, std::string_view chars);
+std::string_view trim_str(std::string_view str, std::string_view substr);
+std::string_view trim_where(std::string_view str, CharacterPredicate pred);
 std::string_view trim_left(std::string_view str);
-std::string_view trim_left(std::string_view str, std::string_view substr);
-std::string_view trim_left(std::string_view str, std::u32string_view chars);
-std::string_view trim_left(std::string_view str, CharacterPredicate pred);
+std::string_view trim_left_chars(std::string_view str, std::string_view chars);
+std::string_view trim_left_str(std::string_view str, std::string_view substr);
+std::string_view trim_left_where(std::string_view str, CharacterPredicate pred);
 std::string_view trim_right(std::string_view str);
-std::string_view trim_right(std::string_view str, std::string_view substr);
-std::string_view trim_right(std::string_view str, std::u32string_view chars);
-std::string_view trim_right(std::string_view str, CharacterPredicate pred);
+std::string_view trim_right_chars(std::string_view str, std::string_view chars);
+std::string_view trim_right_str(std::string_view str, std::string_view substr);
+std::string_view trim_right_where(std::string_view str, CharacterPredicate pred);
 ```
 
 Trim leading or trailing characters from a string.
 
-* Default: Trim all `White_Space` characters.
-* String view argument: Trim any prefix or suffix that matches the target
-  string. It will be removed at most once from each end even if there are
-  multiple copies of the substring.
-* UTF-32 string view argument: Trim all characters in the string.
-* Predicate argument: Trim all characters that match the predicate
-  (behaviour is undefined if a null function is passed).
+* `trim()` -- Trim all `White_Space` characters.
+* `trim_chars()` -- Trim all characters (USVs) in the `chars` string.
+* `trim_str()` -- Trim any prefix or suffix that matches the target string.
+  It will be removed at most once from each end even if there are multiple
+  copies of the substring.
+* `trim_where()` -- Trim all characters that match the predicate (behaviour is
+  undefined if a null function is passed).
 
 ```c++
 std::string word_wrap(std::string_view text, std::size_t width = npos,
@@ -336,7 +346,8 @@ Find the first or last UTF-8 encoded character matching, or failing to match,
 a specific character, any one of a set of characters (passed as either UTF-8
 or UTF-32), or any character matching a predicate. On success, the function
 returns a string view over the encoded character; on failure, it returns a
-null (default constructed) string view.
+null (default constructed) string view (this is the only time the returned
+view can be empty, so testing the data pointer is not necessary).
 
 ## String literals
 

@@ -142,41 +142,14 @@ namespace RS::Unicode {
 
     namespace {
 
-        CharacterPredicate make_preducate(std::u32string_view delimiter) {
-            std::unordered_set<char32_t> set(std::from_range, delimiter);
+        CharacterPredicate make_predicate(std::string_view delimiter) {
+            auto set = decoded_utf8_view(delimiter) | rs::to<std::unordered_set>();
             return [set] (char32_t c) { return set.contains(c); };
         }
 
     }
 
-    SplitIterator::SplitIterator(std::string_view str):
-    SplitIterator(str, is_white_space) {}
-
-    SplitIterator::SplitIterator(std::string_view str, std::string_view delimiter):
-    delimiter_(delimiter),
-    current_(),
-    tail_(str) {
-        if (tail_.empty()) {
-            // Do nothing
-        } else if (delimiter_.empty()) {
-            current_ = tail_;
-        } else {
-            auto pos = tail_.find(delimiter_);
-            current_ = tail_.substr(0, pos);
-        }
-    }
-
-    SplitIterator::SplitIterator(std::string_view str, std::u32string_view delimiter):
-    SplitIterator(str, make_preducate(delimiter)) {}
-
-    SplitIterator::SplitIterator(std::string_view str, CharacterPredicate delimiter):
-    predicate_(delimiter),
-    tail_(str) {
-        next();
-    }
-
     SplitIterator& SplitIterator::operator++() {
-        tail_ = tail_.substr(current_.size());
         next();
         return *this;
     }
@@ -185,9 +158,74 @@ namespace RS::Unicode {
         return current_.data() == i.current_.data();
     }
 
+    SplitIterator SplitIterator::words(std::string_view str) {
+        return where(str, is_white_space);
+    }
+
+    SplitIterator SplitIterator::lines(std::string_view str) {
+        SplitIterator it;
+        it.tail_ = str;
+        it.lines_ = true;
+        it.next();
+        return it;
+    }
+
+    SplitIterator SplitIterator::any(std::string_view str, std::string_view delimiter) {
+        return where(str, make_predicate(delimiter));
+    }
+
+    SplitIterator SplitIterator::at(std::string_view str, std::string_view delimiter) {
+        SplitIterator it;
+        it.delimiter_ = delimiter;
+        if (str.empty()) {
+            // Do nothing
+        } else if (it.delimiter_.empty()) {
+            it.current_ = str;
+        } else {
+            auto pos = str.find(it.delimiter_);
+            it.current_ = str.substr(0, pos);
+            if (pos != npos) {
+                it.tail_ = str.substr(pos);
+            }
+        }
+        return it;
+    }
+
+    SplitIterator SplitIterator::where(std::string_view str, CharacterPredicate delimiter) {
+        SplitIterator it;
+        it.predicate_ = delimiter;
+        it.tail_ = str;
+        it.next();
+        return it;
+    }
+
     void SplitIterator::next() {
 
-        if (predicate_) {
+        if (tail_.empty()) {
+
+            current_ = {};
+
+        } else if (lines_) {
+
+            for (auto pos = 0uz;; ++pos) {
+                pos = tail_.find_first_of("\r\n", pos);
+                if (pos == npos) {
+                    current_ = tail_;
+                    tail_ = {};
+                    break;
+                } else if (tail_[pos] == '\n') {
+                    current_ = tail_.substr(0, pos);
+                    tail_ = tail_.substr(pos + 1);
+                    break;
+                } else if (tail_.size() - pos >= 2 && tail_[pos + 1] == '\n') {
+                    current_ = tail_.substr(0, pos);
+                    tail_ = tail_.substr(pos + 2);
+                    break;
+                }
+            }
+
+
+        } else if (predicate_) {
 
             auto ptr = tail_.data();
             auto len = tail_.size();
@@ -220,15 +258,14 @@ namespace RS::Unicode {
                 current_ = tail_.substr(0, endpos - pos);
             }
 
-        } else if (tail_.empty()) {
-
-            current_ = {};
+            tail_ = tail_.substr(current_.size());
 
         } else {
 
             tail_ = tail_.substr(delimiter_.size());
             auto pos = tail_.find(delimiter_);
             current_ = tail_.substr(0, pos);
+            tail_ = tail_.substr(current_.size());
 
         }
 
@@ -744,11 +781,37 @@ namespace RS::Unicode {
         return pad_helper(str, to_length, padding, u, true);
     }
 
-    std::pair<std::string_view, std::string_view> partition(std::string_view str) noexcept {
-        return partition(str, is_white_space);
+    std::pair<std::string_view, std::string_view> partition_words(std::string_view str) noexcept {
+        return partition_where(str, is_white_space);
     }
 
-    std::pair<std::string_view, std::string_view> partition(std::string_view str,
+    std::pair<std::string_view, std::string_view> partition_lines(std::string_view str) noexcept {
+
+        auto lf = str.find('\n');
+
+        if (lf == npos) {
+            return {str, {}};
+        }
+
+        std::string_view left;
+        auto right = str.substr(lf + 1);
+
+        if (lf > 0 && str[lf - 1] == '\r') {
+            left = str.substr(0, lf - 1);
+        } else {
+            left = str.substr(0, lf);
+        }
+
+        return {left, right};
+
+    }
+
+    std::pair<std::string_view, std::string_view> partition_any(std::string_view str,
+            std::string_view delimiter) noexcept {
+        return partition_where(str, make_predicate(delimiter));
+    }
+
+    std::pair<std::string_view, std::string_view> partition_at(std::string_view str,
             std::string_view delimiter) noexcept {
 
         auto pos = str.find(delimiter);
@@ -756,7 +819,6 @@ namespace RS::Unicode {
 
         if (pos == npos) {
             left = str;
-            right = str.substr(str.size());
         } else {
             left = str.substr(0, pos);
             right = str.substr(pos + delimiter.size());
@@ -766,12 +828,7 @@ namespace RS::Unicode {
 
     }
 
-    std::pair<std::string_view, std::string_view> partition(std::string_view str,
-            std::u32string_view delimiter) noexcept {
-        return partition(str, make_preducate(delimiter));
-    }
-
-    std::pair<std::string_view, std::string_view> partition(std::string_view str,
+    std::pair<std::string_view, std::string_view> partition_where(std::string_view str,
             CharacterPredicate delimiter) noexcept {
 
         auto utf32 = decoded_utf8_view(str);
@@ -780,7 +837,6 @@ namespace RS::Unicode {
 
         if (i == rs::end(utf32)) {
             left = str;
-            right = str.substr(str.size());
         } else {
             auto tail = rs::subrange{i, rs::end(utf32)};
             auto j = rs::find_if_not(tail, delimiter);
@@ -851,26 +907,31 @@ namespace RS::Unicode {
     }
 
     std::string_view trim(std::string_view str) {
-        return trim(str, is_white_space);
+        return trim_where(str, is_white_space);
     }
 
-    std::string_view trim(std::string_view str, std::string_view substr) {
-        return trim_right(trim_left(str, substr), substr);
+    std::string_view trim_chars(std::string_view str, std::string_view chars) {
+        return trim_right_chars(trim_left_chars(str, chars), chars);
     }
 
-    std::string_view trim(std::string_view str, std::u32string_view chars) {
-        return trim_right(trim_left(str, chars), chars);
+    std::string_view trim_str(std::string_view str, std::string_view substr) {
+        return trim_right_str(trim_left_str(str, substr), substr);
     }
 
-    std::string_view trim(std::string_view str, CharacterPredicate pred) {
-        return trim_right(trim_left(str, pred), pred);
+    std::string_view trim_where(std::string_view str, CharacterPredicate pred) {
+        return trim_right_where(trim_left_where(str, pred), pred);
     }
 
     std::string_view trim_left(std::string_view str) {
-        return trim_left(str, is_white_space);
+        return trim_left_where(str, is_white_space);
     }
 
-    std::string_view trim_left(std::string_view str, std::string_view substr) {
+    std::string_view trim_left_chars(std::string_view str, std::string_view chars) {
+        auto uchars = utf8_to_utf32(chars);
+        return trim_left_where(str, [&uchars] (char32_t c) { return uchars.contains(c); });
+    }
+
+    std::string_view trim_left_str(std::string_view str, std::string_view substr) {
         if (str.starts_with(substr)) {
             return str.substr(substr.size());
         } else {
@@ -878,21 +939,22 @@ namespace RS::Unicode {
         }
     }
 
-    std::string_view trim_left(std::string_view str, std::u32string_view chars) {
-        return trim_left(str, [&chars] (char32_t c) { return chars.contains(c); });
-    }
-
-    std::string_view trim_left(std::string_view str, CharacterPredicate pred) {
+    std::string_view trim_left_where(std::string_view str, CharacterPredicate pred) {
         auto chars = decoded_utf8_view(str);
         auto it = rs::find_if_not(chars, pred);
         return std::string_view(it.view().begin(), str.end());
     }
 
     std::string_view trim_right(std::string_view str) {
-        return trim_right(str, is_white_space);
+        return trim_right_where(str, is_white_space);
     }
 
-    std::string_view trim_right(std::string_view str, std::string_view substr) {
+    std::string_view trim_right_chars(std::string_view str, std::string_view chars) {
+        auto uchars = utf8_to_utf32(chars);
+        return trim_right_where(str, [&uchars] (char32_t c) { return uchars.contains(c); });
+    }
+
+    std::string_view trim_right_str(std::string_view str, std::string_view substr) {
         if (str.ends_with(substr)) {
             return str.substr(0, str.size() - substr.size());
         } else {
@@ -900,11 +962,7 @@ namespace RS::Unicode {
         }
     }
 
-    std::string_view trim_right(std::string_view str, std::u32string_view chars) {
-        return trim_right(str, [&chars] (char32_t c) { return chars.contains(c); });
-    }
-
-    std::string_view trim_right(std::string_view str, CharacterPredicate pred) {
+    std::string_view trim_right_where(std::string_view str, CharacterPredicate pred) {
         auto chars = decoded_utf8_view(str);
         auto begin = rs::begin(chars);
         auto it = rs::end(chars);
@@ -933,7 +991,7 @@ namespace RS::Unicode {
         auto current_width = 0uz;
         auto indent = indent1;
 
-        for (auto word: split_view(text)) {
+        for (auto word: split_words(text)) {
 
             auto word_size = length(word, u);
 
@@ -1049,7 +1107,7 @@ namespace RS::Unicode {
         std::string operator""_doc(const char* ptr, std::size_t len) {
 
             std::string_view source(ptr, len);
-            auto lines = split_view(source, "\n") | rs::to<std::vector>();
+            auto lines = split_lines(source) | rs::to<std::vector>();
 
             if (lines.empty()) {
                 return {};
@@ -1089,8 +1147,7 @@ namespace RS::Unicode {
         }
 
         std::vector<std::string> operator""_qw(const char* ptr, std::size_t len) {
-            std::string_view source(ptr, len);
-            return split_vector(source);
+            return reify(split_words({ptr, len}));
         }
 
     }

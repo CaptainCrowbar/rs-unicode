@@ -23,6 +23,15 @@ namespace RS::Unicode {
 
     using CharacterPredicate = std::function<bool(char32_t)>;
 
+    // Utility functions
+
+    template <ReadableRange<std::string_view> Range>
+    std::vector<std::string> reify(const Range& range) {
+        return range
+            | std::views::transform([] (std::string_view s) { return std::string{s}; })
+            | std::ranges::to<std::vector>();
+    }
+
     // Grapheme clusters
 
     class GraphemeIterator:
@@ -59,15 +68,15 @@ namespace RS::Unicode {
 
     public:
 
-        SplitIterator() = default;
-        explicit SplitIterator(std::string_view str);
-        explicit SplitIterator(std::string_view str, std::string_view delimiter);
-        explicit SplitIterator(std::string_view str, std::u32string_view delimiter);
-        explicit SplitIterator(std::string_view str, CharacterPredicate delimiter);
-
         const std::string_view& operator*() const noexcept { return current_; }
         SplitIterator& operator++();
         bool operator==(const SplitIterator& i) const noexcept;
+
+        static SplitIterator words(std::string_view str);
+        static SplitIterator lines(std::string_view str);
+        static SplitIterator any(std::string_view str, std::string_view delimiter);
+        static SplitIterator at(std::string_view str, std::string_view delimiter);
+        static SplitIterator where(std::string_view str, CharacterPredicate delimiter);
 
     private:
 
@@ -75,57 +84,30 @@ namespace RS::Unicode {
         std::string delimiter_;
         std::string_view current_;
         std::string_view tail_;
+        bool lines_ = false;
 
         void next();
 
     };
 
-    inline auto split_view(std::string_view str) {
-        SplitIterator i{str};
-        SplitIterator j;
-        return std::ranges::subrange{i, j};
+    inline auto split_words(std::string_view str) {
+        return std::ranges::subrange{SplitIterator::words(str), SplitIterator{}};
     }
 
-    inline auto split_view(std::string_view str, std::string_view delimiter) {
-        SplitIterator i{str, delimiter};
-        SplitIterator j;
-        return std::ranges::subrange{i, j};
+    inline auto split_lines(std::string_view str) {
+        return std::ranges::subrange{SplitIterator::lines(str), SplitIterator{}};
     }
 
-    inline auto split_view(std::string_view str, std::u32string_view delimiter) {
-        SplitIterator i{str, delimiter};
-        SplitIterator j;
-        return std::ranges::subrange{i, j};
+    inline auto split_any(std::string_view str, std::string_view delimiter) {
+        return std::ranges::subrange{SplitIterator::any(str, delimiter), SplitIterator{}};
     }
 
-    inline auto split_view(std::string_view str, CharacterPredicate delimiter) {
-        SplitIterator i{str, delimiter};
-        SplitIterator j;
-        return std::ranges::subrange{i, j};
+    inline auto split_at(std::string_view str, std::string_view delimiter) {
+        return std::ranges::subrange{SplitIterator::at(str, delimiter), SplitIterator{}};
     }
 
-    inline auto split_vector(std::string_view str) {
-        return split_view(str)
-            | std::views::transform([] (std::string_view s) { return std::string{s}; })
-            | std::ranges::to<std::vector>();
-    }
-
-    inline auto split_vector(std::string_view str, std::string_view delimiter) {
-        return split_view(str, delimiter)
-            | std::views::transform([] (std::string_view s) { return std::string{s}; })
-            | std::ranges::to<std::vector>();
-    }
-
-    inline auto split_vector(std::string_view str, std::u32string_view delimiter) {
-        return split_view(str, delimiter)
-            | std::views::transform([] (std::string_view s) { return std::string{s}; })
-            | std::ranges::to<std::vector>();
-    }
-
-    inline auto split_vector(std::string_view str, CharacterPredicate delimiter) {
-        return split_view(str, delimiter)
-            | std::views::transform([] (std::string_view s) { return std::string{s}; })
-            | std::ranges::to<std::vector>();
+    inline auto split_where(std::string_view str, CharacterPredicate delimiter) {
+        return std::ranges::subrange{SplitIterator::where(str, delimiter), SplitIterator{}};
     }
 
     // String metrics
@@ -262,29 +244,30 @@ namespace RS::Unicode {
         char32_t padding = U' ', Unit u = Unit::columns);
     std::string pad_right(std::string_view str, std::size_t to_length,
         char32_t padding = U' ', Unit u = Unit::columns);
-    std::pair<std::string_view, std::string_view> partition(std::string_view str) noexcept;
-    std::pair<std::string_view, std::string_view> partition(std::string_view str,
+    std::pair<std::string_view, std::string_view> partition_words(std::string_view str) noexcept;
+    std::pair<std::string_view, std::string_view> partition_lines(std::string_view str) noexcept;
+    std::pair<std::string_view, std::string_view> partition_any(std::string_view str,
         std::string_view delimiter) noexcept;
-    std::pair<std::string_view, std::string_view> partition(std::string_view str,
-        std::u32string_view delimiter) noexcept;
-    std::pair<std::string_view, std::string_view> partition(std::string_view str,
+    std::pair<std::string_view, std::string_view> partition_at(std::string_view str,
+        std::string_view delimiter) noexcept;
+    std::pair<std::string_view, std::string_view> partition_where(std::string_view str,
         CharacterPredicate delimiter) noexcept;
     std::string repeat(char32_t c, std::size_t n);
     std::string repeat(std::string_view str, std::size_t n);
     std::string replace(std::string_view source, std::string_view target,
         std::string_view replacement, std::size_t number = npos);
     std::string_view trim(std::string_view str);
-    std::string_view trim(std::string_view str, std::string_view substr);
-    std::string_view trim(std::string_view str, std::u32string_view chars);
-    std::string_view trim(std::string_view str, CharacterPredicate pred);
+    std::string_view trim_chars(std::string_view str, std::string_view chars);
+    std::string_view trim_str(std::string_view str, std::string_view substr);
+    std::string_view trim_where(std::string_view str, CharacterPredicate pred);
     std::string_view trim_left(std::string_view str);
-    std::string_view trim_left(std::string_view str, std::string_view substr);
-    std::string_view trim_left(std::string_view str, std::u32string_view chars);
-    std::string_view trim_left(std::string_view str, CharacterPredicate pred);
+    std::string_view trim_left_chars(std::string_view str, std::string_view chars);
+    std::string_view trim_left_str(std::string_view str, std::string_view substr);
+    std::string_view trim_left_where(std::string_view str, CharacterPredicate pred);
     std::string_view trim_right(std::string_view str);
-    std::string_view trim_right(std::string_view str, std::string_view substr);
-    std::string_view trim_right(std::string_view str, std::u32string_view chars);
-    std::string_view trim_right(std::string_view str, CharacterPredicate pred);
+    std::string_view trim_right_chars(std::string_view str, std::string_view chars);
+    std::string_view trim_right_str(std::string_view str, std::string_view substr);
+    std::string_view trim_right_where(std::string_view str, CharacterPredicate pred);
     std::string word_wrap(std::string_view text, std::size_t width = npos,
         std::size_t indent1 = 0, std::size_t indent2 = npos, Unit u = Unit::columns);
 

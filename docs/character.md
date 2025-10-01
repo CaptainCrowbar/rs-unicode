@@ -33,7 +33,7 @@ has the integer value zero.
 
 ```c++
 enum class East_Asian_Width: unsigned char {
-    N,   // Neutral (default)
+    N,   // Neutral
     A,   // Ambiguous
     F,   // Fullwidth
     H,   // Halfwidth
@@ -43,7 +43,7 @@ enum class East_Asian_Width: unsigned char {
 
 enum class General_Category: unsigned char {
     // Other (C*)
-    Cn,  // Unassigned (default)
+    Cn,  // Unassigned
     Cc,  // Control
     Cf,  // Format
     Co,  // Private Use
@@ -82,7 +82,7 @@ enum class General_Category: unsigned char {
 };
 
 enum class Grapheme_Cluster_Break: unsigned char {
-    Other, // Default
+    Other,
     CR,
     Control,
     Extend,
@@ -99,7 +99,7 @@ enum class Grapheme_Cluster_Break: unsigned char {
 };
 
 enum class Hangul_Syllable_Type: unsigned char {
-    NA, // Default
+    NA,
     L,
     LV,
     LVT,
@@ -108,7 +108,7 @@ enum class Hangul_Syllable_Type: unsigned char {
 };
 
 enum class Indic_Conjunct_Break: unsigned char {
-    None, // Default
+    None,
     Case_Ignorable,
     Consonant,
     Default_Ignorable_Code_Point,
@@ -121,7 +121,7 @@ enum class Indic_Conjunct_Break: unsigned char {
 
 enum class Line_Break: unsigned char {
     // Other characters
-    XX,   // Unknown (default)
+    XX,   // Unknown
     AI,   // Ambiguous (alphabetic or ideographic)
     AK,   // Aksara
     AL,   // Alphabetic
@@ -222,7 +222,7 @@ Enumeration valued properties.
 
 ```c++
 int canonical_combining_class(char32_t c);
-char primary_category(char32_t c); // From General_Category
+char primary_category(char32_t c); // First character of General_Category
 ```
 
 Integer valued properties.
