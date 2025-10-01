@@ -110,9 +110,13 @@ void test_rs_unicode_iterators_split_view() {
     TRY(parts = split_words("🇳🇿 🇺🇸 🇩🇪 🇦🇺"));                               TEST_EQUAL(rs::distance(parts), 4);  TEST_EQUAL(std::format("{}", parts), R"(["🇳🇿", "🇺🇸", "🇩🇪", "🇦🇺"])");
     TRY(parts = split_lines(""));                                           TEST_EQUAL(rs::distance(parts), 0);  TEST_EQUAL(std::format("{}", parts), R"([])");
     TRY(parts = split_lines("\n"));                                         TEST_EQUAL(rs::distance(parts), 1);  TEST_EQUAL(std::format("{}", parts), R"([""])");
+    TRY(parts = split_lines("\n\n"));                                       TEST_EQUAL(rs::distance(parts), 2);  TEST_EQUAL(std::format("{}", parts), R"(["", ""])");
     TRY(parts = split_lines("Hello world"));                                TEST_EQUAL(rs::distance(parts), 1);  TEST_EQUAL(std::format("{}", parts), R"(["Hello world"])");
     TRY(parts = split_lines("Hello\nworld\n"));                             TEST_EQUAL(rs::distance(parts), 2);  TEST_EQUAL(std::format("{}", parts), R"(["Hello", "world"])");
     TRY(parts = split_lines("Hello\r\nworld\r\n"));                         TEST_EQUAL(rs::distance(parts), 2);  TEST_EQUAL(std::format("{}", parts), R"(["Hello", "world"])");
+    TRY(parts = split_lines("\nHello\nworld\n"));                           TEST_EQUAL(rs::distance(parts), 3);  TEST_EQUAL(std::format("{}", parts), R"(["", "Hello", "world"])");
+    TRY(parts = split_lines("\r\nHello\r\nworld\r\n"));                     TEST_EQUAL(rs::distance(parts), 3);  TEST_EQUAL(std::format("{}", parts), R"(["", "Hello", "world"])");
+    TRY(parts = split_lines("\n\nHello\n\nworld\n\n"));                     TEST_EQUAL(rs::distance(parts), 6);  TEST_EQUAL(std::format("{}", parts), R"(["", "", "Hello", "", "world", ""])");
     TRY(parts = split_any("", ""));                                         TEST_EQUAL(rs::distance(parts), 0);  TEST_EQUAL(std::format("{}", parts), R"([])");
     TRY(parts = split_any("Hello world", ""));                              TEST_EQUAL(rs::distance(parts), 1);  TEST_EQUAL(std::format("{}", parts), R"(["Hello world"])");
     TRY(parts = split_any("", "⋀⋁"));                                       TEST_EQUAL(rs::distance(parts), 0);  TEST_EQUAL(std::format("{}", parts), R"([])");
