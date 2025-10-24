@@ -240,6 +240,7 @@ namespace RS::Unicode {
 
     }
 
+    std::string indent(std::string_view str, std::size_t n, char32_t c = U' ');
     std::string pad_left(std::string_view str, std::size_t to_length,
         char32_t padding = U' ', Unit u = Unit::columns);
     std::string pad_right(std::string_view str, std::size_t to_length,

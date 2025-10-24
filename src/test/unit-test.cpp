@@ -64,6 +64,7 @@ void test_rs_unicode_string_literals_doc();
 void test_rs_unicode_string_literals_qw();
 void test_rs_unicode_string_manipulation_concepts();
 void test_rs_unicode_string_manipulation_cat();
+void test_rs_unicode_string_manipulation_indent();
 void test_rs_unicode_string_manipulation_join();
 void test_rs_unicode_string_manipulation_padding();
 void test_rs_unicode_string_manipulation_partition();
@@ -150,6 +151,7 @@ int main(int argc, char** argv) {
     call_me_maybe(test_rs_unicode_string_literals_qw, "test_rs_unicode_string_literals_qw");
     call_me_maybe(test_rs_unicode_string_manipulation_concepts, "test_rs_unicode_string_manipulation_concepts");
     call_me_maybe(test_rs_unicode_string_manipulation_cat, "test_rs_unicode_string_manipulation_cat");
+    call_me_maybe(test_rs_unicode_string_manipulation_indent, "test_rs_unicode_string_manipulation_indent");
     call_me_maybe(test_rs_unicode_string_manipulation_join, "test_rs_unicode_string_manipulation_join");
     call_me_maybe(test_rs_unicode_string_manipulation_padding, "test_rs_unicode_string_manipulation_padding");
     call_me_maybe(test_rs_unicode_string_manipulation_partition, "test_rs_unicode_string_manipulation_partition");

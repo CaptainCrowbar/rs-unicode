@@ -94,6 +94,68 @@ void test_rs_unicode_string_manipulation_cat() {
 
 }
 
+void test_rs_unicode_string_manipulation_indent() {
+
+    std::string s, t;
+
+    s = "";
+    TRY(t = indent(s, 4));
+    TEST_EQUAL(t, "");
+
+    s = "Hello world";
+    TRY(t = indent(s, 4));
+    TEST_EQUAL(t, "    Hello world");
+
+    s = "Hello world\n";
+    TRY(t = indent(s, 4));
+    TEST_EQUAL(t, "    Hello world\n");
+
+    s = "Hello world\n"
+        "Goodnight moon\n"
+        "Here comes the sun\n";
+    TRY(t = indent(s, 4));
+    TEST_EQUAL(t,
+        "    Hello world\n"
+        "    Goodnight moon\n"
+        "    Here comes the sun\n");
+
+    s = "\n"
+        "Hello world\n"
+        "\n"
+        "Goodnight moon\n"
+        "\n"
+        "Here comes the sun\n"
+        "\n";
+    TRY(t = indent(s, 4));
+    TEST_EQUAL(t,
+        "\n"
+        "    Hello world\n"
+        "\n"
+        "    Goodnight moon\n"
+        "\n"
+        "    Here comes the sun\n"
+        "\n");
+
+    s = "Hello world\n"
+        "Goodnight moon\n"
+        "Here comes the sun\n";
+    TRY(t = indent(s, 1, U'\t'));
+    TEST_EQUAL(t,
+        "\tHello world\n"
+        "\tGoodnight moon\n"
+        "\tHere comes the sun\n");
+
+    s = "Hello world\n"
+        "Goodnight moon\n"
+        "Here comes the sun\n";
+    TRY(t = indent(s, 2, U'§'));
+    TEST_EQUAL(t,
+        "§§Hello world\n"
+        "§§Goodnight moon\n"
+        "§§Here comes the sun\n");
+
+}
+
 void test_rs_unicode_string_manipulation_join() {
 
     std::vector<std::string> v;

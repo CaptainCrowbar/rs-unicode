@@ -210,6 +210,12 @@ accepted:
     * Any standard integral type not already covered, formatted using `std::to_string()`
 
 ```c++
+std::string indent(std::string_view str, std::size_t n, char32_t c = U' ');
+```
+
+Add indentation to every non-empty line in the string.
+
+```c++
 template <rs::range R> std::string join(const R& range,
     std::string_view delimiter = {});
 ```

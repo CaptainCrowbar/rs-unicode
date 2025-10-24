@@ -771,6 +771,37 @@ namespace RS::Unicode {
 
     }
 
+    std::string indent(std::string_view str, std::size_t n, char32_t c) {
+
+        if (str.empty()) {
+            return {};
+        }
+
+        std::string out{str};
+        auto margin = repeat(c, n);
+        auto pos = 0uz;
+
+        while (pos < out.size()) {
+
+            if (out[pos] != '\n') {
+                out.insert(pos, margin);
+                pos += margin.size();
+            }
+
+            pos = out.find('\n', pos);
+
+            if (pos == npos) {
+                break;
+            }
+
+            ++pos;
+
+        }
+
+        return out;
+
+    }
+
     std::string pad_left(std::string_view str, std::size_t to_length,
             char32_t padding, Unit u) {
         return pad_helper(str, to_length, padding, u, false);
