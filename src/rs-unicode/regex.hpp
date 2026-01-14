@@ -2,12 +2,13 @@
 
 #include "rs-unicode/character.hpp"
 #include "rs-core/enum.hpp"
-#include "rs-core/format.hpp"
 #include "rs-core/global.hpp"
 #include "rs-core/iterator.hpp"
+#include <algorithm>
 #include <compare>
 #include <cstddef>
 #include <cstdint>
+#include <format>
 #include <iterator>
 #include <ranges>
 #include <stdexcept>
@@ -114,7 +115,6 @@ namespace RS::Unicode {
         std::string_view str(std::size_t index = 0) const noexcept;
         std::string_view operator[](std::size_t index) const noexcept { return str(index); }
         operator std::string_view() const noexcept { return str(0); }
-        std::string_view rs_core_format() const noexcept { return str(0); }
 
     private:
 
@@ -214,3 +214,25 @@ namespace RS::Unicode {
     }
 
 }
+
+template <>
+class std::formatter<::RS::Unicode::Regex::match> {
+
+public:
+
+    template <typename ParseContext>
+    constexpr auto parse(ParseContext& ctx) {
+        if (ctx.begin() != ctx.end() && *ctx.begin() != '}') {
+            throw std::format_error{std::format("Invalid format: {:?}", *ctx.begin())};
+        }
+        return ctx.begin();
+    }
+
+    template <typename FormatContext>
+    auto format(const ::RS::Unicode::Regex::match& m, FormatContext& ctx) const {
+        auto s = m.str();
+        std::copy(s.begin(), s.end(), ctx.out());
+        return ctx.out();
+    }
+
+};

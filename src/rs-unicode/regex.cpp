@@ -1,6 +1,4 @@
 #include "rs-unicode/regex.hpp"
-#include <algorithm>
-#include <format>
 #include <memory>
 
 #if defined(PCRE2_CODE_UNIT_WIDTH) && PCRE2_CODE_UNIT_WIDTH != 8
