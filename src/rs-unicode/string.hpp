@@ -5,6 +5,7 @@
 #include "rs-core/enum.hpp"
 #include "rs-core/global.hpp"
 #include "rs-core/iterator.hpp"
+#include "rs-core/range.hpp"
 #include <compare>
 #include <concepts>
 #include <cstddef>
