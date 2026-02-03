@@ -210,6 +210,14 @@ accepted:
     * Any standard integral type not already covered, formatted using `std::to_string()`
 
 ```c++
+std::string fold_whitespace(std::string_view str, char32_t c = U' ');
+```
+
+Trim all leading and trailing whitespace, and collapse all internal sequences
+of consecutive whitespace characters to a single character (space by
+default);
+
+```c++
 std::string indent(std::string_view str, std::size_t n, char32_t c = U' ');
 ```
 

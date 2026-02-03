@@ -771,6 +771,11 @@ namespace RS::Unicode {
 
     }
 
+    std::string fold_whitespace(std::string_view str, char32_t c) {
+        auto delimiter = utf32_to_utf8(std::u32string_view{&c, 1});
+        return join(split_words(str), delimiter);
+    }
+
     std::string indent(std::string_view str, std::size_t n, char32_t c) {
 
         if (str.empty()) {

@@ -94,6 +94,17 @@ void test_rs_unicode_string_manipulation_cat() {
 
 }
 
+void test_rs_unicode_string_manipulation_fold_whitespace() {
+
+    TEST_EQUAL(fold_whitespace(""),                                        "");
+    TEST_EQUAL(fold_whitespace("Hello world"),                             "Hello world");
+    TEST_EQUAL(fold_whitespace("\r\nHello\r\nworld\r\n"),                  "Hello world");
+    TEST_EQUAL(fold_whitespace("\r\nHello\r\nworld\r\ngoodbye\r\n"),       "Hello world goodbye");
+    TEST_EQUAL(fold_whitespace("", '_'),                                   "");
+    TEST_EQUAL(fold_whitespace("\r\nHello\r\nworld\r\ngoodbye\r\n", '_'),  "Hello_world_goodbye");
+
+}
+
 void test_rs_unicode_string_manipulation_indent() {
 
     std::string s, t;

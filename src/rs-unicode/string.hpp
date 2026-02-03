@@ -241,6 +241,7 @@ namespace RS::Unicode {
 
     }
 
+    std::string fold_whitespace(std::string_view str, char32_t c = U' ');
     std::string indent(std::string_view str, std::size_t n, char32_t c = U' ');
     std::string pad_left(std::string_view str, std::size_t to_length,
         char32_t padding = U' ', Unit u = Unit::columns);
