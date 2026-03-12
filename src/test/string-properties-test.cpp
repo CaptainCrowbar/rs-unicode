@@ -174,3 +174,26 @@ void test_rs_unicode_string_properties_line_and_column() {
     TRY(lc = line_and_column(text, 999, Unit::columns));  TEST_EQUAL(lc.first, 4u);  TEST_EQUAL(lc.second, 0u);
 
 }
+
+void test_rs_unicode_string_properties_common_prefix_suffix() {
+
+    TEST_EQUAL(common_prefix("",             ""),             "");
+    TEST_EQUAL(common_prefix("hello",        ""),             "");
+    TEST_EQUAL(common_prefix("",             "world"),        "");
+    TEST_EQUAL(common_prefix("hello",        "world"),        "");
+    TEST_EQUAL(common_prefix("hello",        "hello"),        "hello");
+    TEST_EQUAL(common_prefix("hello",        "hello world"),  "hello");
+    TEST_EQUAL(common_prefix("hello world",  "hello moon"),   "hello ");
+    TEST_EQUAL(common_prefix("hello αβγ",    "hello δεζ"),    "hello ");
+    TEST_EQUAL(common_prefix("αβγδεζ",       "αβγηθι"),       "αβγ");
+
+    TEST_EQUAL(common_suffix("",               ""),             "");
+    TEST_EQUAL(common_suffix("hello",          ""),             "");
+    TEST_EQUAL(common_suffix("",               "hello"),        "");
+    TEST_EQUAL(common_suffix("hello",          "world"),        "");
+    TEST_EQUAL(common_suffix("hello",          "hello"),        "hello");
+    TEST_EQUAL(common_suffix("hello world",    "world"),        "world");
+    TEST_EQUAL(common_suffix("goodbye world",  "hello world"),  " world");
+    TEST_EQUAL(common_suffix("αβγδεζ",         "ηθιδεζ"),       "δεζ");
+
+}

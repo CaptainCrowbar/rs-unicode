@@ -80,6 +80,7 @@ void test_rs_unicode_string_properties_grapheme_length();
 void test_rs_unicode_string_properties_column_length();
 void test_rs_unicode_string_properties_wide_column_length();
 void test_rs_unicode_string_properties_line_and_column();
+void test_rs_unicode_string_properties_common_prefix_suffix();
 void test_rs_unicode_string_search_find_first_of();
 void test_rs_unicode_string_search_find_first_not_of();
 void test_rs_unicode_string_search_find_last_of();
@@ -168,6 +169,7 @@ int main(int argc, char** argv) {
     call_me_maybe(test_rs_unicode_string_properties_column_length, "test_rs_unicode_string_properties_column_length");
     call_me_maybe(test_rs_unicode_string_properties_wide_column_length, "test_rs_unicode_string_properties_wide_column_length");
     call_me_maybe(test_rs_unicode_string_properties_line_and_column, "test_rs_unicode_string_properties_line_and_column");
+    call_me_maybe(test_rs_unicode_string_properties_common_prefix_suffix, "test_rs_unicode_string_properties_common_prefix_suffix");
     call_me_maybe(test_rs_unicode_string_search_find_first_of, "test_rs_unicode_string_search_find_first_of");
     call_me_maybe(test_rs_unicode_string_search_find_first_not_of, "test_rs_unicode_string_search_find_first_not_of");
     call_me_maybe(test_rs_unicode_string_search_find_last_of, "test_rs_unicode_string_search_find_last_of");

@@ -183,6 +183,17 @@ Convert a string to subscripts or superscripts. These will return null if the
 input string contains characters that have no corresponding subscript or
 superscript character in Unicode.
 
+## String comparison functions
+
+```c++
+std::string_view common_prefix(std::string_view a, std::string_view b) noexcept;
+std::string_view common_suffix(std::string_view a, std::string_view b) noexcept;
+```
+
+Find the longest common prefix or suffix of two strings. The returned
+substring will end or begin at a UTF-8 character boundary, even if some bytes
+of the adjacent characters would have matched.
+
 ## String manipulation functions
 
 ```c++

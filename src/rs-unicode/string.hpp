@@ -143,6 +143,11 @@ namespace RS::Unicode {
     std::optional<std::string> to_subscript(std::string_view str);
     std::optional<std::string> to_superscript(std::string_view str);
 
+    // String comparison functions
+
+    std::string_view common_prefix(std::string_view a, std::string_view b) noexcept;
+    std::string_view common_suffix(std::string_view a, std::string_view b) noexcept;
+
     // String manipulation functions
 
     namespace Detail {

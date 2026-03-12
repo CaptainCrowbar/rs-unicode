@@ -726,7 +726,45 @@ namespace RS::Unicode {
         return out;
     }
 
-    // Other string functions
+    // String comparison functions
+
+    std::string_view common_prefix(std::string_view a, std::string_view b) noexcept {
+
+        auto utf_a = decoded_utf8_view(a);
+        auto utf_b = decoded_utf8_view(b);
+        auto i = utf_a.begin();
+        auto j = utf_b.begin();
+
+        while (i != utf_a.end() && j != utf_b.end() && *i == *j) {
+            ++i;
+            ++j;
+        }
+
+        return std::string_view(a.data(), i.ptr());
+
+    }
+
+    std::string_view common_suffix(std::string_view a, std::string_view b) noexcept {
+
+        auto utf_a = decoded_utf8_view(a);
+        auto utf_b = decoded_utf8_view(b);
+        auto i = utf_a.end();
+        auto j = utf_b.end();
+
+        while (i != utf_a.begin() && j != utf_b.begin()) {
+            --i;
+            --j;
+            if (*i != *j) {
+                ++i;
+                break;
+            }
+        }
+
+        return std::string_view(i.ptr(), a.data() + a.size());
+
+    }
+
+    // String manipulation functions
 
     namespace {
 
