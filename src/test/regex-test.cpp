@@ -30,6 +30,7 @@ void test_rs_unicode_regex_match() {
     TEST_EQUAL(m.pos(), RS::npos);
     TEST_EQUAL(m.len(), 0u);
     TEST_EQUAL(m.str(), "");
+    TEST_EQUAL(m.copy(), "");
     TEST_EQUAL(m[0], "");
 
     TRY(re = "[a-z]+"_re);
@@ -41,6 +42,7 @@ void test_rs_unicode_regex_match() {
     TEST_EQUAL(m.pos(), 1u);
     TEST_EQUAL(m.len(), 4u);
     TEST_EQUAL(m.str(), "ello");
+    TEST_EQUAL(m.copy(), "ello");
     TEST_EQUAL(m[0], "ello");
 
     TRY(re = Regex("[a-z]+", Regex::icase));
@@ -52,6 +54,7 @@ void test_rs_unicode_regex_match() {
     TEST_EQUAL(m.pos(), 0u);
     TEST_EQUAL(m.len(), 5u);
     TEST_EQUAL(m.str(), "Hello");
+    TEST_EQUAL(m.copy(), "Hello");
     TEST_EQUAL(m[0], "Hello");
 
     TRY(re = "(?i)[a-z]+"_re);
@@ -61,15 +64,16 @@ void test_rs_unicode_regex_match() {
     TEST_EQUAL(m.pos(), 0u);
     TEST_EQUAL(m.len(), 5u);
     TEST_EQUAL(m.str(), "Hello");
+    TEST_EQUAL(m.copy(), "Hello");
     TEST_EQUAL(m[0], "Hello");
 
     TRY(re = "([a-z]+)\\s+([a-z]+)"_re);
     TEST_EQUAL(re.groups(), 3u);
     TRY(m = re("Hello world"));
     TEST(m);
-    TEST_EQUAL(m.pos(), 1u);   TEST_EQUAL(m.len(), 10u);  TEST_EQUAL(m.str(), "ello world");  TEST_EQUAL(m[0], "ello world");
-    TEST_EQUAL(m.pos(1), 1u);  TEST_EQUAL(m.len(1), 4u);  TEST_EQUAL(m.str(1), "ello");       TEST_EQUAL(m[1], "ello");
-    TEST_EQUAL(m.pos(2), 6u);  TEST_EQUAL(m.len(2), 5u);  TEST_EQUAL(m.str(2), "world");      TEST_EQUAL(m[2], "world");
+    TEST_EQUAL(m.pos(), 1u);   TEST_EQUAL(m.len(), 10u);  TEST_EQUAL(m.str(), "ello world");  TEST_EQUAL(m.copy(), "ello world");  TEST_EQUAL(m[0], "ello world");
+    TEST_EQUAL(m.pos(1), 1u);  TEST_EQUAL(m.len(1), 4u);  TEST_EQUAL(m.str(1), "ello");       TEST_EQUAL(m.copy(1), "ello");       TEST_EQUAL(m[1], "ello");
+    TEST_EQUAL(m.pos(2), 6u);  TEST_EQUAL(m.len(2), 5u);  TEST_EQUAL(m.str(2), "world");      TEST_EQUAL(m.copy(2), "world");      TEST_EQUAL(m[2], "world");
 
 }
 

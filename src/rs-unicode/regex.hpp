@@ -114,6 +114,7 @@ namespace RS::Unicode {
         std::size_t len(std::size_t index = 0) const noexcept { return endpos(index) - pos(index); }
         std::string_view str(std::size_t index = 0) const noexcept;
         std::string_view operator[](std::size_t index) const noexcept { return str(index); }
+        std::string copy(std::size_t index = 0) const noexcept { return std::string{str(index)}; }
         operator std::string_view() const noexcept { return str(0); }
 
     private:
