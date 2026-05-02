@@ -106,6 +106,22 @@ namespace RS::Unicode {
 
     public:
 
+        class iterator:
+        public Iterator<iterator, const std::string_view, std::random_access_iterator_tag> {
+        public:
+            iterator() = default;
+            std::string_view operator*() const noexcept { return match_->str(static_cast<std::size_t>(index_)); }
+            iterator& operator+=(std::ptrdiff_t n) noexcept { index_ += n; return *this; }
+            std::ptrdiff_t operator-(const iterator& i) const noexcept { return index_ - i.index_; }
+        private:
+            friend class match;
+            const match* match_;
+            std::ptrdiff_t index_;
+            explicit iterator(const match& m, std::size_t i): match_{&m}, index_{static_cast<std::ptrdiff_t>(i)} {}
+        };
+
+        auto begin() const noexcept { return iterator{*this, 1}; }
+        auto end() const noexcept { return iterator{*this, groups_.size()}; }
         bool matched(std::size_t index = 0) const noexcept;
         operator bool() const noexcept { return matched(); }
         bool partial() const noexcept { return partial_; }

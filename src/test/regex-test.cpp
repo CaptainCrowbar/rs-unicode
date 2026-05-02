@@ -77,6 +77,22 @@ void test_rs_unicode_regex_match() {
 
 }
 
+void test_rs_unicode_regex_match_iterator() {
+
+    Regex re;
+    Regex::match m;
+
+    TRY(re = "(\\w+)(\\s+)(\\w+)"_re);
+    TRY(m = re("Hello world"));
+    TEST(m);
+    TEST_EQUAL(m.pos(), 0u);
+    TEST_EQUAL(m.len(), 11u);
+    TEST_EQUAL(m.str(), "Hello world");
+    auto range = rs::subrange{m.begin(), m.end()};
+    TEST_EQUAL(std::format("{}", range), "[\"Hello\", \" \", \"world\"]");
+
+}
+
 void test_rs_unicode_regex_flags() {
 
     Regex re;

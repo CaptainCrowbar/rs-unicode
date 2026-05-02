@@ -15,7 +15,13 @@ namespace rs = std::ranges;
 
 void test_rs_unicode_iterators_reify() {
 
-    std::set<const char*> pointers {"alpha", "bravo", "charlie"};
+    struct compare_char_ptrs {
+        bool operator()(const char* p, const char* q) const noexcept {
+            return std::string_view{p} < std::string_view{q};
+        }
+    };
+
+    std::set<const char*, compare_char_ptrs> pointers {"alpha", "bravo", "charlie"};
     std::set<std::string_view> views {"delta", "echo", "foxtrot"};
     std::set<std::string> strings {"golf", "hotel", "india"};
     std::vector<std::string> vec;

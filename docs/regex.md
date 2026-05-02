@@ -200,9 +200,12 @@ original error code; otherwise it will return zero.
 ```c++
 class Regex::match {
 public:
+    class iterator;
     bool matched(std::size_t index = 0) const noexcept;
     operator bool() const noexcept;
     bool partial() const noexcept;
+    iterator begin() const noexcept;
+    iterator end() const noexcept;
     std::size_t pos(std::size_t index = 0) const noexcept;
     std::size_t endpos(std::size_t index = 0) const noexcept;
     std::size_t len(std::size_t index = 0) const noexcept;
@@ -244,6 +247,9 @@ equivalent to `str(0);` this is also what you will get if you pass a match
 object to `std::format()` or `std::print().`
 
 The `copy()` function returns a copy of the matched substring.
+
+The `begin()` and `end()` functions return random access iterators over the
+capture groups.
 
 Normally a successful match object contains pointers into the original subject
 string. Accessing a match object after the subject string has been changed or
