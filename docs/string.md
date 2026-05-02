@@ -186,6 +186,47 @@ superscript character in Unicode.
 ## String comparison functions
 
 ```c++
+enum class Sort: unsigned char {
+    defaults = 0,  // Simple Unicode lexicographical order
+    icase,         // Fold case before comparing
+    numeric,       // Recognise embedded integers
+    sign,          // Recognise signs on numbers (implies numeric)
+    nfc,           // Convert to NFC before comparing
+    nfd,           // Convert to NFD before comparing
+    reverse,       // Compare in reverse order
+    trim,          // Ignore leading and trailing whitespace and controls
+};
+```
+
+Bitmask values specifying options for the `StringCompare` class.
+
+```c++
+class StringCompare {
+    StringCompare();
+    explicit StringCompare(Sort options);
+    bool operator()(std::string_view s, std::string_view t) const;
+};
+```
+
+This is a comparison object (a binary predicate) that compares strings using
+user-selected options. Ideally it is usually better to transform the strings
+in a list before sorting them, to avoid redundant transformations of the same
+string, but using a custom comparison object is often more convenient in
+cases where optimizing sorting speed is not the top priority.
+
+```c++
+template <Sort Options = Sort::defaults> class BasicStringCompare {
+    BasicStringCompare();
+    bool operator()(std::string_view s, std::string_view t) const;
+};
+```
+
+This performs the same operations as `StringCompare,` but the comparison
+options are supplied as a template parameter instead of a runtime argument.
+This is more convenient when the comparison object is itself supplied as a
+template argument, for example to a `std::set` or `std::map.`
+
+```c++
 std::string_view common_prefix(std::string_view a, std::string_view b) noexcept;
 std::string_view common_suffix(std::string_view a, std::string_view b) noexcept;
 ```
@@ -226,7 +267,7 @@ std::string fold_whitespace(std::string_view str, char32_t c = U' ');
 
 Trim all leading and trailing whitespace, and collapse all internal sequences
 of consecutive whitespace characters to a single character (space by
-default);
+default).
 
 ```c++
 std::string indent(std::string_view str, std::size_t n, char32_t c = U' ');

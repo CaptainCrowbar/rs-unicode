@@ -1,7 +1,10 @@
 #include "rs-unicode/string.hpp"
+#include "rs-unicode/regex.hpp"
+#include "rs-core/arithmetic.hpp"
 #include <algorithm>
 #include <bit>
 #include <cstdlib>
+#include <stdexcept>
 #include <unordered_set>
 
 namespace rs = std::ranges;
@@ -727,6 +730,114 @@ namespace RS::Unicode {
     }
 
     // String comparison functions
+
+    bool StringCompare::operator()(std::string_view s, std::string_view t) const {
+
+        auto ps = prepare(s);
+        auto pt = prepare(t);
+        auto cmp = ps <=> pt;
+        auto reverse = has_bit(options_, Sort::reverse);
+
+        if (cmp == std::strong_ordering::equal) {
+            if (reverse) {
+                return t < s;
+            } else {
+                return s < t;
+            }
+        } else {
+            if (reverse) {
+                return cmp == std::strong_ordering::greater;
+            } else {
+                return cmp == std::strong_ordering::less;
+            }
+        }
+
+    }
+
+    void StringCompare::check() {
+        if (has_bit(options_, Sort::nfc) && has_bit(options_, Sort::nfd)) {
+            throw std::invalid_argument("Inconsistent normalization flags in StringCompare");
+        } else if (has_bit(options_, Sort::sign)) {
+            options_ |= Sort::numeric;
+        }
+    }
+
+    StringCompare::string_breakdown StringCompare::numeric_breakdown(const std::string& str) const {
+
+        static const Regex match_unsigned_integer {"\\d+"};
+        static const Regex match_signed_integer {"[+-]?\\d+"};
+
+        const Regex* pattern;
+
+        if (has_bit(options_, Sort::sign)) {
+            pattern = &match_signed_integer;
+        } else {
+            pattern = &match_unsigned_integer;
+        }
+
+        string_breakdown brk;
+        auto i = 0uz;
+
+        while (i < str.size()) {
+
+            auto match = pattern->search(str, {}, i);
+
+            if (! match) {
+                brk.push_back(str.substr(i));
+                break;
+            }
+
+            if (match.pos() > i) {
+                brk.push_back(str.substr(i, match.pos() - i));
+            }
+
+            brk.push_back(Integer{match});
+            i = match.endpos();
+
+        }
+
+        return brk;
+
+    }
+
+    StringCompare::string_breakdown StringCompare::prepare(std::string_view str) const {
+
+        if (has_bit(options_, Sort::trim)) {
+            str = trim_where(str, [] (char32_t c) {
+                auto gc = general_category(c);
+                return gc == General_Category::Cc
+                    || gc == General_Category::Cf
+                    || gc == General_Category::Zl
+                    || gc == General_Category::Zp
+                    || gc == General_Category::Zs;
+            });
+        }
+
+        std::string s;
+
+        if (has_bit(options_, Sort::icase)) {
+            s = to_casefold(str);
+        } else {
+            s = str;
+        }
+
+        if (has_bit(options_, Sort::nfc)) {
+            s = to_nfc(s);
+        } else if (has_bit(options_, Sort::nfd)) {
+            s = to_nfd(s);
+        }
+
+        string_breakdown brk {s};
+
+        if (has_bit(options_, Sort::numeric)) {
+            brk = numeric_breakdown(s);
+        } else {
+            brk = {s};
+        }
+
+        return brk;
+
+    }
 
     std::string_view common_prefix(std::string_view a, std::string_view b) noexcept {
 

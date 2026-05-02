@@ -1,11 +1,12 @@
 #pragma once
 
-#include "rs-unicode/character.hpp"
-#include "rs-unicode/encoding.hpp"
 #include "rs-core/enum.hpp"
 #include "rs-core/global.hpp"
 #include "rs-core/iterator.hpp"
+#include "rs-core/mp-integer.hpp"
 #include "rs-core/range.hpp"
+#include "rs-unicode/character.hpp"
+#include "rs-unicode/encoding.hpp"
 #include <compare>
 #include <concepts>
 #include <cstddef>
@@ -16,6 +17,7 @@
 #include <string>
 #include <string_view>
 #include <utility>
+#include <variant>
 #include <vector>
 
 namespace RS::Unicode {
@@ -144,6 +146,48 @@ namespace RS::Unicode {
     std::optional<std::string> to_superscript(std::string_view str);
 
     // String comparison functions
+
+    RS_BITMASK(Sort, unsigned char,
+        defaults  = 0,        // Simple Unicode lexicographical order
+        icase     = 1u << 0,  // Fold case before comparing
+        numeric   = 1u << 1,  // Recognise embedded integers
+        sign      = 1u << 2,  // Recognise signs on numbers (implies numeric)
+        nfc       = 1u << 3,  // Convert to NFC before comparing
+        nfd       = 1u << 4,  // Convert to NFD before comparing
+        reverse   = 1u << 5,  // Compare in reverse order
+        trim      = 1u << 6,  // Ignore leading and trailing whitespace and control characters
+    )
+
+    class StringCompare {
+
+    public:
+
+        StringCompare() = default;
+        explicit StringCompare(Sort options): options_{options} { check(); }
+
+        bool operator()(std::string_view s, std::string_view t) const;
+
+    private:
+
+        using string_element = std::variant<Integer, std::string>;
+        using string_breakdown = std::vector<string_element>;
+
+        Sort options_ = Sort::defaults;
+
+        void check();
+        string_breakdown numeric_breakdown(const std::string& str) const;
+        string_breakdown prepare(std::string_view str) const;
+
+    };
+
+    template <Sort Options = Sort::defaults>
+    class BasicStringCompare {
+    public:
+        BasicStringCompare(): compare_{Options} {}
+        bool operator()(std::string_view s, std::string_view t) const { return compare_(s, t); }
+    private:
+        StringCompare compare_;
+    };
 
     std::string_view common_prefix(std::string_view a, std::string_view b) noexcept;
     std::string_view common_suffix(std::string_view a, std::string_view b) noexcept;
