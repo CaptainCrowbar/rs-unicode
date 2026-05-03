@@ -244,7 +244,7 @@ void test_rs_unicode_character_properties_extended_pictographic() {
     TEST(! is_extended_pictographic(0x0391));  // greek capital letter alpha
     TEST(is_extended_pictographic(0x2139));    // information
     TEST(is_extended_pictographic(0x3299));    // japanese secret button
-    TEST(is_extended_pictographic(0x1'f000));  // mahjong tile east wind
+    TEST(is_extended_pictographic(0x1'f004));  // mahjong red dragon
     TEST(is_extended_pictographic(0x1'faf8));  // rightwards pushing hand
 
 }

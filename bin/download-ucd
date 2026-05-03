@@ -6,8 +6,10 @@
 # should not be updated until compatibility with the table extraction code
 # has been checked and any necessary changes have been made.
 
-ucd_version=16.0.0
-ucd_url="https://www.unicode.org/Public/zipped/$ucd_version/UCD.zip"
+ucd_version=17.0.0
+ucd_url="https://www.unicode.org/Public/$ucd_version/ucd/UCD.zip"
+
+# https://www.unicode.org/Public/17.0.0/ucd/UCD.zip
 
 set -o errexit
 set -o nounset

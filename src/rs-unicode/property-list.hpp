@@ -105,6 +105,7 @@ namespace RS::Unicode {
         GL,
         H2,
         H3,
+        HH,
         HL,
         HY,
         ID,

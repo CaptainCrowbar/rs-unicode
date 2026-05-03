@@ -15,11 +15,11 @@ namespace RS::Unicode {
     }
 
     inline std::array<int, 3> library_version() noexcept {
-        return { 0, 2, 21 }; // Library version
+        return { 0, 2, 22 }; // Library version
     }
 
     inline std::array<int, 3> unicode_version() noexcept {
-        return { 16, 0, 0 }; // Unicode version
+        return { 17, 0, 0 }; // Unicode version
     }
 
     inline std::string library_version_string() {
