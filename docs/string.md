@@ -180,6 +180,23 @@ bool is_nfd(std::string_view str);
 Check whether a string is in the expected normalization form. These will
 return true for an empty string.
 
+```c++
+std::string nfc_cat(std::string_view a, std::string_view b);
+std::string nfd_cat(std::string_view a, std::string_view b);
+```
+
+Concatenate two normalized strings, maintaining the normalization property,
+which may require modifying parts of the concatenated string near the join.
+These functions are usually much more efficient than re-normalizing the
+entire joined string.
+
+These functions assume that both input strings are already in the desired
+normalization form; if this is not true, behaviour is not undefined, but the
+output will be garbage. In this case it is usually more efficient to
+concatenate the strings first and then normalize the joined string, rather
+than normalize each string separately and then call one of these two
+functions.
+
 ## Subscripts and superscripts
 
 ```c++

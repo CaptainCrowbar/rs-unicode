@@ -733,6 +733,64 @@ namespace RS::Unicode {
 
     }
 
+    std::string nfc_cat(std::string_view a, std::string_view b) {
+
+        static const auto is_nfc_stable = [] (char32_t c) {
+            return nfc_quick_check(c) == NFC_Quick_Check::Y
+                && canonical_combining_class(c) == 0;
+        };
+
+        auto ua = decoded_utf8_view(a);
+        auto ub = decoded_utf8_view(b);
+        auto ua_last = rs::find_last_if(ua, is_nfc_stable).begin();
+        auto ub_first = rs::find_if(ub, is_nfc_stable);
+        auto ua_last_offset = 0uz;
+        auto ub_first_offset = static_cast<std::size_t>(ub_first.ptr() - b.data());
+
+        if (ua_last != ua.end()) {
+            ua_last_offset = static_cast<std::size_t>(ua_last.ptr() - a.data());
+        }
+
+        auto a_prefix = a.substr(0, ua_last_offset);
+        auto a_suffix = a.substr(ua_last_offset);
+        auto b_prefix = b.substr(0, ub_first_offset);
+        auto b_suffix = b.substr(ub_first_offset);
+        auto mid = to_nfc(cat(a_suffix, b_prefix));
+        auto result = cat(a_prefix, mid, b_suffix);
+
+        return result;
+
+    }
+
+    std::string nfd_cat(std::string_view a, std::string_view b) {
+
+        static const auto is_nfd_stable = [] (char32_t c) {
+            return nfd_quick_check(c) == NFD_Quick_Check::Y
+                && canonical_combining_class(c) == 0;
+        };
+
+        auto ua = decoded_utf8_view(a);
+        auto ub = decoded_utf8_view(b);
+        auto ua_last = rs::find_last_if(ua, is_nfd_stable).begin();
+        auto ub_first = rs::find_if(ub, is_nfd_stable);
+        auto ua_last_offset = 0uz;
+        auto ub_first_offset = static_cast<std::size_t>(ub_first.ptr() - b.data());
+
+        if (ua_last != ua.end()) {
+            ua_last_offset = static_cast<std::size_t>(ua_last.ptr() - a.data());
+        }
+
+        auto a_prefix = a.substr(0, ua_last_offset);
+        auto a_suffix = a.substr(ua_last_offset);
+        auto b_prefix = b.substr(0, ub_first_offset);
+        auto b_suffix = b.substr(ub_first_offset);
+        auto mid = to_nfd(cat(a_suffix, b_prefix));
+        auto result = cat(a_prefix, mid, b_suffix);
+
+        return result;
+
+    }
+
     // Subscripts and superscripts
 
     std::optional<std::string> to_subscript(std::string_view str) {

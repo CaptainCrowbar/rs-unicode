@@ -94,6 +94,18 @@ void test_rs_unicode_string_manipulation_cat() {
 
 }
 
+void test_rs_unicode_string_manipulation_cat_normalized() {
+
+    std::string a = "aeiouàéîõü";
+    auto c = to_nfc(a);
+    auto d = to_nfd(a);
+    std::string s, t;
+
+    TRY(s = nfc_cat(c, c));  TRY(t = to_nfc(a + a));  TEST_EQUAL(s, t);
+    TRY(s = nfd_cat(d, d));  TRY(t = to_nfd(a + a));  TEST_EQUAL(s, t);
+
+}
+
 void test_rs_unicode_string_manipulation_fold_whitespace() {
 
     TEST_EQUAL(fold_whitespace(""),                                        "");
