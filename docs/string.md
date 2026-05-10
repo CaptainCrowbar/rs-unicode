@@ -172,6 +172,14 @@ std::string to_nfd(std::string_view str);
 
 Normalization functions. We only support NFC and NFD formats.
 
+```c++
+bool is_nfc(std::string_view str);
+bool is_nfd(std::string_view str);
+```
+
+Check whether a string is in the expected normalization form. These will
+return true for an empty string.
+
 ## Subscripts and superscripts
 
 ```c++

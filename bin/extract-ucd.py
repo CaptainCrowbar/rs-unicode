@@ -35,7 +35,7 @@ PropertyInfo = collections.namedtuple(
         "type",      # Data type (see below)
         "default",   # Default value
         "file",      # File path (relative to UCD root)
-        "column",    # Column in file (0-based; only relevant if file is "UnicodeData.txt", otherwise None)
+        "column",    # For "UnicodeData.txt", column in file (0-based); otherwise, expected number of fields
         "ucd_name",  # Name used in UCD file, when different from property name
     ]
 )
@@ -61,26 +61,28 @@ PropertyCppInfo = collections.namedtuple(
 
 property_info_table = {
 
-    "General_Category"                 : PropertyInfo("enum",   "Cn",     unicode_data,                           2,     None                            ),
-    "Canonical_Combining_Class"        : PropertyInfo("int",    0,        unicode_data,                           3,     None                            ),
-    "Canonical_Decomposition_Mapping"  : PropertyInfo("chars",  None,     unicode_data,                           5,     None                            ),
-    "Simple_Uppercase_Mapping"         : PropertyInfo("char",   None,     unicode_data,                           12,    None                            ),
-    "Simple_Lowercase_Mapping"         : PropertyInfo("char",   None,     unicode_data,                           13,    None                            ),
-    "Simple_Titlecase_Mapping"         : PropertyInfo("char",   None,     unicode_data,                           14,    None                            ),
-    "Default_Ignorable"                : PropertyInfo("bool",   False,    "DerivedCoreProperties.txt",            None,  "Default_Ignorable_Code_Point"  ),
-    "Indic_Conjunct_Break"             : PropertyInfo("enum",   "None",   "DerivedCoreProperties.txt",            None,  "InCB"                          ),
-    "XID_Start"                        : PropertyInfo("bool",   False,    "DerivedCoreProperties.txt",            None,  None                            ),
-    "XID_Continue"                     : PropertyInfo("bool",   False,    "DerivedCoreProperties.txt",            None,  None                            ),
-    "Full_Composition_Exclusion"       : PropertyInfo("bool",   False,    "DerivedNormalizationProps.txt",        None,  None                            ),
-    "East_Asian_Width"                 : PropertyInfo("enum",   "N",      "EastAsianWidth.txt",                   None,  None                            ),
-    "Line_Break"                       : PropertyInfo("enum",   "XX",     "LineBreak.txt",                        None,  None                            ),
-    "ID_Compat_Math_Continue"          : PropertyInfo("bool",   False,    "PropList.txt",                         None,  None                            ),
-    "ID_Compat_Math_Start"             : PropertyInfo("bool",   False,    "PropList.txt",                         None,  None                            ),
-    "Pattern_Syntax"                   : PropertyInfo("bool",   False,    "PropList.txt",                         None,  None                            ),
-    "Pattern_White_Space"              : PropertyInfo("bool",   False,    "PropList.txt",                         None,  None                            ),
-    "White_Space"                      : PropertyInfo("bool",   False,    "PropList.txt",                         None,  None                            ),
-    "Grapheme_Cluster_Break"           : PropertyInfo("enum",   "Other",  "auxiliary/GraphemeBreakProperty.txt",  None,  None                            ),
-    "Extended_Pictographic"            : PropertyInfo("bool",   False,    "emoji/emoji-data.txt",                 None,  None                            ),
+    "General_Category"                 : PropertyInfo("enum",   "Cn",     unicode_data,                           2,   None                            ),
+    "Canonical_Combining_Class"        : PropertyInfo("int",    0,        unicode_data,                           3,   None                            ),
+    "Canonical_Decomposition_Mapping"  : PropertyInfo("chars",  None,     unicode_data,                           5,   None                            ),
+    "Simple_Uppercase_Mapping"         : PropertyInfo("char",   None,     unicode_data,                           12,  None                            ),
+    "Simple_Lowercase_Mapping"         : PropertyInfo("char",   None,     unicode_data,                           13,  None                            ),
+    "Simple_Titlecase_Mapping"         : PropertyInfo("char",   None,     unicode_data,                           14,  None                            ),
+    "Default_Ignorable"                : PropertyInfo("bool",   False,    "DerivedCoreProperties.txt",            2,   "Default_Ignorable_Code_Point"  ),
+    "Indic_Conjunct_Break"             : PropertyInfo("enum",   "None",   "DerivedCoreProperties.txt",            3,   "InCB"                          ),
+    "XID_Start"                        : PropertyInfo("bool",   False,    "DerivedCoreProperties.txt",            2,   None                            ),
+    "XID_Continue"                     : PropertyInfo("bool",   False,    "DerivedCoreProperties.txt",            2,   None                            ),
+    "Full_Composition_Exclusion"       : PropertyInfo("bool",   False,    "DerivedNormalizationProps.txt",        2,   None                            ),
+    "NFC_Quick_Check"                  : PropertyInfo("enum",   "Y",      "DerivedNormalizationProps.txt",        3,   "NFC_QC"                        ),
+    "NFD_Quick_Check"                  : PropertyInfo("enum",   "Y",      "DerivedNormalizationProps.txt",        3,   "NFD_QC"                        ),
+    "East_Asian_Width"                 : PropertyInfo("enum",   "N",      "EastAsianWidth.txt",                   2,   None                            ),
+    "Line_Break"                       : PropertyInfo("enum",   "XX",     "LineBreak.txt",                        2,   None                            ),
+    "ID_Compat_Math_Continue"          : PropertyInfo("bool",   False,    "PropList.txt",                         2,   None                            ),
+    "ID_Compat_Math_Start"             : PropertyInfo("bool",   False,    "PropList.txt",                         2,   None                            ),
+    "Pattern_Syntax"                   : PropertyInfo("bool",   False,    "PropList.txt",                         2,   None                            ),
+    "Pattern_White_Space"              : PropertyInfo("bool",   False,    "PropList.txt",                         2,   None                            ),
+    "White_Space"                      : PropertyInfo("bool",   False,    "PropList.txt",                         2,   None                            ),
+    "Grapheme_Cluster_Break"           : PropertyInfo("enum",   "Other",  "auxiliary/GraphemeBreakProperty.txt",  2,   None                            ),
+    "Extended_Pictographic"            : PropertyInfo("bool",   False,    "emoji/emoji-data.txt",                 2,   None                            ),
 
 }
 
@@ -210,7 +212,7 @@ def extract_properties_from_unicode_data():
 
     for prop in property_info_table:
         info = property_info_table[prop]
-        if info.column:
+        if info.file == unicode_data:
             column_table[info.column] = prop
         property_tables[prop] = [info.default] * unicode_points
 
@@ -270,7 +272,9 @@ def extract_property_from_ucd_file(prop):
         fields = [field.strip() for field in left.split(";")]
         n_fields = len(fields)
 
-        if n_fields == 2:
+        if n_fields != info.column:
+            continue
+        elif n_fields == 2:
             if info.type == "bool" and fields[1] != key:
                 continue
         elif n_fields == 3:
@@ -376,7 +380,7 @@ def write_property_table(prop):
 extract_properties_from_unicode_data()
 
 for prop in sorted(property_info_table):
-    if not property_info_table[prop].column:
+    if property_info_table[prop].file != unicode_data:
         extract_property_from_ucd_file(prop)
 
 # Generate the property tables as C++ files

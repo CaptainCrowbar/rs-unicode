@@ -174,3 +174,27 @@ void test_rs_unicode_string_properties_line_and_column() {
     TRY(lc = line_and_column(text, 999, Unit::columns));  TEST_EQUAL(lc.first, 4u);  TEST_EQUAL(lc.second, 0u);
 
 }
+
+void test_rs_unicode_string_properties_normalization() {
+
+    std::string a = "abcde";
+    std::string b =
+        "\u00E0"   // latin small letter a with grave
+        "\u00E9"   // latin small letter e with acute
+        "\u00EE"   // latin small letter i with circumflex
+        "\u00F5"   // latin small letter o with tilde
+        "\u00FC";  // latin small letter u with diaeresis
+    std::string c =
+        "a\u0300"   // combining grave accent
+        "b\u0301"   // combining acute accent
+        "c\u0302"   // combining circumflex accent
+        "d\u0303"   // combining tilde
+        "e\u0308";  // combining diaeresis
+    auto d = b + c;
+
+    TEST(is_nfc(a));    TEST(is_nfd(a));
+    TEST(is_nfc(b));    TEST(! is_nfd(b));
+    TEST(! is_nfc(c));  TEST(is_nfd(c));
+    TEST(! is_nfc(d));  TEST(! is_nfd(d));
+
+}

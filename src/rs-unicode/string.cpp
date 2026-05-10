@@ -703,6 +703,36 @@ namespace RS::Unicode {
         return utf32_to_utf8(result);
     }
 
+    bool is_nfc(std::string_view str) {
+
+        auto utf32 = decoded_utf8_view(str);
+        auto it = rs::find_if(utf32, [] (char32_t c) { return nfc_quick_check(c) != NFC_Quick_Check::Y; });
+
+        if (it == utf32.end()) {
+            return true;
+        } else if (nfc_quick_check(*it) == NFC_Quick_Check::N) {
+            return false;
+        } else {
+            return to_nfc(str) == str;
+        }
+
+    }
+
+    bool is_nfd(std::string_view str) {
+
+        auto utf32 = decoded_utf8_view(str);
+        auto it = rs::find_if(utf32, [] (char32_t c) { return nfd_quick_check(c) != NFD_Quick_Check::Y; });
+
+        if (it == utf32.end()) {
+            return true;
+        } else if (nfd_quick_check(*it) == NFD_Quick_Check::N) {
+            return false;
+        } else {
+            return to_nfd(str) == str;
+        }
+
+    }
+
     // Subscripts and superscripts
 
     std::optional<std::string> to_subscript(std::string_view str) {

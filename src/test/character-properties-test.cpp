@@ -7,9 +7,6 @@ using namespace RS::Unicode;
 
 namespace {
 
-    // Convenience functions
-
-    template <typename T> constexpr auto to_int(T t) noexcept { return static_cast<int>(t); }
     template <typename T> constexpr auto to_u32(T t) noexcept { return static_cast<std::uint32_t>(t); }
 
 }
@@ -18,64 +15,64 @@ void test_rs_unicode_character_properties_general_category() {
 
     using GC = General_Category;
 
-    TEST_EQUAL(to_int(general_category(0)),          to_int(GC::Cc));  TEST_EQUAL(primary_category(0),          'C');  //
-    TEST_EQUAL(to_int(general_category(U'\n')),      to_int(GC::Cc));  TEST_EQUAL(primary_category(U'\n'),      'C');  //
-    TEST_EQUAL(to_int(general_category(U' ')),       to_int(GC::Zs));  TEST_EQUAL(primary_category(U' '),       'Z');  //
-    TEST_EQUAL(to_int(general_category(U'!')),       to_int(GC::Po));  TEST_EQUAL(primary_category(U'!'),       'P');  //
-    TEST_EQUAL(to_int(general_category(U'$')),       to_int(GC::Sc));  TEST_EQUAL(primary_category(U'$'),       'S');  //
-    TEST_EQUAL(to_int(general_category(U'(')),       to_int(GC::Ps));  TEST_EQUAL(primary_category(U'('),       'P');  //
-    TEST_EQUAL(to_int(general_category(U')')),       to_int(GC::Pe));  TEST_EQUAL(primary_category(U')'),       'P');  //
-    TEST_EQUAL(to_int(general_category(U'+')),       to_int(GC::Sm));  TEST_EQUAL(primary_category(U'+'),       'S');  //
-    TEST_EQUAL(to_int(general_category(U'-')),       to_int(GC::Pd));  TEST_EQUAL(primary_category(U'-'),       'P');  //
-    TEST_EQUAL(to_int(general_category(U'/')),       to_int(GC::Po));  TEST_EQUAL(primary_category(U'/'),       'P');  //
-    TEST_EQUAL(to_int(general_category(U'0')),       to_int(GC::Nd));  TEST_EQUAL(primary_category(U'0'),       'N');  //
-    TEST_EQUAL(to_int(general_category(U'9')),       to_int(GC::Nd));  TEST_EQUAL(primary_category(U'9'),       'N');  //
-    TEST_EQUAL(to_int(general_category(U'A')),       to_int(GC::Lu));  TEST_EQUAL(primary_category(U'A'),       'L');  //
-    TEST_EQUAL(to_int(general_category(U'Z')),       to_int(GC::Lu));  TEST_EQUAL(primary_category(U'Z'),       'L');  //
-    TEST_EQUAL(to_int(general_category(U'^')),       to_int(GC::Sk));  TEST_EQUAL(primary_category(U'^'),       'S');  //
-    TEST_EQUAL(to_int(general_category(U'_')),       to_int(GC::Pc));  TEST_EQUAL(primary_category(U'_'),       'P');  //
-    TEST_EQUAL(to_int(general_category(U'a')),       to_int(GC::Ll));  TEST_EQUAL(primary_category(U'a'),       'L');  //
-    TEST_EQUAL(to_int(general_category(U'z')),       to_int(GC::Ll));  TEST_EQUAL(primary_category(U'z'),       'L');  //
-    TEST_EQUAL(to_int(general_category(0xa6)),       to_int(GC::So));  TEST_EQUAL(primary_category(0xa6),       'S');  // broken bar
-    TEST_EQUAL(to_int(general_category(0xaa)),       to_int(GC::Lo));  TEST_EQUAL(primary_category(0xaa),       'L');  // feminine ordinal indicator
-    TEST_EQUAL(to_int(general_category(0xab)),       to_int(GC::Pi));  TEST_EQUAL(primary_category(0xab),       'P');  // left-pointing double angle quotation mark
-    TEST_EQUAL(to_int(general_category(0xad)),       to_int(GC::Cf));  TEST_EQUAL(primary_category(0xad),       'C');  // soft hyphen
-    TEST_EQUAL(to_int(general_category(0xb2)),       to_int(GC::No));  TEST_EQUAL(primary_category(0xb2),       'N');  // superscript two
-    TEST_EQUAL(to_int(general_category(0xbb)),       to_int(GC::Pf));  TEST_EQUAL(primary_category(0xbb),       'P');  // right-pointing double angle quotation mark
-    TEST_EQUAL(to_int(general_category(0xf7)),       to_int(GC::Sm));  TEST_EQUAL(primary_category(0xf7),       'S');  // division sign
-    TEST_EQUAL(to_int(general_category(0x1c5)),      to_int(GC::Lt));  TEST_EQUAL(primary_category(0x1c5),      'L');  // latin capital letter d with small letter z with caron
-    TEST_EQUAL(to_int(general_category(0x2b0)),      to_int(GC::Lm));  TEST_EQUAL(primary_category(0x2b0),      'L');  // modifier letter small h
-    TEST_EQUAL(to_int(general_category(0x2b9)),      to_int(GC::Lm));  TEST_EQUAL(primary_category(0x2b9),      'L');  // modifier letter prime
-    TEST_EQUAL(to_int(general_category(0x2c5)),      to_int(GC::Sk));  TEST_EQUAL(primary_category(0x2c5),      'S');  // modifier letter down arrowhead
-    TEST_EQUAL(to_int(general_category(0x300)),      to_int(GC::Mn));  TEST_EQUAL(primary_category(0x300),      'M');  // combining grave accent
-    TEST_EQUAL(to_int(general_category(0x309)),      to_int(GC::Mn));  TEST_EQUAL(primary_category(0x309),      'M');  // combining hook above
-    TEST_EQUAL(to_int(general_category(0x378)),      to_int(GC::Cn));  TEST_EQUAL(primary_category(0x378),      'C');  // unassigned
-    TEST_EQUAL(to_int(general_category(0x488)),      to_int(GC::Me));  TEST_EQUAL(primary_category(0x488),      'M');  // combining cyrillic hundred thousands sign
-    TEST_EQUAL(to_int(general_category(0x5d1)),      to_int(GC::Lo));  TEST_EQUAL(primary_category(0x5d1),      'L');  // hebrew letter bet
-    TEST_EQUAL(to_int(general_category(0x6fd)),      to_int(GC::So));  TEST_EQUAL(primary_category(0x6fd),      'S');  // arabic sign sindhi ampersand
-    TEST_EQUAL(to_int(general_category(0x903)),      to_int(GC::Mc));  TEST_EQUAL(primary_category(0x903),      'M');  // devanagari sign visarga
-    TEST_EQUAL(to_int(general_category(0x94e)),      to_int(GC::Mc));  TEST_EQUAL(primary_category(0x94e),      'M');  // devanagari vowel sign prishthamatra e
-    TEST_EQUAL(to_int(general_category(0x9f7)),      to_int(GC::No));  TEST_EQUAL(primary_category(0x9f7),      'N');  // bengali currency numerator four
-    TEST_EQUAL(to_int(general_category(0x9fb)),      to_int(GC::Sc));  TEST_EQUAL(primary_category(0x9fb),      'S');  // bengali ganda mark
-    TEST_EQUAL(to_int(general_category(0x16ee)),     to_int(GC::Nl));  TEST_EQUAL(primary_category(0x16ee),     'N');  // runic arlaug symbol
-    TEST_EQUAL(to_int(general_category(0x180e)),     to_int(GC::Cf));  TEST_EQUAL(primary_category(0x180e),     'C');  // mongolian vowel separator
-    TEST_EQUAL(to_int(general_category(0x1f8d)),     to_int(GC::Lt));  TEST_EQUAL(primary_category(0x1f8d),     'L');  // greek capital letter alpha with dasia and oxia and prosgegrammeni
-    TEST_EQUAL(to_int(general_category(0x2006)),     to_int(GC::Zs));  TEST_EQUAL(primary_category(0x2006),     'Z');  // six-per-em space
-    TEST_EQUAL(to_int(general_category(0x2014)),     to_int(GC::Pd));  TEST_EQUAL(primary_category(0x2014),     'P');  // em dash
-    TEST_EQUAL(to_int(general_category(0x2028)),     to_int(GC::Zl));  TEST_EQUAL(primary_category(0x2028),     'Z');  // line separator
-    TEST_EQUAL(to_int(general_category(0x2029)),     to_int(GC::Zp));  TEST_EQUAL(primary_category(0x2029),     'Z');  // paragraph separator
-    TEST_EQUAL(to_int(general_category(0x207d)),     to_int(GC::Ps));  TEST_EQUAL(primary_category(0x207d),     'P');  // superscript left parenthesis
-    TEST_EQUAL(to_int(general_category(0x2166)),     to_int(GC::Nl));  TEST_EQUAL(primary_category(0x2166),     'N');  // roman numeral seven
-    TEST_EQUAL(to_int(general_category(0x2309)),     to_int(GC::Pe));  TEST_EQUAL(primary_category(0x2309),     'P');  // right ceiling
-    TEST_EQUAL(to_int(general_category(0x2e0c)),     to_int(GC::Pi));  TEST_EQUAL(primary_category(0x2e0c),     'P');  // left raised omission bracket
-    TEST_EQUAL(to_int(general_category(0x2e21)),     to_int(GC::Pf));  TEST_EQUAL(primary_category(0x2e21),     'P');  // right vertical bar with quill
-    TEST_EQUAL(to_int(general_category(0xa670)),     to_int(GC::Me));  TEST_EQUAL(primary_category(0xa670),     'M');  // combining cyrillic ten millions sign
-    TEST_EQUAL(to_int(general_category(0xd800)),     to_int(GC::Cs));  TEST_EQUAL(primary_category(0xd800),     'C');  // non private use high surrogate
-    TEST_EQUAL(to_int(general_category(0xdfff)),     to_int(GC::Cs));  TEST_EQUAL(primary_category(0xdfff),     'C');  // low surrogate
-    TEST_EQUAL(to_int(general_category(0xe000)),     to_int(GC::Co));  TEST_EQUAL(primary_category(0xe000),     'C');  // private use
-    TEST_EQUAL(to_int(general_category(0xff3f)),     to_int(GC::Pc));  TEST_EQUAL(primary_category(0xff3f),     'P');  // fullwidth low line
-    TEST_EQUAL(to_int(general_category(0x10'fffd)),  to_int(GC::Co));  TEST_EQUAL(primary_category(0x10'fffd),  'C');  // plane 16 private use
-    TEST_EQUAL(to_int(general_category(0x11'0000)),  to_int(GC::Cn));  TEST_EQUAL(primary_category(0x11'0000),  'C');  // not unicode
+    TEST_EQUAL(general_category(0),          GC::Cc);  TEST_EQUAL(primary_category(0),          'C');  //
+    TEST_EQUAL(general_category(U'\n'),      GC::Cc);  TEST_EQUAL(primary_category(U'\n'),      'C');  //
+    TEST_EQUAL(general_category(U' '),       GC::Zs);  TEST_EQUAL(primary_category(U' '),       'Z');  //
+    TEST_EQUAL(general_category(U'!'),       GC::Po);  TEST_EQUAL(primary_category(U'!'),       'P');  //
+    TEST_EQUAL(general_category(U'$'),       GC::Sc);  TEST_EQUAL(primary_category(U'$'),       'S');  //
+    TEST_EQUAL(general_category(U'('),       GC::Ps);  TEST_EQUAL(primary_category(U'('),       'P');  //
+    TEST_EQUAL(general_category(U')'),       GC::Pe);  TEST_EQUAL(primary_category(U')'),       'P');  //
+    TEST_EQUAL(general_category(U'+'),       GC::Sm);  TEST_EQUAL(primary_category(U'+'),       'S');  //
+    TEST_EQUAL(general_category(U'-'),       GC::Pd);  TEST_EQUAL(primary_category(U'-'),       'P');  //
+    TEST_EQUAL(general_category(U'/'),       GC::Po);  TEST_EQUAL(primary_category(U'/'),       'P');  //
+    TEST_EQUAL(general_category(U'0'),       GC::Nd);  TEST_EQUAL(primary_category(U'0'),       'N');  //
+    TEST_EQUAL(general_category(U'9'),       GC::Nd);  TEST_EQUAL(primary_category(U'9'),       'N');  //
+    TEST_EQUAL(general_category(U'A'),       GC::Lu);  TEST_EQUAL(primary_category(U'A'),       'L');  //
+    TEST_EQUAL(general_category(U'Z'),       GC::Lu);  TEST_EQUAL(primary_category(U'Z'),       'L');  //
+    TEST_EQUAL(general_category(U'^'),       GC::Sk);  TEST_EQUAL(primary_category(U'^'),       'S');  //
+    TEST_EQUAL(general_category(U'_'),       GC::Pc);  TEST_EQUAL(primary_category(U'_'),       'P');  //
+    TEST_EQUAL(general_category(U'a'),       GC::Ll);  TEST_EQUAL(primary_category(U'a'),       'L');  //
+    TEST_EQUAL(general_category(U'z'),       GC::Ll);  TEST_EQUAL(primary_category(U'z'),       'L');  //
+    TEST_EQUAL(general_category(0xa6),       GC::So);  TEST_EQUAL(primary_category(0xa6),       'S');  // broken bar
+    TEST_EQUAL(general_category(0xaa),       GC::Lo);  TEST_EQUAL(primary_category(0xaa),       'L');  // feminine ordinal indicator
+    TEST_EQUAL(general_category(0xab),       GC::Pi);  TEST_EQUAL(primary_category(0xab),       'P');  // left-pointing double angle quotation mark
+    TEST_EQUAL(general_category(0xad),       GC::Cf);  TEST_EQUAL(primary_category(0xad),       'C');  // soft hyphen
+    TEST_EQUAL(general_category(0xb2),       GC::No);  TEST_EQUAL(primary_category(0xb2),       'N');  // superscript two
+    TEST_EQUAL(general_category(0xbb),       GC::Pf);  TEST_EQUAL(primary_category(0xbb),       'P');  // right-pointing double angle quotation mark
+    TEST_EQUAL(general_category(0xf7),       GC::Sm);  TEST_EQUAL(primary_category(0xf7),       'S');  // division sign
+    TEST_EQUAL(general_category(0x1c5),      GC::Lt);  TEST_EQUAL(primary_category(0x1c5),      'L');  // latin capital letter d with small letter z with caron
+    TEST_EQUAL(general_category(0x2b0),      GC::Lm);  TEST_EQUAL(primary_category(0x2b0),      'L');  // modifier letter small h
+    TEST_EQUAL(general_category(0x2b9),      GC::Lm);  TEST_EQUAL(primary_category(0x2b9),      'L');  // modifier letter prime
+    TEST_EQUAL(general_category(0x2c5),      GC::Sk);  TEST_EQUAL(primary_category(0x2c5),      'S');  // modifier letter down arrowhead
+    TEST_EQUAL(general_category(0x300),      GC::Mn);  TEST_EQUAL(primary_category(0x300),      'M');  // combining grave accent
+    TEST_EQUAL(general_category(0x309),      GC::Mn);  TEST_EQUAL(primary_category(0x309),      'M');  // combining hook above
+    TEST_EQUAL(general_category(0x378),      GC::Cn);  TEST_EQUAL(primary_category(0x378),      'C');  // unassigned
+    TEST_EQUAL(general_category(0x488),      GC::Me);  TEST_EQUAL(primary_category(0x488),      'M');  // combining cyrillic hundred thousands sign
+    TEST_EQUAL(general_category(0x5d1),      GC::Lo);  TEST_EQUAL(primary_category(0x5d1),      'L');  // hebrew letter bet
+    TEST_EQUAL(general_category(0x6fd),      GC::So);  TEST_EQUAL(primary_category(0x6fd),      'S');  // arabic sign sindhi ampersand
+    TEST_EQUAL(general_category(0x903),      GC::Mc);  TEST_EQUAL(primary_category(0x903),      'M');  // devanagari sign visarga
+    TEST_EQUAL(general_category(0x94e),      GC::Mc);  TEST_EQUAL(primary_category(0x94e),      'M');  // devanagari vowel sign prishthamatra e
+    TEST_EQUAL(general_category(0x9f7),      GC::No);  TEST_EQUAL(primary_category(0x9f7),      'N');  // bengali currency numerator four
+    TEST_EQUAL(general_category(0x9fb),      GC::Sc);  TEST_EQUAL(primary_category(0x9fb),      'S');  // bengali ganda mark
+    TEST_EQUAL(general_category(0x16ee),     GC::Nl);  TEST_EQUAL(primary_category(0x16ee),     'N');  // runic arlaug symbol
+    TEST_EQUAL(general_category(0x180e),     GC::Cf);  TEST_EQUAL(primary_category(0x180e),     'C');  // mongolian vowel separator
+    TEST_EQUAL(general_category(0x1f8d),     GC::Lt);  TEST_EQUAL(primary_category(0x1f8d),     'L');  // greek capital letter alpha with dasia and oxia and prosgegrammeni
+    TEST_EQUAL(general_category(0x2006),     GC::Zs);  TEST_EQUAL(primary_category(0x2006),     'Z');  // six-per-em space
+    TEST_EQUAL(general_category(0x2014),     GC::Pd);  TEST_EQUAL(primary_category(0x2014),     'P');  // em dash
+    TEST_EQUAL(general_category(0x2028),     GC::Zl);  TEST_EQUAL(primary_category(0x2028),     'Z');  // line separator
+    TEST_EQUAL(general_category(0x2029),     GC::Zp);  TEST_EQUAL(primary_category(0x2029),     'Z');  // paragraph separator
+    TEST_EQUAL(general_category(0x207d),     GC::Ps);  TEST_EQUAL(primary_category(0x207d),     'P');  // superscript left parenthesis
+    TEST_EQUAL(general_category(0x2166),     GC::Nl);  TEST_EQUAL(primary_category(0x2166),     'N');  // roman numeral seven
+    TEST_EQUAL(general_category(0x2309),     GC::Pe);  TEST_EQUAL(primary_category(0x2309),     'P');  // right ceiling
+    TEST_EQUAL(general_category(0x2e0c),     GC::Pi);  TEST_EQUAL(primary_category(0x2e0c),     'P');  // left raised omission bracket
+    TEST_EQUAL(general_category(0x2e21),     GC::Pf);  TEST_EQUAL(primary_category(0x2e21),     'P');  // right vertical bar with quill
+    TEST_EQUAL(general_category(0xa670),     GC::Me);  TEST_EQUAL(primary_category(0xa670),     'M');  // combining cyrillic ten millions sign
+    TEST_EQUAL(general_category(0xd800),     GC::Cs);  TEST_EQUAL(primary_category(0xd800),     'C');  // non private use high surrogate
+    TEST_EQUAL(general_category(0xdfff),     GC::Cs);  TEST_EQUAL(primary_category(0xdfff),     'C');  // low surrogate
+    TEST_EQUAL(general_category(0xe000),     GC::Co);  TEST_EQUAL(primary_category(0xe000),     'C');  // private use
+    TEST_EQUAL(general_category(0xff3f),     GC::Pc);  TEST_EQUAL(primary_category(0xff3f),     'P');  // fullwidth low line
+    TEST_EQUAL(general_category(0x10'fffd),  GC::Co);  TEST_EQUAL(primary_category(0x10'fffd),  'C');  // plane 16 private use
+    TEST_EQUAL(general_category(0x11'0000),  GC::Cn);  TEST_EQUAL(primary_category(0x11'0000),  'C');  // not unicode
 
 }
 
@@ -115,42 +112,62 @@ void test_rs_unicode_character_properties_canonical_decomposition_mapping() {
 
 void test_rs_unicode_character_properties_east_asian_width() {
 
-    TEST_EQUAL(to_int(east_asian_width(0)),       to_int(East_Asian_Width::N));
-    TEST_EQUAL(to_int(east_asian_width(U' ')),    to_int(East_Asian_Width::Na));
-    TEST_EQUAL(to_int(east_asian_width(U'A')),    to_int(East_Asian_Width::Na));
-    TEST_EQUAL(to_int(east_asian_width(0xa1)),    to_int(East_Asian_Width::A));
-    TEST_EQUAL(to_int(east_asian_width(0x1100)),  to_int(East_Asian_Width::W));
-    TEST_EQUAL(to_int(east_asian_width(0x20a9)),  to_int(East_Asian_Width::H));
-    TEST_EQUAL(to_int(east_asian_width(0x3000)),  to_int(East_Asian_Width::F));
+    TEST_EQUAL(east_asian_width(0),       East_Asian_Width::N);
+    TEST_EQUAL(east_asian_width(U' '),    East_Asian_Width::Na);
+    TEST_EQUAL(east_asian_width(U'A'),    East_Asian_Width::Na);
+    TEST_EQUAL(east_asian_width(0xa1),    East_Asian_Width::A);
+    TEST_EQUAL(east_asian_width(0x1100),  East_Asian_Width::W);
+    TEST_EQUAL(east_asian_width(0x20a9),  East_Asian_Width::H);
+    TEST_EQUAL(east_asian_width(0x3000),  East_Asian_Width::F);
 
 }
 
 void test_rs_unicode_character_properties_grapheme_cluster_break() {
 
-    TEST_EQUAL(to_int(grapheme_cluster_break(0)),         to_int(Grapheme_Cluster_Break::Control));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0x000a)),    to_int(Grapheme_Cluster_Break::LF));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0x000d)),    to_int(Grapheme_Cluster_Break::CR));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0x0041)),    to_int(Grapheme_Cluster_Break::Other));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0x0300)),    to_int(Grapheme_Cluster_Break::Extend));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0x0600)),    to_int(Grapheme_Cluster_Break::Prepend));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0x0903)),    to_int(Grapheme_Cluster_Break::SpacingMark));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0x1100)),    to_int(Grapheme_Cluster_Break::L));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0x1160)),    to_int(Grapheme_Cluster_Break::V));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0x11a8)),    to_int(Grapheme_Cluster_Break::T));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0x200d)),    to_int(Grapheme_Cluster_Break::ZWJ));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0xa97c)),    to_int(Grapheme_Cluster_Break::L));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0xac00)),    to_int(Grapheme_Cluster_Break::LV));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0xac01)),    to_int(Grapheme_Cluster_Break::LVT));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0xd788)),    to_int(Grapheme_Cluster_Break::LV));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0xd7a3)),    to_int(Grapheme_Cluster_Break::LVT));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0xd7c6)),    to_int(Grapheme_Cluster_Break::V));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0xd7fb)),    to_int(Grapheme_Cluster_Break::T));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0x1'1f02)),  to_int(Grapheme_Cluster_Break::Prepend));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0x1'd16d)),  to_int(Grapheme_Cluster_Break::Extend));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0x1'f1e6)),  to_int(Grapheme_Cluster_Break::Regional_Indicator));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0x1'f1ff)),  to_int(Grapheme_Cluster_Break::Regional_Indicator));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0xe'01ef)),  to_int(Grapheme_Cluster_Break::Extend));
-    TEST_EQUAL(to_int(grapheme_cluster_break(0xe'0fff)),  to_int(Grapheme_Cluster_Break::Control));
+    TEST_EQUAL(grapheme_cluster_break(0),         Grapheme_Cluster_Break::Control);
+    TEST_EQUAL(grapheme_cluster_break(0x000a),    Grapheme_Cluster_Break::LF);
+    TEST_EQUAL(grapheme_cluster_break(0x000d),    Grapheme_Cluster_Break::CR);
+    TEST_EQUAL(grapheme_cluster_break(0x0041),    Grapheme_Cluster_Break::Other);
+    TEST_EQUAL(grapheme_cluster_break(0x0300),    Grapheme_Cluster_Break::Extend);
+    TEST_EQUAL(grapheme_cluster_break(0x0600),    Grapheme_Cluster_Break::Prepend);
+    TEST_EQUAL(grapheme_cluster_break(0x0903),    Grapheme_Cluster_Break::SpacingMark);
+    TEST_EQUAL(grapheme_cluster_break(0x1100),    Grapheme_Cluster_Break::L);
+    TEST_EQUAL(grapheme_cluster_break(0x1160),    Grapheme_Cluster_Break::V);
+    TEST_EQUAL(grapheme_cluster_break(0x11a8),    Grapheme_Cluster_Break::T);
+    TEST_EQUAL(grapheme_cluster_break(0x200d),    Grapheme_Cluster_Break::ZWJ);
+    TEST_EQUAL(grapheme_cluster_break(0xa97c),    Grapheme_Cluster_Break::L);
+    TEST_EQUAL(grapheme_cluster_break(0xac00),    Grapheme_Cluster_Break::LV);
+    TEST_EQUAL(grapheme_cluster_break(0xac01),    Grapheme_Cluster_Break::LVT);
+    TEST_EQUAL(grapheme_cluster_break(0xd788),    Grapheme_Cluster_Break::LV);
+    TEST_EQUAL(grapheme_cluster_break(0xd7a3),    Grapheme_Cluster_Break::LVT);
+    TEST_EQUAL(grapheme_cluster_break(0xd7c6),    Grapheme_Cluster_Break::V);
+    TEST_EQUAL(grapheme_cluster_break(0xd7fb),    Grapheme_Cluster_Break::T);
+    TEST_EQUAL(grapheme_cluster_break(0x1'1f02),  Grapheme_Cluster_Break::Prepend);
+    TEST_EQUAL(grapheme_cluster_break(0x1'd16d),  Grapheme_Cluster_Break::Extend);
+    TEST_EQUAL(grapheme_cluster_break(0x1'f1e6),  Grapheme_Cluster_Break::Regional_Indicator);
+    TEST_EQUAL(grapheme_cluster_break(0x1'f1ff),  Grapheme_Cluster_Break::Regional_Indicator);
+    TEST_EQUAL(grapheme_cluster_break(0xe'01ef),  Grapheme_Cluster_Break::Extend);
+    TEST_EQUAL(grapheme_cluster_break(0xe'0fff),  Grapheme_Cluster_Break::Control);
+
+}
+
+void test_rs_unicode_character_properties_normalization_quick_check() {
+
+    TEST_EQUAL(nfc_quick_check(0x0041),  NFC_Quick_Check::Y);  // latin capital letter a
+    TEST_EQUAL(nfc_quick_check(0x03B1),  NFC_Quick_Check::Y);  // greek small letter alpha
+    TEST_EQUAL(nfc_quick_check(0x20AC),  NFC_Quick_Check::Y);  // euro sign
+    TEST_EQUAL(nfc_quick_check(0x0300),  NFC_Quick_Check::M);  // combining grave accent
+    TEST_EQUAL(nfc_quick_check(0x0330),  NFC_Quick_Check::M);  // combining tilde below
+    TEST_EQUAL(nfc_quick_check(0x0653),  NFC_Quick_Check::M);  // arabic maddah above
+    TEST_EQUAL(nfc_quick_check(0x0343),  NFC_Quick_Check::N);  // combining greek koronis
+    TEST_EQUAL(nfc_quick_check(0x0958),  NFC_Quick_Check::N);  // devanagari letter qa
+    TEST_EQUAL(nfc_quick_check(0x0F73),  NFC_Quick_Check::N);  // tibetan vowel sign ii
+    TEST_EQUAL(nfd_quick_check(0x0041),  NFD_Quick_Check::Y);  // latin capital letter a
+    TEST_EQUAL(nfd_quick_check(0x03B1),  NFD_Quick_Check::Y);  // greek small letter alpha
+    TEST_EQUAL(nfd_quick_check(0x20AC),  NFD_Quick_Check::Y);  // euro sign
+    TEST_EQUAL(nfd_quick_check(0x00C0),  NFD_Quick_Check::N);  // latin capital letter a with grave
+    TEST_EQUAL(nfd_quick_check(0x00FF),  NFD_Quick_Check::N);  // latin small letter y with diaeresis
+    TEST_EQUAL(nfd_quick_check(0x0343),  NFD_Quick_Check::N);  // combining greek koronis
 
 }
 

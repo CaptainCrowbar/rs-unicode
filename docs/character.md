@@ -174,6 +174,18 @@ enum class Line_Break: unsigned char {
     PR,   // Prefix numeric
     SY,   // Symbols allowing break after
 };
+
+enum class NFC_Quick_Check: unsigned char {
+    Y,  // Yes
+    N,  // No
+    M,  // Maybe
+};
+
+enum class NFD_Quick_Check: unsigned char {
+    Y,  // Yes
+    N,  // No
+};
+
 ```
 
 ## Character property functions
@@ -216,6 +228,8 @@ Grapheme_Cluster_Break grapheme_cluster_break(char32_t c);
 Hangul_Syllable_Type hangul_syllable_type(char32_t c);
 Indic_Conjunct_Break indic_conjunct_break(char32_t c);
 Line_Break line_break(char32_t c);
+NFC_Quick_Check nfc_quick_check(char32_t c);
+NFD_Quick_Check nfd_quick_check(char32_t c);
 ```
 
 Enumeration valued properties.

@@ -139,6 +139,8 @@ namespace RS::Unicode {
 
     std::string to_nfc(std::string_view str);
     std::string to_nfd(std::string_view str);
+    bool is_nfc(std::string_view str);
+    bool is_nfd(std::string_view str);
 
     // Subscripts and superscripts
 

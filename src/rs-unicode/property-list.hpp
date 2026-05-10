@@ -73,12 +73,8 @@ namespace RS::Unicode {
 
     RS_ENUM(Indic_Conjunct_Break, unsigned char,
         None,
-        Case_Ignorable,
         Consonant,
-        Default_Ignorable_Code_Point,
         Extend,
-        Grapheme_Base,
-        Grapheme_Extend,
         Linker,
     )
 
@@ -134,6 +130,17 @@ namespace RS::Unicode {
         ZWJ,
     )
 
+    RS_ENUM(NFC_Quick_Check, unsigned char,
+        Y,
+        M,
+        N,
+    )
+
+    RS_ENUM(NFD_Quick_Check, unsigned char,
+        Y,
+        N,
+    )
+
     int canonical_combining_class(char32_t c);
     std::u32string_view canonical_decomposition_mapping(char32_t c);
     East_Asian_Width east_asian_width(char32_t c);
@@ -141,6 +148,8 @@ namespace RS::Unicode {
     Grapheme_Cluster_Break grapheme_cluster_break(char32_t c);
     Indic_Conjunct_Break indic_conjunct_break(char32_t c);
     Line_Break line_break(char32_t c);
+    NFC_Quick_Check nfc_quick_check(char32_t c);
+    NFD_Quick_Check nfd_quick_check(char32_t c);
     char32_t simple_lowercase_mapping(char32_t c);
     char32_t simple_titlecase_mapping(char32_t c);
     char32_t simple_uppercase_mapping(char32_t c);

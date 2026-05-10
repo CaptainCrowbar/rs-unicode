@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.30)
 # version.hpp.
 
 project(rs-unicode
-    VERSION 0.2.22
+    VERSION 0.2.23
     LANGUAGES CXX
 )
 
@@ -60,6 +60,8 @@ add_library(${library} STATIC
     rs-unicode/ucd-id-compat-math-start.cpp
     rs-unicode/ucd-indic-conjunct-break.cpp
     rs-unicode/ucd-line-break.cpp
+    rs-unicode/ucd-nfc-quick-check.cpp
+    rs-unicode/ucd-nfd-quick-check.cpp
     rs-unicode/ucd-pattern-syntax.cpp
     rs-unicode/ucd-pattern-white-space.cpp
     rs-unicode/ucd-simple-lowercase-mapping.cpp
