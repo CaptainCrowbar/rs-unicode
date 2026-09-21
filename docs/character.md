@@ -1,6 +1,6 @@
 # Character Properties
 
-_[Unicode Library by Ross Smith](index.html)_
+_ [index.html](Unicode Library by Ross Smith)_
 
 ```c++
 #include "rs-unicode/character.hpp"
@@ -251,7 +251,7 @@ bool is_xid_continue(char32_t c);
 These reflect the `XID_Start` and `XID_Continue` properties, intended to be
 the default character sets for the first and subsequent characters of
 identifiers in markup and programming languages, as described in
-[https://www.unicode.org/reports/tr31/](Unicode TR31).
+[Unicode TR31](https://www.unicode.org/reports/tr31/).
 
 ```c++
 bool is_id_compat_math_start(char32_t c);
@@ -262,9 +262,9 @@ These reflect the `ID_Compat_Math_Start` and `ID_Compat_Math_Continue`
 properties, intended to be added to the default character sets for the first
 and subsequent characters of identifiers in programming languages that may be
 used for mathematical and scientific applications, as described in
-[https://www.unicode.org/reports/tr31/#Mathematical_Compatibility_Notation_Profile](Unicode TR31 §7.1)
+[Unicode TR31 §7.1](https://www.unicode.org/reports/tr31/#Mathematical_Compatibility_Notation_Profile)
 and
-[https://www.unicode.org/reports/tr55/#Identifiers](Unicode TR55 §3.1).
+[Unicode TR55 §3.1](https://www.unicode.org/reports/tr55/#Identifiers).
 
 ```c++
 bool is_combined_id_start(char32_t c);
