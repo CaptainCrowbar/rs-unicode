@@ -186,10 +186,12 @@ namespace RS::Unicode {
 
     };
 
-    inline auto decoded_utf8_view(std::string_view utf8) noexcept {
+    using DecodeUtf8Range = std::ranges::subrange<DecodeUtf8Iterator>;
+
+    inline DecodeUtf8Range decoded_utf8_view(std::string_view utf8) noexcept {
         DecodeUtf8Iterator i{utf8.data()};
         DecodeUtf8Iterator j{utf8.data() + utf8.size()};
-        return std::ranges::subrange{i, j};
+        return {i, j};
     }
 
     class EncodeUtf8Iterator:
@@ -214,10 +216,12 @@ namespace RS::Unicode {
 
     };
 
-    inline auto encoded_utf8_view(std::u32string_view utf32) noexcept {
+    using EncodeUtf8Range = std::ranges::subrange<EncodeUtf8Iterator>;
+
+    inline EncodeUtf8Range encoded_utf8_view(std::u32string_view utf32) noexcept {
         EncodeUtf8Iterator i{utf32.data()};
         EncodeUtf8Iterator j{utf32.data() + utf32.size()};
-        return std::ranges::subrange{i, j};
+        return {i, j};
     }
 
 }

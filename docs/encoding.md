@@ -173,7 +173,9 @@ class DecodeUtf8Iterator {
     std::string_view view() const noexcept;
 };
 
-[subrange view] decoded_utf8_view(std::string_view utf8) noexcept;
+using DecodeUtf8Range = std::ranges::subrange<DecodeUtf8Iterator>;
+
+DecodeUtf8Range decoded_utf8_view(std::string_view utf8) noexcept;
 ```
 
 Bidirectional iterator over the encoded Unicode scalar values in a UTF-8
@@ -199,7 +201,9 @@ class EncodeUtf8Iterator {
     bool operator==(const EncodeUtf8Iterator& i) const noexcept;
 };
 
-[subrange view] encoded_utf8_view(std::u32string_view utf32) noexcept;
+using EncodeUtf8Range = std::ranges::subrange<EncodeUtf8Iterator>;
+
+EncodeUtf8Range encoded_utf8_view(std::u32string_view utf32) noexcept;
 ```
 
 Bidirectional iterator over the UTF-8 code units of a UTF-32 string. This
