@@ -401,7 +401,9 @@ namespace RS::Unicode {
     // DecodeUtf8Iterator class
 
     const char32_t& DecodeUtf8Iterator::operator*() const noexcept {
-        count_ = decode_utf8_char(utf8_, utf32_);
+        if (count_ == 0) {
+            count_ = decode_utf8_char(utf8_, utf32_);
+        }
         return utf32_;
     }
 
@@ -415,7 +417,7 @@ namespace RS::Unicode {
         do {
             --utf8_;
         } while (! is_utf8_leading_unit(*utf8_));
-        count_ = utf8_length(*utf8_);
+        count_ = 0;
         return *this;
     }
 
@@ -429,7 +431,9 @@ namespace RS::Unicode {
     // EncodeUtf8Iterator class
 
     const char& EncodeUtf8Iterator::operator*() const noexcept {
-        count_ = encode_utf8_char(*utf32_, utf8_.data());
+        if (count_ == 0) {
+            count_ = encode_utf8_char(*utf32_, utf8_.data());
+        }
         return utf8_[index_];
     }
 
