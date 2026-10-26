@@ -432,7 +432,7 @@ void test_rs_unicode_string_manipulation_word_wrap() {
     TRY(wrapped = word_wrap(original, 40, 8, 4));
     TEST_EQUAL(wrapped, "");
 
-    original = "Hello world";;
+    original = "Hello world";
     TRY(wrapped = word_wrap(original, 40));
     TEST_EQUAL(wrapped, "Hello world\n");
     TRY(wrapped = word_wrap(original, 40, 8, 4));
