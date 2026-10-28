@@ -120,11 +120,12 @@ namespace RS::Unicode {
             explicit iterator(const match& m, std::size_t i): match_{&m}, index_{static_cast<std::ptrdiff_t>(i)} {}
         };
 
-        auto begin() const noexcept { return iterator{*this, 1}; }
-        auto end() const noexcept { return iterator{*this, groups_.size()}; }
         bool matched(std::size_t index = 0) const noexcept;
         operator bool() const noexcept { return matched(); }
         bool partial() const noexcept { return partial_; }
+        auto begin() const noexcept { return iterator{*this, 1}; }
+        auto end() const noexcept { return iterator{*this, groups_.size()}; }
+        std::size_t size() const noexcept { return groups_.size(); }
         std::size_t pos(std::size_t index = 0) const noexcept;
         std::size_t endpos(std::size_t index = 0) const noexcept;
         std::size_t len(std::size_t index = 0) const noexcept { return endpos(index) - pos(index); }

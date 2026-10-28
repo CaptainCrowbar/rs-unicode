@@ -206,6 +206,7 @@ public:
     bool partial() const noexcept;
     iterator begin() const noexcept;
     iterator end() const noexcept;
+    std::size_t size() const noexcept;
     std::size_t pos(std::size_t index = 0) const noexcept;
     std::size_t endpos(std::size_t index = 0) const noexcept;
     std::size_t len(std::size_t index = 0) const noexcept;
@@ -231,6 +232,14 @@ The `partial()` function indicates whether a partial match occurred. If this
 is true, all capture groups are treated as unmatched, even if they could have
 matched within the partially matched substring.
 
+The `begin()` and `end()` functions return random access iterators over the
+capture groups (as string views).
+
+The `size()` function returns the number of groups in the match, including the
+full match. This may be less than the number of groups in the original regex
+if some of the trailing groups were not matched (however this is not
+guaranteed).
+
 The `pos(), endpos(),` and `len()` functions report the position and length of
 the match, or a specific capture group, as byte offsets. If the search was
 started at a non-zero offset, positions are relative to the start of the
@@ -247,9 +256,6 @@ equivalent to `str(0);` this is also what you will get if you pass a match
 object to `std::format()` or `std::print().`
 
 The `copy()` function returns a copy of the matched substring.
-
-The `begin()` and `end()` functions return random access iterators over the
-capture groups.
 
 Normally a successful match object contains pointers into the original subject
 string. Accessing a match object after the subject string has been changed or
